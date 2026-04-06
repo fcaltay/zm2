@@ -389,8 +389,8 @@ function switchToCounter(id){
   menuView.classList.add("hidden");
   counterView.classList.remove("hidden");
   bottomBar.style.display="none";
-  descBoxEl.classList.remove("open");
-  toggleDesc.textContent="Okunuş ▾";
+  descBoxEl.classList.add("open");      
+  toggleDesc.textContent="Okunuş ▴";    
   renderCounter();
 }
 
