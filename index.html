@@ -5,130 +5,115 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>Zikir-Matik</title>
 <style>
-  *{box-sizing:border-box;margin:0;padding:0}
-  :root{
-    --bg:#0a0a0f;--surface:#13131a;--surface2:#1c1c27;--border:#2a2a3a;
-    --accent:#c9a96e;--accent2:#e8c99a;--text:#e8e4d9;--muted:#7a7590;
-    --green:#4caf7d;--ring-size:220px;
-  }
-  body{background:var(--bg);color:var(--text);font-family:'Georgia',serif;min-height:100vh;overflow-x:hidden}
-  
-  /* MENU */
-  #menuView{padding:1.5rem 1rem 5rem}
-  .app-header{text-align:center;padding:2rem 0 1.5rem}
-  .app-header h1{font-size:1.6rem;color:var(--accent2);letter-spacing:.1em;font-weight:400}
-  .app-header p{font-size:.8rem;color:var(--muted);margin-top:.3rem;letter-spacing:.05em}
-  
-  .section-label{font-size:.7rem;letter-spacing:.15em;color:var(--muted);text-transform:uppercase;margin:1.2rem 0 .6rem;padding:0 .25rem}
-  
-  .card{
-    background:var(--surface);border:1px solid var(--border);border-radius:14px;
-    padding:1rem 1.1rem;margin-bottom:.7rem;cursor:pointer;
-    transition:border-color .2s,background .2s;position:relative;overflow:hidden
-  }
-  .card::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--accent);opacity:0;transition:opacity .2s;border-radius:14px 0 0 14px}
-  .card:hover{background:var(--surface2);border-color:var(--accent)}
-  .card:hover::before{opacity:1}
-  .card .title{font-size:1rem;color:var(--text);margin-bottom:.3rem}
-  .card .meta{font-size:.78rem;color:var(--muted)}
-  .card .meta b{color:var(--accent)}
-  .card .descPreview{font-size:.72rem;color:var(--muted);margin-top:.4rem;line-height:1.4;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;opacity:.7}
-  
-  /* COUNTER */
-  #counterView{display:flex;flex-direction:column;min-height:100vh;padding-bottom:2rem}
-  .counter-header{padding:1rem 1rem .5rem;display:flex;align-items:center;gap:.75rem;border-bottom:1px solid var(--border)}
-  #backBtn{background:none;border:1px solid var(--border);color:var(--muted);padding:.4rem .8rem;border-radius:8px;cursor:pointer;font-size:.8rem;transition:color .2s,border-color .2s}
-  #backBtn:hover{color:var(--text);border-color:var(--accent)}
-  .counter-title{flex:1}
-  #activeName{font-size:1rem;color:var(--text)}
-  #activeSub{font-size:.75rem;color:var(--muted);margin-top:.1rem}
-  
-  .ring-area{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:2rem 1rem}
-  #ringTap{
-    width:var(--ring-size);height:var(--ring-size);border-radius:50%;
-    background:radial-gradient(circle at 40% 35%,#1e1e2e,#0d0d14);
-    border:3px solid var(--accent);cursor:pointer;
-    display:flex;flex-direction:column;align-items:center;justify-content:center;
-    position:relative;user-select:none;-webkit-tap-highlight-color:transparent;
-    transition:transform .08s,box-shadow .08s;
-    box-shadow:0 0 40px rgba(201,169,110,.08)
-  }
-  #ringTap:active{transform:scale(.93);box-shadow:0 0 60px rgba(201,169,110,.18)}
-  #ringTap::after{content:'';position:absolute;inset:8px;border-radius:50%;border:1px solid rgba(201,169,110,.15)}
-  #count{font-size:3.5rem;color:var(--accent2);font-weight:400;line-height:1}
-  .tap-hint{font-size:.72rem;color:var(--muted);margin-top:.4rem;letter-spacing:.1em}
-  
-  .stats-row{display:flex;gap:.7rem;width:100%;max-width:340px}
-  .stat-box{flex:1;background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:.7rem;text-align:center}
-  .stat-box .stat-label{font-size:.65rem;color:var(--muted);letter-spacing:.08em;text-transform:uppercase}
-  .stat-box .stat-val{font-size:1.3rem;color:var(--accent);margin-top:.2rem}
-  
-  .counter-actions{display:flex;gap:.6rem;width:100%;max-width:340px;margin-top:1rem}
-  .counter-actions button{flex:1;background:var(--surface);border:1px solid var(--border);color:var(--muted);padding:.55rem;border-radius:8px;cursor:pointer;font-size:.78rem;font-family:inherit;transition:all .2s}
-  .counter-actions button:hover{border-color:var(--accent);color:var(--text)}
-  
-  /* DESC BOX */
-  #descBox{
-    width:100%;max-width:420px;margin:1.2rem auto 0;
-    background:var(--surface);border:1px solid var(--border);border-radius:12px;
-    font-size:.78rem;color:var(--muted);line-height:1.7;
-    max-height:0;overflow:hidden;transition:max-height .35s ease,padding .35s;padding:0 1rem
-  }
-  #descBox.open{max-height:400px;padding:.9rem 1rem;overflow-y:auto}
-  #toggleDesc{
-    background:none;border:1px solid var(--border);color:var(--muted);
-    border-radius:20px;padding:.3rem .9rem;font-size:.72rem;font-family:inherit;
-    cursor:pointer;margin-top:.8rem;transition:all .2s
-  }
-  #toggleDesc:hover{border-color:var(--accent);color:var(--accent)}
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0a0a0f;--surface:#13131a;--surface2:#1c1c27;--border:#2a2a3a;
+  --accent:#c9a96e;--accent2:#e8c99a;--text:#e8e4d9;--muted:#7a7590;
+  --green:#4caf7d;--red:#e05252;--ring-size:220px;
+}
+body{background:var(--bg);color:var(--text);font-family:'Georgia',serif;min-height:100vh;overflow-x:hidden}
 
-  /* CEVŞEN PAGINATION */
-  #cevsenPager{width:100%;max-width:420px;margin:1rem auto 0;display:none}
-  #cevsenPager.active{display:block}
-  .pager-header{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:.8rem 1rem;margin-bottom:.6rem}
-  .pager-progress{height:3px;background:var(--border);border-radius:2px;margin:.6rem 0 .5rem}
-  .pager-progress-fill{height:100%;background:var(--accent);border-radius:2px;transition:width .3s}
-  .pager-meta{display:flex;justify-content:space-between;font-size:.72rem;color:var(--muted)}
-  .pager-section-name{font-size:.85rem;color:var(--accent2);margin-top:.3rem}
-  
-  .pager-text{
-    background:var(--surface);border:1px solid var(--border);border-radius:12px;
-    padding:1rem;font-size:.78rem;color:var(--muted);line-height:1.75;
-    max-height:260px;overflow-y:auto
-  }
-  .pager-nav{display:flex;gap:.6rem;margin-top:.6rem}
-  .pager-nav button{flex:1;background:var(--surface);border:1px solid var(--border);color:var(--muted);padding:.55rem;border-radius:8px;font-size:.78rem;font-family:inherit;cursor:pointer;transition:all .2s}
-  .pager-nav button:hover:not(:disabled){border-color:var(--accent);color:var(--text)}
-  .pager-nav button:disabled{opacity:.3;cursor:default}
-  .pager-nav .continue-btn{border-color:var(--accent);color:var(--accent);font-weight:600}
-  .pager-nav .continue-btn:hover{background:var(--accent);color:#0a0a0f}
-  
-  .pager-jump{display:flex;align-items:center;gap:.5rem;margin-top:.5rem}
-  .pager-jump input{flex:1;background:var(--surface2);border:1px solid var(--border);color:var(--text);padding:.4rem .6rem;border-radius:7px;font-size:.8rem;text-align:center}
-  .pager-jump button{background:var(--surface);border:1px solid var(--border);color:var(--muted);padding:.4rem .8rem;border-radius:7px;font-size:.78rem;cursor:pointer;transition:all .2s}
-  .pager-jump button:hover{border-color:var(--accent);color:var(--accent)}
+/* MENU */
+#menuView{padding:1.5rem 1rem 5rem}
+.app-header{text-align:center;padding:2rem 0 1.5rem}
+.app-header h1{font-size:1.8rem;color:var(--accent2);letter-spacing:.12em;font-weight:400}
+.app-header p{font-size:.8rem;color:var(--muted);margin-top:.3rem;letter-spacing:.06em}
+.header-divider{width:40px;height:1px;background:var(--accent);margin:.8rem auto 0;opacity:.5}
 
-  /* BOTTOM RESET */
-  .bottom-bar{
-    position:fixed;bottom:0;left:0;right:0;
-    padding:.8rem 1rem;background:rgba(10,10,15,.95);
-    border-top:1px solid var(--border);display:flex;justify-content:center
-  }
-  #resetDataBtn{
-    background:none;border:1px solid var(--border);color:var(--muted);
-    padding:.4rem 1.2rem;border-radius:8px;font-size:.75rem;font-family:inherit;
-    cursor:pointer;transition:all .2s
-  }
-  #resetDataBtn:hover{border-color:#e05252;color:#e05252}
+.section-label{font-size:.68rem;letter-spacing:.18em;color:var(--muted);text-transform:uppercase;margin:1.4rem 0 .6rem;padding:0 .25rem}
 
-  .hidden{display:none!important}
-  
-  /* Completed state */
-  .completed-badge{
-    background:rgba(76,175,125,.1);border:1px solid rgba(76,175,125,.3);
-    color:var(--green);border-radius:20px;padding:.2rem .8rem;font-size:.72rem;
-    margin-left:.5rem;vertical-align:middle
-  }
+.card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:1rem 1.1rem;margin-bottom:.7rem;cursor:pointer;transition:border-color .2s,background .2s;position:relative;overflow:hidden}
+.card::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--accent);opacity:0;transition:opacity .2s;border-radius:14px 0 0 14px}
+.card:hover{background:var(--surface2);border-color:var(--accent)}
+.card:hover::before{opacity:1}
+.card .title{font-size:1rem;color:var(--text);margin-bottom:.3rem}
+.card .meta{font-size:.78rem;color:var(--muted)}
+.card .meta b{color:var(--accent)}
+.card .descPreview{font-size:.72rem;color:var(--muted);margin-top:.35rem;line-height:1.4;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;opacity:.65}
+.card .progress-mini{height:2px;background:var(--border);border-radius:2px;margin-top:.6rem;overflow:hidden}
+.card .progress-mini-fill{height:100%;background:var(--accent);border-radius:2px;transition:width .3s}
+
+/* COUNTER */
+#counterView{display:flex;flex-direction:column;min-height:100vh;padding-bottom:2rem}
+.counter-header{padding:1rem 1rem .5rem;display:flex;align-items:center;gap:.75rem;border-bottom:1px solid var(--border)}
+#backBtn{background:none;border:1px solid var(--border);color:var(--muted);padding:.4rem .8rem;border-radius:8px;cursor:pointer;font-size:.8rem;transition:color .2s,border-color .2s}
+#backBtn:hover{color:var(--text);border-color:var(--accent)}
+.counter-title{flex:1;min-width:0}
+#activeName{font-size:1rem;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#activeSub{font-size:.75rem;color:var(--muted);margin-top:.1rem}
+
+.ring-area{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:1.5rem 1rem}
+#ringTap{
+  width:var(--ring-size);height:var(--ring-size);border-radius:50%;
+  background:radial-gradient(circle at 40% 35%,#1e1e2e,#0d0d14);
+  border:3px solid var(--accent);cursor:pointer;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  position:relative;user-select:none;-webkit-tap-highlight-color:transparent;
+  transition:transform .08s,box-shadow .08s;
+  box-shadow:0 0 40px rgba(201,169,110,.08)
+}
+#ringTap:active{transform:scale(.93);box-shadow:0 0 60px rgba(201,169,110,.2)}
+#ringTap::after{content:'';position:absolute;inset:8px;border-radius:50%;border:1px solid rgba(201,169,110,.15)}
+#count{font-size:3.5rem;color:var(--accent2);font-weight:400;line-height:1}
+.tap-hint{font-size:.72rem;color:var(--muted);margin-top:.4rem;letter-spacing:.1em}
+.completed-ring{border-color:var(--green)!important;box-shadow:0 0 50px rgba(76,175,125,.15)!important}
+
+.stats-row{display:flex;gap:.7rem;width:100%;max-width:340px}
+.stat-box{flex:1;background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:.7rem;text-align:center}
+.stat-box .stat-label{font-size:.63rem;color:var(--muted);letter-spacing:.08em;text-transform:uppercase}
+.stat-box .stat-val{font-size:1.3rem;color:var(--accent);margin-top:.2rem}
+
+.counter-actions{display:flex;gap:.6rem;width:100%;max-width:340px;margin-top:1rem}
+.counter-actions button{flex:1;background:var(--surface);border:1px solid var(--border);color:var(--muted);padding:.55rem;border-radius:8px;cursor:pointer;font-size:.78rem;font-family:inherit;transition:all .2s}
+.counter-actions button:hover{border-color:var(--accent);color:var(--text)}
+
+/* DESC / PAGER */
+#descBox{
+  width:100%;max-width:420px;margin:1.2rem auto 0;
+  background:var(--surface);border:1px solid var(--border);border-radius:12px;
+  font-size:.78rem;color:var(--muted);line-height:1.7;
+  max-height:0;overflow:hidden;transition:max-height .35s ease,padding .35s;padding:0 1rem
+}
+#descBox.open{max-height:500px;padding:.9rem 1rem;overflow-y:auto}
+#toggleDesc{background:none;border:1px solid var(--border);color:var(--muted);border-radius:20px;padding:.3rem .9rem;font-size:.72rem;font-family:inherit;cursor:pointer;margin-top:.8rem;transition:all .2s}
+#toggleDesc:hover{border-color:var(--accent);color:var(--accent)}
+
+/* PAGER (shared) */
+.pager-wrap{width:100%;max-width:420px;margin:1rem auto 0;display:none}
+.pager-wrap.active{display:block}
+.pager-header{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:.8rem 1rem;margin-bottom:.6rem}
+.pager-progress{height:3px;background:var(--border);border-radius:2px;margin:.6rem 0 .5rem}
+.pager-progress-fill{height:100%;background:var(--accent);border-radius:2px;transition:width .3s}
+.pager-meta{display:flex;justify-content:space-between;font-size:.72rem;color:var(--muted)}
+.pager-section-name{font-size:.85rem;color:var(--accent2);margin-top:.3rem}
+.pager-text{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:1rem;font-size:.78rem;color:var(--muted);line-height:1.8;max-height:260px;overflow-y:auto}
+.pager-nav{display:flex;gap:.6rem;margin-top:.6rem}
+.pager-nav button{flex:1;background:var(--surface);border:1px solid var(--border);color:var(--muted);padding:.55rem;border-radius:8px;font-size:.78rem;font-family:inherit;cursor:pointer;transition:all .2s}
+.pager-nav button:hover:not(:disabled){border-color:var(--accent);color:var(--text)}
+.pager-nav button:disabled{opacity:.3;cursor:default}
+.continue-btn{border-color:var(--accent)!important;color:var(--accent)!important;font-weight:600}
+.continue-btn:hover:not(:disabled){background:var(--accent)!important;color:#0a0a0f!important}
+.pager-jump{display:flex;align-items:center;gap:.5rem;margin-top:.5rem}
+.pager-jump input{flex:1;background:var(--surface2);border:1px solid var(--border);color:var(--text);padding:.4rem .6rem;border-radius:7px;font-size:.8rem;text-align:center;font-family:inherit}
+.pager-jump button{background:var(--surface);border:1px solid var(--border);color:var(--muted);padding:.4rem .8rem;border-radius:7px;font-size:.78rem;cursor:pointer;transition:all .2s;font-family:inherit}
+.pager-jump button:hover{border-color:var(--accent);color:var(--accent)}
+
+/* COMPLETION BANNER */
+.done-banner{display:none;background:rgba(76,175,125,.08);border:1px solid rgba(76,175,125,.25);border-radius:10px;padding:.7rem 1rem;text-align:center;font-size:.8rem;color:var(--green);margin-top:.8rem;width:100%;max-width:340px}
+.done-banner.show{display:block}
+
+/* BOTTOM BAR */
+.bottom-bar{position:fixed;bottom:0;left:0;right:0;padding:.8rem 1rem;background:rgba(10,10,15,.97);border-top:1px solid var(--border);display:flex;justify-content:center}
+#resetDataBtn{background:none;border:1px solid var(--border);color:var(--muted);padding:.4rem 1.2rem;border-radius:8px;font-size:.75rem;font-family:inherit;cursor:pointer;transition:all .2s}
+#resetDataBtn:hover{border-color:var(--red);color:var(--red)}
+
+.completed-badge{background:rgba(76,175,125,.1);border:1px solid rgba(76,175,125,.3);color:var(--green);border-radius:20px;padding:.15rem .7rem;font-size:.68rem;margin-left:.5rem;vertical-align:middle}
+.hidden{display:none!important}
+
+/* Ashab-i Bedr name list styling */
+.bedr-list{column-count:2;column-gap:1rem;font-size:.73rem;line-height:1.9;color:var(--muted)}
+.bedr-list span{display:block}
+.bedr-list span:nth-child(odd){color:var(--text);opacity:.85}
 </style>
 </head>
 <body>
@@ -137,9 +122,10 @@
   <div class="app-header">
     <h1>Zikir-Matik</h1>
     <p>Zikirlerinizi takip edin</p>
+    <div class="header-divider"></div>
   </div>
   <div id="freeSlot"></div>
-  <div class="section-label">Digerleri</div>
+  <div class="section-label">Zikirler &amp; Dualar</div>
   <div id="dhikrList"></div>
   <div style="height:4rem"></div>
 </div>
@@ -152,7 +138,6 @@
       <div id="activeSub"></div>
     </div>
   </div>
-
   <div class="ring-area">
     <div id="ringTap" tabindex="0" role="button" aria-label="Sayaç">
       <div id="count">0</div>
@@ -174,20 +159,21 @@
       </div>
     </div>
 
+    <div class="done-banner" id="doneBanner">✓ Tamamlandı — MâşâAllah!</div>
+
     <div class="counter-actions">
       <button id="undoBtn">↩ Geri Al</button>
       <button id="resetBtn">Bugünü Sıfırla</button>
     </div>
 
     <button id="toggleDesc">Okunuş ▾</button>
-
     <div id="descBox"></div>
 
-    <!-- Cevşen Pager -->
-    <div id="cevsenPager">
+    <!-- Generic Pager (Fetih, Cevsen etc.) -->
+    <div class="pager-wrap" id="genericPager">
       <div class="pager-header">
         <div class="pager-meta">
-          <span id="pagerSectionLabel">Bölüm</span>
+          <span id="pagerLabel">Bölüm</span>
           <span id="pagerFraction"></span>
         </div>
         <div class="pager-section-name" id="pagerSectionName"></div>
@@ -200,7 +186,7 @@
       </div>
       <div class="pager-jump">
         <span style="font-size:.72rem;color:var(--muted);white-space:nowrap">Sayfaya git:</span>
-        <input type="number" id="jumpInput" min="1" max="100" placeholder="1-100"/>
+        <input type="number" id="jumpInput" min="1" placeholder="No"/>
         <button id="jumpBtn">Git</button>
       </div>
     </div>
@@ -212,142 +198,540 @@
 </div>
 
 <script>
-const KEY = "zikir-matik-state-v2";
+const KEY="zikir-matik-v3";
 
-const CEVSEN_SECTIONS = [
-  ["1","Allâhümme innî es'elüke biesmâike: 1 Yâ Allah 2 Yâ Rahman 3 Yâ Rahîm 4 Yâ 'Alîm 5 Yâ Halîm 6 Yâ Azîm 7 Yâ Hakîm 8 Yâ Kadîm 9 Yâ Mukîm 10 Yâ Kerîm\nSübhâneke yâ lâ ilahe illâ ente'l-emâne'l-emâne hallisnâ mine'n-nâr."],
-  ["2","1 Yâ Seyyide's-sâdât 2 Yâ Mucîbe'd-de'avât 3 Yâ Veliyye'l-hasenât 4 Yâ Refî'a'd-deracât 5 Yâ Azîme'l-berakât 6 Yâ Ğafira'l-hatîât 7 Yâ Dâfi'a'l-beliyyât 8 Yâ Sâmi'a'l-esvât 9 Yâ Mu'tıye'l-mesûlât 10 Yâ 'Alime's-sirri ve'l-hafiyyât\nSübhâneke lâ ilahe illâ ente'l-emâne'l-emâne hallisnâ mine'n-nâr."],
-  ["3","1 Yâ Hayra'l-ğâfirîn 2 Yâ Hayra'n-nâsırîn 3 Yâ Hayra'l-hâkimîn 4 Yâ Hayra'l-fâtihîn 5 Yâ Hayra'z-zâkirîn 6 Yâ Hayra'l-vârişîn 7 Yâ Hayra'l-hâmidîn 8 Yâ Hayra'r-râzikîn 9 Yâ Hayra'l-fâsilîn 10 Yâ Hayra'l-muhsinîn\nSübhâneke lâ ilahe illâ ente'l-emâne'l-emâne hallisnâ mine'n-nâr."],
-  ["4","1 Yâ Men lehü'l-'izzü ve'l-cemâl 2 Yâ Men lehü'l-mülkü ve'l-celâl 3 Yâ Men lehü'l-kudretü ve'l-kemâl 4 Yâ Men hüve'l-kebîru'l-müte'âl 5 Yâ Men hüve şedîdü'l-mihâl 6 Yâ Men hüve şedîdü'l-'ikâb 7 Yâ Men hüve serî'u'l-hisâb 8 Yâ Men hüve 'indehû hüsnü's-şevâb 9 Yâ Men hüve 'indehû ümmü'l-kitâb 10 Yâ Men hüve yünşiü's-sehâbe's-sikâl\nSübhâneke lâ ilahe illâ ente'l-emâne'l-emâne hallisnâ mine'n-nâr."],
-  ["5","Ve es'elüke biesmâike: 1 Yâ Hannân 2 Yâ Mennân 3 Yâ Deyyân 4 Yâ Ğufrân 5 Yâ Bürhân 6 Yâ Sultân 7 Yâ Sübhân 8 Yâ Müste'ân 9 Yâ Ze'l-menni ve'l-beyân 10 Yâ Ze'l-emân\nSübhâneke lâ ilahe illâ ente'l-emâne'l-emâne hallisnâ mine'n-nâr."],
-  ["6","1 Yâ Men tevâda'a küllü şey'in li'azametih 2 Yâ Meni'stesleme küllü şey'in likudratih 3 Yâ Men zelle küllü şey'in li'izzetih 4 Yâ Men hada'a küllü şey'in liheybetih 5 Yâ Meni'nkâde küllü şey'in limülketih 6 Yâ Men dâne küllü şey'in min mehâfetih 7 Yâ Meni'nşakkati'l-cibâlü min haşyetih 8 Yâ Men kâmeti's-semâvâtü bi emrih 9 Yâ Meni'stekarrati'l-ardu bi iznih 10 Yâ Men lâ yâ'tedî 'alâ ehli memleketih\nSübhâneke lâ ilahe illâ ente'l-emâne'l-emâne hallisnâ mine'n-nâr."],
-  ["7","1 Yâ Ğâfıra'l-hatâyâ 2 Yâ Kâşife'l-belâyâ 3 Yâ Müntehe'r-racâyâ 4 Yâ Müczile'l-'atâyâ 5 Yâ Vâsi'a'l-hedâyâ 6 Yâ Râzika'l-berâyâ 7 Yâ Kâdiya'l-münâyâ 8 Yâ Sâmi'a'ş-şekâyâ 9 Yâ Bâ'ise's-serâyâ 10 Yâ Mutlika'l-üsârâ\nSübhâneke lâ ilahe illâ ente'l-emâne'l-emâne hallisnâ mine'n-nâr."],
-  ["8","1 Yâ Ze'l-hamdi ve's-senâ 2 Yâ Ze'l-mecdi ve's-senâ 3 Yâ Ze'l-fahri ve'l-behâ 4 Yâ Ze'l-'ahdi ve'l-vefâ 5 Yâ Ze'l-'afvi ve'r-ridâ 6 Yâ Ze'l-menni ve'l-'atâ 7 Yâ Ze'l-fasli ve'l-kadâ 8 Yâ Ze'l-'izzeti ve'l-bekâ 9 Yâ Ze'l-cûdi ve'n-na'mâ 10 Yâ Ze'l-fadli ve'l-'âlâ\nSübhâneke lâ ilahe illâ ente'l-emâne'l-emâne hallisnâ mine'n-nâr."],
-  ["9","Ve es'elüke biesmâike: 1 Yâ Mâni' 2 Yâ Dâfi' 3 Yâ Nâfi' 4 Yâ Sami' 5 Yâ Râfi' 6 Yâ Sâni' 7 Yâ Şâfi' 8 Yâ Câmi' 9 Yâ Vâsi' 10 Yâ Mûsi'\nSübhâneke lâ ilahe illâ ente'l-emâne'l-emâne hallisnâ mine'n-nâr."],
-  ["10","1 Yâ Sâni'a külli masnû' 2 Yâ Hâlika külli mahlûk 3 Yâ Râzika külli merzûk 4 Yâ Mâlike külli memlûk 5 Yâ Kâşife külli mekrûb 6 Yâ Fârice külli mağmum 7 Yâ Râhime külli merhum 8 Yâ Nasıra külli mahzûl 9 Yâ Sâtira külli mâ'yûb 10 Yâ Melcee külli mazlum\nSübhâneke lâ ilahe illâ ente'l-emâne'l-emâne hallisnâ mine'n-nâr."],
-  ["11","1 Yâ 'Uddetî 'inde şiddeti 2 Yâ Recâî 'inde müsîbeti 3 Yâ Mûnisî 'inde vahşeti 4 Yâ Sâhibî 'inde gurbeti 5 Yâ Veliyyî 'inde ni'metî 6 Yâ Kâşifi 'inde kürbetî 7 Yâ Ğıyâşî 'inde'f-tikârî 8 Yâ Melceî 'inde'd-dırârî 9 Yâ Mu'înî 'inde feze'î 10 Yâ Delîlî 'inde hayratî\nSübhâneke lâ ilahe illâ ente'l-emâne'l-emâne hallisnâ mine'n-nâr."],
-  ["12","1 Yâ 'Allâme'l-ğuyûb 2 Yâ Ğaffâra'z-zünûb 3 Yâ Settâra'l-'uyûb 4 Yâ Keşşâfe'l-kürûb 5 Yâ Mukallibe'l-kulûb 6 Yâ Müzeyyine'l-kulûb 7 Yâ Münevvira'l-kulûb 8 Yâ Tabîbe'l-kulûb 9 Yâ Habîbe'l-kulûb 10 Yâ Enîse'l-kulûb\nSübhâneke lâ ilahe illâ ente'l-emâne'l-emâne hallisnâ mine'n-nâr."],
-  ["13","Ve es'elüke biesmâike: 1 Yâ Celîl 2 Yâ Cemîl 3 Yâ Vekîl 4 Yâ Kefil 5 Yâ Delîl 6 Yâ Mükîl 7 Yâ Habîr 8 Yâ Latîf 9 Yâ 'Azîz 10 Yâ Melîk\nSübhâneke lâ ilahe illâ ente'l-emâne'l-emâne hallisnâ mine'n-nâr."],
-  ["14","1 Yâ Delîle'l-mütehayyirîn 2 Yâ Ğıyâşe'l-müsteğîşîn 3 Yâ Sarîha'l-müstesrihîn 4 Yâ Câra'l-müstecîrîn 5 Yâ Melcee'l-'âsîn 6 Yâ Ğâfıra'l-müznibîn 7 Yâ Emâne'l-hâifîn 8 Yâ Râhime'l-mesâkîn 9 Yâ Enîse'l-müstevhişîn 10 Yâ Mücîbe da'veti'l-müdtarrîn\nSübhâneke lâ ilahe illâ ente'l-emâne'l-emâne hallisnâ mine'n-nâr."],
-  ["15","1 Yâ Ze'l-cûdi ve'l-ihsân 2 Yâ Ze'l-fadli ve'l-imtinân 3 Yâ Ze'l-emni ve'l-emân 4 Yâ Ze'l-kudsi ve's-sübhân 5 Yâ Ze'l-hikmeti ve'l-beyân 6 Yâ Ze'r-rahmeti ve'r-rıdvân 7 Yâ Ze'l-hucceti ve'l-bürhân 8 Yâ Ze'l-'azameti ve's-sultân 9 Yâ Ze'l-'afvi ve'l-ğufrân 10 Yâ Ze'r-ra'feti ve'l-müste'ân\nSübhâneke lâ ilahe illâ ente'l-emâne'l-emâne hallisnâ mine'n-nâr."],
-  ["16","1 Yâ Men hüve Rabbü külli şey' 2 Yâ Men hüve ilâhü külli şey' 3 Yâ Men hüve Hâliku külli şey' 4 Yâ Men hüve fevka külli şey' 5 Yâ Men hüve kable külli şey' 6 Yâ Men hüve ba'de külli şey' 7 Yâ Men hüve 'Alimü külli şey' 8 Yâ Men hüve Kâdiru külli şey' 9 Yâ Men hüve Sâni'u külli şey' 10 Yâ Men hüve yebkâ veyefnâ küllü şey'\nSübhâneke lâ ilahe illâ ente'l-emâne'l-emâne hallisnâ mine'n-nâr."],
-  ["17","Ve es'elüke biesmâike: 1 Yâ Mü'min 2 Yâ Müheymin 3 Yâ Mükevvin 4 Yâ Mülakkin 5 Yâ Mübeyyin 6 Yâ Mühevvin 7 Yâ Müzeyyin 8 Yâ Mu'azzim 9 Yâ Mu'avvin 10 Yâ Mülevvin\nSübhâneke lâ ilahe illâ ente'l-emâne'l-emâne hallisnâ mine'n-nâr."],
-  ["18","1 Yâ men hüve fî mülkihî mükîm 2 Yâ men hüve fî celâlihî 'azîm 3 Yâ men hüve fî sültânihî kadîm 4 Yâ men hüve 'alâ 'abdihî rahîm 5 Yâ men hüve bikülli şey'in 'alîm 6 Yâ men hüve limen cefâhu halîm 7 Yâ men hüve limen teraccâhü kerîm 8 Yâ men hüve fî mekâdîrihî hakîm 9 Yâ men hüve fi hükmihî latîf 10 Yâ men hüve fî lütfihî kadîr\nSübhâneke yâ lâ ilahe illâ ente'l-emâne'l-emâne hallisnâ mine'n-nâr."],
-  ["19","1 Yâ men lâ yürcâ illâ fadlüh 2 Yâ men lâ yühâfü illâ 'adlüh 3 Yâ men lâ yüntezaru illâ birruh 4 Yâ men lâ yüs'elü illâ 'afvüh 5 Yâ men lâ yedûmü illâ mülküh 6 Yâ men lâ sültâne illâ sültânüh 7 Yâ men lâ bürhâne illâ bürhânüh 8 Yâ men vesiat külle şey'in rahmetüh 9 Yâ men sebekat rahmetühû 'alâ ğadabih 10 Yâ men ehâta bi külli şey'in 'ilmüh\nSübhâneke yâ lâ ilahe illâ ente'l-emâne'l-emâne hallisnâ mine'n-nâr."],
-  ["20","1 Yâ Fârice'l-hemm 2 Yâ Kâşife'l-ğamm 3 Yâ Ğâfire'z-zenb 4 Yâ Kâbile't-tevb 5 Yâ Hâlika'l-halk 6 Yâ Sâdika'l-va'd 7 Yâ Râzika't-tıfl 8 Yâ Mûfiye'l-'ahd 9 Yâ 'Alime's-sirr 10 Yâ Fâlika'l-habb\nSübhâneke yâ lâ ilahe illâ ente'l-emâne'l-emâne hallisnâ mine'n-nâr."],
-  ["21","Ve es'elüke biesmâike: 1 Yâ 'Aliyy 2 Yâ Vefiyy 3 Yâ Veliyy 4 Yâ Ğaniyy 5 Yâ Meliyy 6 Yâ Zekiyy 7 Yâ Radiyy 8 Yâ Bediyy 9 Yâ Hafiyy 10 Yâ Kaviyy\nSübhâneke yâ lâ ilahe illâ ente'l-emâne'l-emâne hallisnâ mine'n-nâr."],
-  ["22","1 Yâ Men azhera'l-cemîl 2 Yâ Men setera 'ale'l-kabîh 3 Yâ Men lâ yüâhizü bi'l-cerîmeh 4 Yâ Men lâ yehtikü's-sitr 5 Yâ 'Azîme'l-'afv 6 Yâ Hasene't-tecâvüz 7 Yâ Vâsi'a'l-mağfireh 8 Yâ Bâsita'l-yedeyni bi'r-rahmeh 9 Yâ Sâhibe külli necvâ 10 Yâ Müntehâ külli şekva\nSübhâneke yâ lâ ilahe illâ ente'l-emâne'l-emâne hallisnâ mine'n-nâr."],
-  ["23","1 Yâ Ze'n-ni'meti's-sâbiğah 2 Yâ Ze'r-rahmeti'l-vâsi'ah 3 Yâ Ze'l-hikmeti'l-bâliğah 4 Yâ Ze'l-kudreti'l-kâmileh 5 Yâ Ze'l-hucceti'l-kâtı'ah 6 Yâ Ze'l-kerâmeti'z-zâhirah 7 Yâ Ze's-sıfati'l-'âliyeh 8 Yâ Ze'l-'izzeti'd-dâimeh 9 Yâ Ze'l-kuvveti'l-metîneh 10 Yâ Ze'l-minneti's-sâbikah\nSübhâneke yâ lâ ilahe illâ ente'l-emâne'l-emâne hallisnâ mine'n-nâr."],
-  ["24","1 Yâ Ahkeme'l-hâkimîn 2 Yâ 'Adele'l-'âdilîn 3 Yâ Asdeka's-sâdikîn 4 Yâ Azhera'z-zâhirîn 5 Yâ Athera't-tâhirîn 6 Yâ Ahsene'l-hâlikîn 7 Yâ Esra'a'l-hâsibîn 8 Yâ Esme'a's-sâmi'în 9 Yâ Ekrame'l-ekramîn 10 Yâ Erhame'r-râhimîn 11 Yâ Eşfe'a'ş-şâfi'în\nSübhâneke yâ lâ ilahe illâ ente'l-emâne'l-emâne hallisnâ mine'n-nâr."],
-  ["25","1 Yâ Bedi'a's-semâvât 2 Yâ Câ'ile'z-zulümât 3 Yâ 'Alime'l-hafiyyât 4 Yâ Râhime'l-'aberât 5 Yâ Sâtira'l-'averât 6 Yâ Kâşife'l-beliyyât 7 Yâ Muhyiye'l-emvât 8 Yâ Dâ'ife'l-hasenât 9 Yâ Münzile'l-berakât 10 Yâ Şedîde'n-nekamât\nSübhâneke yâ lâ ilahe illâ ente'l-emâne'l-emâne hallisnâ mine'n-nâr."],
-  ["26","Ve es'elüke biesmâike: 1 Yâ Müsavvir 2 Yâ Mükaddir 3 Yâ Mütahhir 4 Yâ Münevvir 5 Yâ Mükaddim 6 Yâ Müahhir 7 Yâ Müyessir 8 Yâ Münzir 9 Yâ Mübeşşir 10 Yâ Müdebbir\nSübhâneke yâ lâ ilahe illâ ente'l-emâne'l-emâne hallisnâ mine'n-nâr."],
-  ["27","1 Yâ Rabbe'l-beyti'l-harâm 2 Yâ Rabbe'ş-şehri'l-harâm 3 Yâ Rabbe'l-mescidi'l-harâm 4 Yâ Rabbe'l-beledi'l-harâm 5 Yâ Rabbe'r-rukni ve'l-mekâm 6 Yâ Rabbe'l-meş'ari'l-harâm 7 Yâ Rabbe'l-hılli ve'l-harâm 8 Yâ Rabbe'n-nûri ve'z-zalâm 9 Yâ Rabbe't-tahiyyeti ve's-selâm 10 Yâ Rabbe'l-celâli ve'l-ikrâm\nSübhâneke yâ lâ ilahe illâ ente'l-emâne'l-emâne hallisnâ mine'n-nâr."],
-  ["28","1 Yâ 'İmâde men lâ 'imâde leh 2 Yâ Senede men lâ senede leh 3 Yâ Zührâ men lâ zührâ leh 4 Yâ Ğıyâşe men lâ ğıyâşe leh 5 Yâ Hırze men lâ hırze leh 6 Yâ Fahra men lâ fahra leh 7 Yâ 'İzze men lâ 'izze leh 8 Yâ Mu'îne men lâ mu'îne leh 9 Yâ Enîse men lâ enîse leh 10 Yâ Ğunyete men lâ ğunyete leh\nSübhâneke yâ lâ ilahe illâ ente'l-emâne'l-emâne hallisnâ mine'n-nâr."],
-  ["29","Ve es'elüke biesmâike: 1 Yâ Kâim 2 Yâ Dâim 3 Yâ Râhim 4 Yâ Hâkim 5 Yâ 'Âlim 6 Yâ 'Âsım 7 Yâ Kâsım 8 Yâ Sâlim 9 Yâ Kâbid 10 Yâ Bâsit\nSübhâneke yâ lâ ilahe illâ ente'l-emâne'l-emâne hallisnâ mine'n-nâr."],
-  ["30","1 Yâ 'Âsıme meni'sta'sameh 2 Yâ Râhime meni'sterhameh 3 Yâ Nasıra meni'stensarah 4 Yâ Hâfıza meni'stahfezah 5 Yâ Mükrime meni'stekrameh 6 Yâ Mürşide meni'sterşedeh 7 Yâ Mu'îne meni'ste'âneh 8 Yâ Muğîşe meni'steğâşeh 9 Yâ Sarîha meni'stesrahah 10 Yâ Ğâfıra meni'stağferah\nSübhâneke yâ lâ ilahe illâ ente'l-emâne'l-emâne hallisnâ mine'n-nâr."],
-  ["31","1 Yâ Kerîme's-saftı 2 Yâ 'Azîme'l-menn 3 Yâ Kesîra'l-hayr 4 Yâ Kadîme'l-fadl 5 Yâ Latîfe's-sun' 6 Yâ Dâime'l-lütf 7 Yâ Nâfise'l-kerb 8 Yâ Kâşife'd-durr 9 Yâ Mâlike'l-mülk 10 Yâ Kâdiyen bi'l-hakk\nSübhâneke yâ lâ ilahe illâ ente'l-emâne'l-emâne ecirnâ mine'n-nâr."],
-  ["32","1 Yâ 'Azîzen lâ yüdâm 2 Yâ Latîfen lâ yürâm 3 Yâ Rakîben lâ yenâm 4 Yâ Kâimen lâ yefût 5 Yâ Hayyen lâ yemût 6 Yâ Meliken lâ yezûl 7 Yâ Bâkiyen lâ yefnâ 8 Yâ 'Alimen lâ yechel 9 Yâ Sameden lâ yüt'âm 10 Yâ Kaviyyen lâ yüd'af\nSübhâneke yâ lâ ilahe illâ ente'l-emâne'l-emâne ecirnâ mine'n-nâr."],
-  ["33","Ve es'elüke biesmâike: 1 Yâ Vâhid 2 Yâ Vâcid 3 Yâ Şâhid 4 Yâ Mâcid 5 Yâ Râşid 6 Yâ Bâis 7 Yâ Vâris 8 Yâ Dârr 9 Yâ Nâfi' 10 Yâ Hâdî\nSübhâneke yâ lâ ilahe illâ ente'l-emâne'l-emâne ecirnâ mine'n-nâr."],
-  ["34","1 Yâ A'zamü min külli 'azîm 2 Yâ Ekramü min külli kerîm 3 Yâ Erhamü min külli rahîm 4 Yâ Ahkemü min külli hakîm 5 Yâ A'lemü min külli 'alîm 6 Yâ Akdemü min külli kadîm 7 Yâ Ekberu min külli kebîr 8 Yâ Ecellü min külli celîl 9 Yâ E'azzü min külli 'azîz 10 Yâ Eltafü min külli latîf\nSübhâneke yâ lâ ilahe illâ ente'l-emâne'l-emâne ecirnâ mine'n-nâr."],
-  ["35","1 Yâ Men hüve fî 'ahdihî vefiyy 2 Yâ Men hüve fî vefaihî kaviyy 3 Yâ Men hüve fî kuvvetihî 'aliyy 4 Yâ Men hüve fî 'ulüvvihî karîb 5 Yâ Men hüve fî kurbihî latîf 6 Yâ Men hüve fî lütfıhî şerîf 7 Yâ Men hüve fî şerefihî 'azîz 8 Yâ Men hüve fî 'izzetihî 'azîm 9 Yâ Men hüve fî 'azametihî mecîd 10 Yâ Men hüve fî mecdihî hamîd\nSübhâneke yâ lâ ilahe illâ ente'l-emâne'l-emâne ecirnâ mine'n-nâr."],
-  ["36","1 Yâ Men hüve küllü şey'in hâdi'un leh 2 Yâ Men hüve küllü şey'in kâinün leh 3 Yâ Men hüve küllü şey'in mevcûdun leh 4 Yâ Men hüve küllü şey'in münîbün leh 5 Yâ Men hüve küllü şey'in hâifün minh 6 Yâ Men hüve küllü şey'in müsebbihun leh 7 Yâ Men hüve küllü şey'in kâimün bih 8 Yâ Men hüve küllü şey'in hâşi'un leh 9 Yâ Men hüve küllü şey'in sâirun ileyh 10 Yâ Men hüve küllü şey'in hâlikün illâ vecheh\nSübhâneke yâ lâ ilahe illâ ente'l-emâne'l-emâne ecirnâ mine'n-nâr."],
-  ["37","Ve es'elüke biesmâike: 1 Yâ Kâfî 2 Yâ Şâfî 3 Yâ Vâfî 4 Yâ Mu'âfî 5 Yâ 'Âlî 6 Yâ Dâ'î 7 Yâ Râdî 8 Yâ Kâdî 9 Yâ Bâkî 10 Yâ Hâdî\nSübhâneke yâ lâ ilahe illâ ente'l-emâne'l-emâne ecirnâ mine'n-nâr."],
-  ["38","1 Yâ Men lâ meferra illâ ileyh 2 Yâ Men lâ mefze'a illâ ileyh 3 Yâ Men lâ melcee illâ ileyh 4 Yâ Men lâ yütevekkelü illâ 'aleyh 5 Yâ Men lâ maksade illâ ileyh 6 Yâ Men lâ mencee illâ ileyh 7 Yâ Men lâ yürğabü illâ ileyh 8 Yâ Men lâ yü'bedü illâ iyyâh 9 Yâ Men lâ yüste'ânü illâ minh 10 Yâ Men lâ havle velâ kuvvete illâ bih\nSübhâneke yâ lâ ilahe illâ ente'l-emâne'l-emâne ecirnâ mine'n-nâr."],
-  ["39","1 Yâ Hayra'l-merhûbîn 2 Yâ Hayra'l-matlûbîn 3 Yâ Hayra'l-merğûbîn 4 Yâ Hayra'l-mes'ûlîn 5 Yâ Hayra'l-maksûdîn 6 Yâ Hayra'l-mezkûrîn 7 Yâ Hayra'l-meşkûrîn 8 Yâ Hayra'l-mahbûbîn 9 Yâ Hayra'l-münzilîn 10 Yâ Hayra'l-müste'nisîn\nSübhâneke yâ lâ ilahe illâ ente'l-emâne'l-emâne ecirnâ mine'n-nâr."],
-  ["40","1 Yâ Men hüve halaka fesevvâ 2 Yâ Men hüve kaddera fehedâ 3 Yâ Men hüve yekşifü'l-belvâ 4 Yâ Men hüve yesme'u'n-necvâ 5 Yâ Men hüve yünkizü'l-ğarkâ 6 Yâ Men hüve yünci'l-helkâ 7 Yâ Men hüve yeşfi'l-merdâ 8 Yâ Men hüve emâte ve ahyâ 9 Yâ Men hüve edhake ve ebkâ 10 Yâ Men hüve edalle ve ehdâ\nSübhâneke yâ lâ ilahe illâ ente'l-emâne'l-emâne ecirnâ mine'n-nâr."],
-  ["41","Ve es'elüke biesmâike: 1 Yâ Ğâfır 2 Yâ Sâtir 3 Yâ Kâhir 4 Yâ Kâdir 5 Yâ Nâzır 6 Yâ Fâtır 7 Yâ Şâkir 8 Yâ Zâkir 9 Yâ Nâsır 10 Yâ Câbir\nSübhâneke yâ lâ ilahe illâ ente'l-emâne'l-emâne ecirnâ mine'n-nâr."],
-  ["42","1 Yâ Men hüve fi'l-berri ve'l-bahri sebîlüh 2 Yâ Men hüve fi'l-âfaki âyâtüh 3 Yâ Men hüve fi'l-âyâti bürhânüh 4 Yâ Men hüve fi'l-memâti kudratüh 5 Yâ Men hüve fi'l-kubûri 'izzetüh 6 Yâ Men hüve fi'l-kıyâmeti mülketüh 7 Yâ Men hüve fi'l-hisâbi heybetüh 8 Yâ Men hüve fi'l-mîzâni kadâüh 9 Yâ Men hüve fi'l-cenneti rahmetüh 10 Yâ Men hüve fi'n-nâri 'azâbüh\nSübhâneke yâ lâ ilahe illâ ente'l-emâne'l-emâne ecirnâ mine'n-nâr."],
-  ["43","1 Yâ Men hüve ileyhi yehrabü'l-hâifûn 2 Yâ Men hüve ileyhi yefze'u'l-müznibûn 3 Yâ Men hüve ileyhi yaksıdü'l-münîbûn 4 Yâ Men hüve ileyhi yelceü'l-'âsûn 5 Yâ Men hüve ileyhi yerğabü'z-zâhidûn 6 Yâ Men hüve fîhi yatme'u'l-hâtıûn 7 Yâ Men hüve yeste'nisü bihi'l-mürîdûn 8 Yâ Men hüve yeftehiru bihi'l-muhsinûn 9 Yâ Men hüve 'aleyhi yetevekkelü'l-mütevekkilûn 10 Yâ Men hüve yeskünü bihi'l-mûkınûn\nSübhâneke yâ lâ ilahe illâ ente'l-emâne'l-emâne ecirnâ mine'n-nâr."],
-  ["44","1 Yâ Ekrabe min külli karîb 2 Yâ Ehabbe min külli habîb 3 Yâ A'zame min külli 'azîm 4 Yâ E'azze min külli 'azîz 5 Yâ Ekvâ min külli kaviyy 6 Yâ Ağnâ min külli ğaniyy 7 Yâ Ecvede min külli cevâd 8 Yâ Er'efe min külli raûf 9 Yâ Erhame min külli rahîm 10 Yâ Ecelle min külli celîl\nSübhâneke yâ lâ ilahe illâ ente'l-emâne'l-emâne ecirnâ mine'n-nâr."],
-  ["45","Ve es'elüke biesmâike: 1 Yâ Karîb 2 Yâ Rakîb 3 Yâ Habîb 4 Yâ Mücîb 5 Yâ Hasîb 6 Yâ Tabîb 7 Yâ Basîr 8 Yâ Habîr 9 Yâ Münîr 10 Yâ Mübîn\nSübhâneke yâ lâ ilahe illâ ente'l-emâne'l-emâne ecirnâ mine'n-nâr."],
-  ["46","1 Yâ Ğâliben ğayra mağlûb 2 Yâ Sâni'an ğayra masnû' 3 Yâ Hâlikan ğayra mahlûk 4 Yâ Mâliken ğayra memlûk 5 Yâ Kâhiran ğayra makhûr 6 Yâ Râfi'an ğayra merfu' 7 Yâ Hâfızan ğayra mahfûz 8 Yâ Nâsiran ğayra mensûr 9 Yâ Şâhiden ğayra ğâib 10 Yâ Karîben ğayra ba'îd\nSübhâneke yâ lâ ilahe illâ ente'l-emâne'l-emâne ecirnâ mine'n-nâr."],
-  ["47","1 Yâ Nûra'n-nûr 2 Yâ Münevvira'n-nûr 3 Yâ Müsavvira'n-nûr 4 Yâ Hâlika'n-nûr 5 Yâ Mükaddira'n-nûr 6 Yâ Müdebbira'n-nûr 7 Yâ Nûran kable külli nûr 8 Yâ Nûran ba'de külli nûr 9 Yâ Nûran fevka külli nûr 10 Yâ Nûran leyse mişlehû nûr\nSübhâneke yâ lâ ilahe illâ ente'l-emâne'l-emâne ecirnâ mine'n-nâr."],
-  ["48","1 Yâ Men 'atâuhû şerîf 2 Yâ Men fi'lühû latîf 3 Yâ Men lütfühû mükîm 4 Yâ Men ihsânühû kadîm 5 Yâ Men kavlühü hakk 6 Yâ Men va'dühû sıdk 7 Yâ Men 'afvühû fadl 8 Yâ Men 'azabühû 'adl 9 Yâ Men zikrühû hulv 10 Yâ Men ünsühû leziz\nSübhâneke yâ lâ ilahe illâ ente'l-emâne'l-emâne ecirnâ mine'n-nâr."],
-  ["49","Ve es'elüke biesmâike: 1 Yâ Münevvil 2 Yâ Müfassil 3 Yâ Mübeddil 4 Yâ Müsehhil 5 Yâ Müzellil 6 Yâ Münezzil 7 Yâ Muhavvil 8 Yâ Mücemmil 9 Yâ Mükemmil 10 Yâ Müfaddil\nSübhâneke yâ lâ ilahe illâ ente'l-emâne'l-emâne ecirnâ mine'n-nâr."],
-  ["50","1 Yâ Men yerâ velâ yürâ 2 Yâ Men yahlüku velâ yühlâk 3 Yâ Men yehdî velâ yühda 4 Yâ Men yühyî velâ yühyâ 5 Yâ Men yüt'imü velâ yüt'am 6 Yâ Men yücîru velâ yücâr 7 Yâ Men yakdî velâ yükdâ 'aleyh 8 Yâ Men yahkümü velâ yuhkemü 'aleyh 9 Yâ Men lem yelid velem yûled 10 Yâ Men lem yekûn lehû küfüven ehad\nSübhâneke yâ lâ ilahe illâ ente'l-emâne'l-emâne ecirnâ mine'n-nâr."],
-  ["51","1 Yâ Ni'me'l-habîb 2 Yâ Ni'me't-tabîb 3 Yâ Ni'me'l-hasîb 4 Yâ Ni'me'l-karîb 5 Yâ Ni'me'r-rakîb 6 Yâ Ni'me'l-mücîb 7 Yâ Ni'me'l-enîs 8 Yâ Ni'me'l-vekîl 9 Yâ Ni'me'l-mevlâ 10 Yâ Ni'me'n-nasîr\nSübhâneke yâ lâ ilahe illâ ente'l-emâne'l-emâne ecirnâ mine'n-nâr."],
-  ["52","1 Yâ Sürûra'l-'ârifîn 2 Yâ Enîse'l-mürîdîn 3 Yâ Muğîşe'l-müştâkîn 4 Yâ Habîbe't-tevvâbîn 5 Yâ Râzika'l-mükillîn 6 Yâ Recâe'l-müznibîn 7 Yâ Kâşife'l-mekrûbîn 8 Yâ Müneffisen 'ani'l-mağmûmîn 9 Yâ Müferricen 'ani'l-mahzûnîn 10 Yâ İlâhe'l-evvelîne ve'l-âhirîn\nSübhâneke yâ lâ ilahe illâ ente'l-emâne'l-emâne ecirnâ mine'n-nâr."],
-  ["53","1 Yâ Rabbe'l-cenneti ve'n-nâr 2 Yâ Rabbe'n-nebiyyîne ve'l-ahyâr 3 Yâ Rabbe's-sıddîkîne ve'l-ebrâr 4 Yâ Rabbe's-siğâri ve'l-kibâr 5 Yâ Rabbe'l-hubûbi ve'l-eşmâr 6 Yâ Rabbe'l-enhâri ve'l-eşcâr 7 Yâ Rabbe's-sahârâ ve'l-kıfâr 8 Yâ Rabbe'l-'abîdi ve'l-ahrâr 9 Yâ Rabbe'l-i'lâni ve'l-isrâr 10 Yâ Rabbe'l-leyli ve'n-nehâr\nSübhâneke yâ lâ ilahe illâ ente'l-emâne'l-emâne ecirnâ mine'n-nâr."],
-  ["54","1 Yâ Men lahika fî külli şey'in 'ilmüh 2 Yâ Men nefeze bi külli şey'in besaruhu 3 Yâ Men beleğat ilâ külli şey'in kudratüh 4 Yâ Men lâ yuhsı'l-'ibâdü na'mâeh 5 Yâ Men lâ teblüğu'l-halâiku şükrah 6 Yâ Men lâ tüdrikü'l-efhâmü celâleh 7 Yâ Men lâ tenâlü'l-evhâmü künheh 8 Yâ Meni'l-'azâmetü ve'l-kibriyâü ridâüh 9 Yâ Meni'l-heybetü ve's-sültânü behâüh 10 Yâ Men te'azzeze bi'l-'izzi bekâüh\nSübhâneke yâ lâ ilahe illâ ente'l-emâne'l-emâne ecirnâ mine'n-nâr."],
-  ["55","1 Yâ Men lehü'l-meşelü'l-a'lâ 2 Yâ Men lehü's-sıfâtü'l-'ulâ 3 Yâ Men lehü'l-âhiratü ve'l-ûlâ 4 Yâ Men lehü'l-cennetü'l-me'vâ 5 Yâ Men lehü'n-nâru ve'l-lezâ 6 Yâ Men lehü'l-âyâtü'l-kübrâ 7 Yâ Men lehü'l-esmâü'l-hüsnâ 8 Yâ Men lehü'l-hükmü ve'l-kadâ 9 Yâ Men lehü's-semâvâtü'l-'ulâ 10 Yâ Men lehü'l-'arşü ve's-serâ\nSübhâneke yâ lâ ilahe illâ ente'l-emâne'l-emâne ecirnâ mine'n-nâr."],
-  ["56","Ve es'elüke biesmâike: 1 Yâ 'Afüvv 2 Yâ Ğafûr 3 Yâ Vedûd 4 Yâ Şekûr 5 Yâ Sabûr 6 Yâ Raûf 7 Yâ 'Atûf 8 Yâ Kuddûs 9 Yâ Hayy 10 Yâ Kayyûm\nSübhâneke yâ lâ ilahe illâ ente'l-emâne'l-emâne ecirnâ mine'n-nâr."],
-  ["57","1 Yâ Men hüve fi's-semâi 'azametüh 2 Yâ Men hüve fi'l-ardi âyâtüh 3 Yâ Men hüve fî külli şey'in delâilüh 4 Yâ Men hüve fi'l-bihâri 'acâibüh 5 Yâ Men yebdeü'l-halka şümme yü'îdüh 6 Yâ Men hüve fi'l-cibâli hazâinüh 7 Yâ Men ahsene külle şey'in halekah 8 Yâ Men ileyhi yürce'u'l-emrü küllüh 9 Yâ Men zahera fî külli şey'in lütfüh 10 Yâ Men yü'arrifü'l-halâika kudrateh\nSübhâneke yâ lâ ilahe illâ ente'l-emâne'l-emâne ecirnâ mine'n-nâr."],
-  ["58","1 Yâ Habîbe men lâ habîbe leh 2 Yâ Tabîbe men lâ tabîbe leh 3 Yâ Mücîbe men lâ mücîbe leh 4 Yâ Şefîka men lâ şefîka leh 5 Yâ Rafîka men lâ rafîka leh 6 Yâ Şefî'a men lâ şefî'a leh 7 Yâ Müğîşe men lâ müğîşe leh 8 Yâ Delîle men lâ delîle leh 9 Yâ Kâide men lâ kâide leh 10 Yâ Râhıme men lâ râhıme leh\nSübhâneke yâ lâ ilahe illâ ente'l-emâne'l-emâne ecirnâ mine'n-nâr."],
-  ["59","1 Yâ Kâfiye meni'stekfâh 2 Yâ Hâdiye meni'stehdâh 3 Yâ Kâliye meni'steklâh 4 Yâ Dâ'iye meni'sted'âh 5 Yâ Şâfiye meni'steşfâh 6 Yâ Kâdiye meni'stakdâh 7 Yâ Muğniye meni'steğnâh 8 Yâ Mûfiye meni'stevfâh 9 Yâ Mükavviye meni'stakvâh 10 Yâ Veliyye meni'stevlâh\nSübhâneke yâ lâ ilahe illâ ente'l-emâne'l-emâne ecirnâ mine'n-nâr."],
-  ["60","Ve es'elüke biesmâike: 1 Yâ Evvel 2 Yâ Âhir 3 Yâ Zâhir 4 Yâ Bâtın 5 Yâ Hâlik 6 Yâ Râzık 7 Yâ Sâdık 8 Yâ Sâbık 9 Yâ Sâik 10 Yâ Fâlik\nSübhâneke yâ lâ ilahe illâ ente'l-emâne'l-emâne ecirnâ mine'n-nâr."],
-  ["61","1 Yâ Men yükallibü'l-leyle ve'n-nehâr 2 Yâ Men halekat'z-zulümâti ve'n-nûr 3 Yâ Men ce'ale'z-zılle ve'l-harûr 4 Yâ Men sehhara's-şemse ve'l-kamer 5 Yâ Men haleka'l-mevte ve'l-hayah 6 Yâ Men lehü'l-halku ve'l-emr 7 Yâ Men lem yettehiz sâhibeten velâ veledâ 8 Yâ Men lem yekûn lehû şerîkün fi'l-mülk 9 Yâ Men lem yekûn lehû veliyyün mine'z-züll 10 Yâ Men lehü'l-havlü ve'l-kuvveh\nSübhâneke yâ lâ ilahe illâ ente'l-emâne'l-emâne neccinâ mine'n-nâr."],
-  ["62","1 Yâ Men ya'lemü mürâde'l-mürîdîn 2 Yâ Men yemlikü hâvâice's-sâilîn 3 Yâ Men yesme'u enîne'l-vâlihîn 4 Yâ Men yerâ bükâe'l-hâifîn 5 Yâ Men ya'lemu damîra's-sâmitîn 6 Yâ Men yerâ nedeme'n-nâdimîn 7 Yâ Men yakbelü 'uzre't-tâibîn 8 Yâ Men lâ yüslihu 'amele'l-müfsidîn 9 Yâ Men lâ yüdî'u ecra'l-muhsinîn 10 Yâ Men lâ yeb'udü an kulûbi'l-'ârifîn\nSübhâneke yâ lâ ilahe illâ ente'l-emâne'l-emâne neccinâ mine'n-nâr."],
-  ["63","1 Yâ Dâime'l-bekâ 2 Yâ Ğâfire'l-hatâ 3 Yâ Sâmi'e'd-düâ 4 Yâ Vâsi'a'l-'atâ 5 Yâ Râfi'a's-semâ 6 Yâ Kâşife'l-belâ 7 Yâ 'Azîme's-senâ 8 Yâ Kadîme's-senâ 9 Yâ Kesîra'l-vefâ 10 Yâ Şerîfe'l-cezâ\nSübhâneke yâ lâ ilahe illâ ente'l-emâne'l-emâne neccinâ mine'n-nâr."],
-  ["64","Ve es'elüke biesmâike: 1 Yâ Ğaffâr 2 Yâ Settâr 3 Yâ Kahhâr 4 Yâ Cebbâr 5 Yâ Sabbâr 6 Yâ Razzâk 7 Yâ Fettâh 8 Yâ 'Allâm 9 Yâ Vehhâb 10 Yâ Tevvâb\nSübhâneke yâ lâ ilahe illâ ente'l-emâne'l-emâne neccinâ mine'n-nâr."],
-  ["65","1 Yâ Men halekanî ve sevvânî 2 Yâ Men razekanî ve rabbânî 3 Yâ Men et'amenî ve sekânî 4 Yâ Men karrabenî ve ednânî 5 Yâ Men 'asamenî ve kefânî 6 Yâ Men hâfızanî ve kelânî 7 Yâ Men veffekanî ve hedânî 8 Yâ Men e'azzenî ve ağnânî 9 Yâ Men emâtenî ve ahyânî 10 Yâ Men ânesenî ve âvânî\nSübhâneke yâ lâ ilahe illâ ente'l-emâne'l-emâne neccinâ mine'n-nâr."],
-  ["66","1 Yâ Men yühikku'l-hakka bikelimâtih 2 Yâ Men lâ mü'akkibe lihukmih 3 Yâ Men lâ radde likadâih 4 Yâ Men yehûlü beyne'l-mer'i ve kalbih 5 Yâ Men yakbelü't-tevbete an 'ibâdih 6 Yâ Men lâ tenfe'u'ş-şefâ'atü illâ biiznih 7 Yâ Meni's-semâvâtü matviyyâtün biyemînih 8 Yâ Men hüve a'lemü bi men dalle 'an sebîlih 9 Yâ Men yüsebbihü'r-ra'dü bihâmdihî ve'l-melâiketü min hîfetih 10 Yâ Men yürsilü'r-riyâha büşran beyne yedey rahmetih\nSübhâneke yâ lâ ilahe illâ ente'l-emâne'l-emâne neccinâ mine'n-nâr."],
-  ["67","1 Yâ Men ce'ale'l-arda mihâdâ 2 Yâ Men ce'ale'l-cibâle evtâdâ 3 Yâ Men ce'ale'ş-şemse sirâcâ 4 Yâ Men ce'ale'l-kamera nûrâ 5 Yâ Men ce'ale'l-leyle libâsâ 6 Yâ Men ce'ale'n-nehâra me'âşâ 7 Yâ Men ce'ale'n-nevme sübâtâ 8 Yâ Men ce'ale's-semâe binâa 9 Yâ Men ce'ale'l-eşyâe ezvâcâ 10 Yâ Men ce'ale'n-nâra mirsâdâ\nSübhâneke yâ lâ ilahe illâ ente'l-emâne'l-emâne neccinâ mine'n-nâr."],
-  ["68","Ve es'elüke biesmâike: 1 Yâ Şefî' 2 Yâ Semî' 3 Yâ Râfi' 4 Yâ Meni' 5 Yâ Bedi' 6 Yâ Serî' 7 Yâ Beşîr 8 Yâ Nezîr 9 Yâ Kadîr 10 Yâ Muktedir\nSübhâneke yâ lâ ilahe illâ ente'l-emâne'l-emâne neccinâ mine'n-nâr."],
-  ["69","1 Yâ Hayyü kable külli hayy 2 Yâ Hayyü ba'de külli hayy 3 Yâ Hayyü'llezî lâ yüşbihühû şey' 4 Yâ Hayyü'llezî leyse kemişlihî hayy 5 Yâ Hayyü'llezî lâ yüşârikühû hayy 6 Yâ Hayyü'llezî lâ yahtâcü ilâ hayy 7 Yâ Hayyü'llezî yümîtü külle hayy 8 Yâ Hayyü'llezî yerzüku külle hayy 9 Yâ Hayyü'llezî yühyi'l-mevtâ 10 Yâ Hayyü'llezî lâ yemût\nSübhâneke yâ lâ ilahe illâ ente'l-emâne'l-emâne neccinâ mine'n-nâr."],
-  ["70","1 Yâ Men lehû zikrun lâ yünsâ 2 Yâ Men lehû nûrun lâ yutfâ 3 Yâ Men lehû şenâün lâ yuhsâ 4 Yâ Men lehû nü'ûtün lâ tüğayyer 5 Yâ Men lehû ni'amün lâ tü'add 6 Yâ Men lehû mülkün lâ yezûl 7 Yâ Men lehû celâlün lâ yükeyyef 8 Yâ Men lehû kadâün lâ yüradd 9 Yâ Men lehû sıfâtün lâ tübeddel 10 Yâ Men lehû kemâlün lâ yüdrak\nSübhâneke yâ lâ ilahe illâ ente'l-emâne'l-emâne neccinâ mine'n-nâr."],
-  ["71","1 Yâ Rabbe'l-'âlemîn 2 Yâ Mâlike yevmi'd-dîn 3 Yâ Men yühibbü's-sâbirîn 4 Yâ Men yühibbü't-tevvâbîn 5 Yâ Men yühibbü'l-mütetahhirîn 6 Yâ Men yühibbü'l-muhsinîn 7 Yâ Men hüve hayrü'n-nâsirîn 8 Yâ Men hüve hayrü'l-fâsilîn 9 Yâ Men hüve hayrü'ş-şâkirîn 10 Yâ Men hüve a'lemü bi'l-müfsidîn\nSübhâneke yâ lâ ilahe illâ ente'l-emâne'l-emâne neccinâ mine'n-nâr."],
-  ["72","Ve es'elüke biesmâike: 1 Yâ Mübdi 2 Yâ Mu'îd 3 Yâ Hâfız 4 Yâ Mühît 5 Yâ Hamîd 6 Yâ Mecîd 7 Yâ Mükît 8 Yâ Müğîs 9 Yâ Mü'izz 10 Yâ Müzill\nSübhâneke yâ lâ ilahe illâ ente'l-emâne'l-emâne neccinâ mine'n-nâr."],
-  ["73","1 Yâ Men hüve Ehadün bilâ didd 2 Yâ Men hüve Ferdün bilâ nidd 3 Yâ Men hüve Samedün bilâ 'ayb 4 Yâ Men hüve Vitrun bilâ şef' 5 Yâ Men hüve Rabbün bilâ vezîr 6 Yâ Men hüve Ğaniyyün bilâ fakr 7 Yâ Men hüve Sültânün bilâ 'azl 8 Yâ Men hüve Melîkün bilâ 'acz 9 Yâ Men hüve Mevcûdun bilâ mişl\nSübhâneke yâ lâ ilahe illâ ente'l-emâne'l-emâne neccinâ mine'n-nâr."],
-  ["74","1 Yâ Men hüve zikruhû şerafün li'z-zâkirîn 2 Yâ Men hüve şükruhû fevzün li'ş-şâkirîn 3 Yâ Men hüve hamdühû fahrun li'l-hâmidîn 4 Yâ Men hüve tâ'atühû necâtün li'l-mütî'în 5 Yâ Men hüve bâbühü meftûhun li't-tâlibîn 6 Yâ Men hüve sebîlühü vâdihun li'l-mü'minîn 7 Yâ Men hüve âyâtühü bürhânün li'n-nâzırîn 8 Yâ Men hüve kitâbühü tezkiratün li'l-mûkınîn 9 Yâ Men hüve 'afvühü melceün li'l-müznibîn 10 Yâ Men hüve rahmetühü karîbün li'l-muhsinîn\nSübhâneke yâ lâ ilahe illâ ente'l-emâne'l-emâne neccinâ mine'n-nâr."],
-  ["75","1 Yâ Men tebâreke'smüh 2 Yâ Men te'âlâ ceddüh 3 Yâ Men celle şenâüh 4 Yâ Men lâ ilahe ğayruh 5 Yâ Men tekaddeset esmâüh 6 Yâ Men yedûmü bekâüh 7 Yâ Meni'l-'azametü behâüh 8 Yâ Meni'l-kibriyâü ridâüh 9 Yâ Men lâ yühsâ âlâüh 10 Yâ Men lâ yü'addü na'mâüh\nSübhâneke yâ lâ ilahe illâ ente'l-emâne'l-emâne neccinâ mine'n-nâr."],
-  ["76","Ve es'elüke biesmâike: 1 Yâ Mü'în 2 Yâ Mübîn 3 Yâ Emîn 4 Yâ Mekîn 5 Yâ Metîn 6 Yâ Şedîd 7 Yâ Şehîd 8 Yâ Reşîd 9 Yâ Hamîd 10 Yâ Mecîd\nSübhâneke yâ lâ ilahe illâ ente'l-emâne'l-emâne neccinâ mine'n-nâr."],
-  ["77","1 Yâ Ze'l-arşi'l-mecîd 2 Yâ Ze'l-kavli's-sedîd 3 Yâ Ze'l-fadli'r-reşîd 4 Yâ Ze'l-batşi'ş-şedîd 5 Yâ Ze'l-va'di ve'l-va'îd 6 Yâ Karîben ğayra ba'îd 7 Yâ Men hüve'l-veliyyü'l-hamîd 8 Yâ Men hüve 'alâ külli şey'in şehîd 9 Yâ Men hüve leyse bizallâmin li'l-'abîd 10 Yâ Men hüve akrabü ileyhi min habli'l-verîd\nSübhâneke yâ lâ ilahe illâ ente'l-emâne'l-emâne neccinâ mine'n-nâr."],
-  ["78","1 Yâ Men lâ şerîke lehû velâ vezîr 2 Yâ Men lâ şebîhe lehû velâ nezîr 3 Yâ Hâlika'ş-şemsi ve'l-kameri'l-münîr 4 Yâ Muğniye'l-bâisi'l-fakîr 5 Yâ Râzika't-tıfli's-sağîr 6 Yâ Râhime'ş-şeyhi'l-kebîr 7 Yâ 'Ismete'l-hâifi'l-müstecîr 8 Yâ Men hüve bi'ibâdihî basîr 9 Yâ Men hüve bihavâyici'l-'ibâdi habîr 10 Yâ Men hüve 'alâ külli şey'in kadîr\nSübhâneke yâ lâ ilahe illâ ente'l-emâne'l-emâne neccinâ mine'n-nâr."],
-  ["79","1 Yâ Ze'l-cûdi ve'n-ni'âm 2 Yâ Ze'l-fadli ve'l-kerâm 3 Yâ Ze'l-be'si ve'n-nikâm 4 Yâ Hâlika'l-levhi ve'l-kalem 5 Yâ Bârie'z-zerri ve'n-nesem 6 Yâ Mülhime'l-'arabi ve'l-'acem 7 Yâ Kâşife'd-durri ve'l-elem 8 Yâ 'Alime's-sirri ve'l-himem 9 Yâ Men lehü'l-beytü ve'l-harâm 10 Yâ Men yahlüku'l-eşyâe mine'l-'adem\nSübhâneke yâ lâ ilahe illâ ente'l-emâne'l-emâne neccinâ mine'n-nâr."],
-  ["80","Ve es'elüke biesmâike: 1 Yâ 'Âdil 2 Yâ Kâbil 3 Yâ Fâdil 4 Yâ Fâ'il 5 Yâ Kâfil 6 Yâ Câ'il 7 Yâ Kâmil 8 Yâ Fâtır 9 Yâ Tâlib 10 Yâ Matlûb\nSübhâneke yâ lâ ilahe illâ ente'l-emâne'l-emâne neccinâ mine'n-nâr."],
-  ["81","1 Yâ Men en'ame bihavlih 2 Yâ Men ekrame bitavlih 3 Yâ Men 'âde bilütfıh 4 Yâ Men te'azzeze bikudratih 5 Yâ Men kaddera bihikmetih 6 Yâ Men hakeme bitedbîrih 7 Yâ Men debbera bi'ilmih 8 Yâ Men tecâveze bihılmih 9 Yâ Men denâ fî 'ulüvvih 10 Yâ Men 'alâ fî dünüvvih\nSübhâneke yâ lâ ilahe illâ ente'l-emâne'l-emâne neccinâ mine'n-nâr."],
-  ["82","1 Yâ Men yahlüku mâ yeşâ 2 Yâ Men yef'alü mâ yeşâ 3 Yâ Men yehdî men yeşâ 4 Yâ Men yüdillü men yeşâ 5 Yâ Men yağfiru limen yeşâ 6 Yâ Men yü'azzibü men yeşâ 7 Yâ Men yetûbü alâ men yeşâ 8 Yâ Men yüsavviru fi'l-erhâmi keyfe yeşâ 9 Yâ Men yezîdü fi'l-halki mâ yeşâ 10 Yâ Men yahtassu birahmetihî men yeşâ\nSübhâneke yâ lâ ilahe illâ ente'l-emâne'l-emâne neccinâ mine'n-nâr."],
-  ["83","1 Yâ Men lem yettehiz sâhibeten velâ veledâ 2 Yâ Men lâ yüşrikü fî hukmihî ehadâ 3 Yâ Men ce'ale li külli şey'in kadrâ 4 Yâ Men lem yezel rahîmâ 5 Yâ Câ'ile'l-melâiketi rusülâ 6 Yâ Men ce'ale fi's-semâi bürûcâ 7 Yâ Men ce'ale'l-arda karârâ 8 Yâ Men ce'ale mine'l-mâi beşerâ 9 Yâ Men ahsâ külle şey'in 'adedâ 10 Yâ Men ehâta bi külli şey'in 'ilmâ\nSübhâneke yâ lâ ilahe illâ ente'l-emâne'l-emâne neccinâ mine'n-nâr."],
-  ["84","Ve es'elüke biesmâike: 1 Yâ Ferd 2 Yâ Vitr 3 Yâ Ehad 4 Yâ Samed 5 Yâ Emced 6 Yâ E'azz 7 Yâ Ecel 8 Yâ Ehakk 9 Yâ Eberr 10 Yâ Ebed\nSübhâneke yâ lâ ilahe illâ ente'l-emâne'l-emâne neccinâ mine'n-nâr."],
-  ["85","1 Yâ Ma'rûfe men 'arafeh 2 Yâ Ma'bûde men 'abedeh 3 Yâ Meşkûre men şekerah 4 Yâ Mezkûre men zekerah 5 Yâ Mahmûde men hamideh 6 Yâ Mevcûde men talebeh 7 Yâ Mevsûfe men vahhadeh 8 Yâ Mahbûbe men ehabbeh 9 Yâ Merğûbe men erâdeh 10 Yâ Maksûde men enâbe ileyh\nSübhâneke yâ lâ ilahe illâ ente'l-emâne'l-emâne neccinâ mine'n-nâr."],
-  ["86","1 Yâ Men lâ mülke illâ mülküh 2 Yâ Men lâ yuhsı'l-'ibâdü şenâeh 3 Yâ Men lâ tesıfü'l-halâiku celâleh 4 Yâ Men lâ yüdrikü'l-ebsâru kemâleh 5 Yâ Men lâ yeblüğu'l-efhâmü sıfâtih 6 Yâ Men lâ yenâlü'l-efkâru kibriyâeh 7 Yâ Men lâ yühsinü'l-insânü nü'ûteh 8 Yâ Men lâ yeruddü'l-'ibâdü kadâeh 9 Yâ Men zahera fî külli şey'in âyâtüh\nSübhâneke yâ lâ ilahe illâ ente'l-emâne'l-emâne neccinâ mine'n-nâr."],
-  ["87","1 Yâ Habîbe'l-bekkâîn 2 Yâ Senede'l-mütevekkilîn 3 Yâ Hâdiye'l-mudillîn 4 Yâ Veliyye'l-mü'minîn 5 Yâ Enîse'z-zâkirîn 6 Yâ Akdara'l-kâdirîn 7 Yâ Ebsara'n-nâzırîn 8 Yâ A'leme'l-'âlimîn 9 Yâ Mefze'a'l-melhûfîn 10 Yâ Ensara'n-nâsirîn\nSübhâneke yâ lâ ilahe illâ ente'l-emâne'l-emâne neccinâ mine'n-nâr."],
-  ["88","Ve es'elüke biesmâike: 1 Yâ Mükrim 2 Yâ Mu'azzim 3 Yâ Mün'im 4 Yâ Mü'tî 5 Yâ Muğnî 6 Yâ Muhyî 7 Yâ Mübdî 8 Yâ Mürdî 9 Yâ Müncî 10 Yâ Muhsin\nSübhâneke yâ lâ ilahe illâ ente'l-emâne'l-emâne neccinâ mine'n-nâr."],
-  ["89","1 Yâ Kâfiye külli şey' 2 Yâ Kâimen 'alâ külli şey' 3 Yâ Men lâ yüşbihühû şey' 4 Yâ Men lâ yezîdü fî mülkihî şey' 5 Yâ Men lâ yenkusu min hazâinihî şey' 6 Yâ Men lâ yahfâ 'aleyhi şey' 7 Yâ Men leyse kemişlihî şey' 8 Yâ Men biyedihî mekâlîdü külli şey' 9 Yâ Men vesi'at rahmetühü külle şey' 10 Yâ Men yebkâ veyefnâ küllü şey'\nSübhâneke yâ lâ ilahe illâ ente'l-emâne'l-emâne neccinâ mine'n-nâr."],
-  ["90","1 Yâ Men lâ ya'lemü'l-ğaybe illâ hû 2 Yâ Men lâ yasrifü's-sûe illâ hû 3 Yâ Men lâ yüdebbiru'l-emra illâ hû 4 Yâ Men lâ yağfiru'z-zünûbe illâ hû 5 Yâ Men lâ yükallibü'l-kalbe illâ hû 6 Yâ Men lâ yahlüku'l-halka illâ hû 7 Yâ Men lâ yütimmü'n-ni'mete illâ hû 8 Yâ Men lâ yünezzilü'l-ğayşe illâ hû 9 Yâ Men lâ yuhyi'l-mevtâ illâ hû 10 Yâ Men lâ yuğnî 'ale't-tahkîki illâ hû\nSübhâneke yâ lâ ilahe illâ ente'l-emâne'l-emâne neccinâ mine'n-nâr."],
-  ["91","Ve es'elüke biesmâike: 1 Yâ Kâşif 2 Yâ Fâric 3 Yâ Fâtih 4 Yâ Nâsır 5 Yâ Dâmin 6 Yâ Âmir 7 Yâ Nâhî 8 Yâ Recâ 9 Yâ Mürtecâ 10 Yâ 'Azîme'r-recâ\nSübhâneke yâ lâ ilahe illâ ente'l-emâne'l-emâne hallisnâ mine'n-nâr."],
-  ["92","1 Yâ Mü'îne'd-du'afâ 2 Yâ Kenze'l-fükarâ 3 Yâ Sâhibe'l-ğurabâ 4 Yâ Nâsıra'l-evliyâ 5 Yâ Kâhira'l-a'dâ 6 Yâ Râfi'a's-semâ 7 Yâ Kâşife'l-belâ 8 Yâ Enîse'l-evliyâ 9 Yâ Habîbe'l-etkıyâ 10 Yâ İlâhe'l-ağniyâ\nSübhâneke yâ lâ ilahe illâ ente'l-emâne'l-emâne hallisnâ mine'n-nâr."],
-  ["93","1 Yâ Evvele külli şey'in ve âhirah 2 Yâ İlahe külli şey'in ve sâni'ah 3 Yâ Râzika külli şey'in ve hâlikah 4 Yâ Fâtıra külli şey'in ve melîkeh 5 Yâ Kâbida külli şey'in ve bâsiteh 6 Yâ Mübdie külli şey'in ve mü'îdeh 7 Yâ Müsebbibe külli şey'in ve mükaddirah 8 Yâ Mürabbiye külli şey'in ve müdebbirah 9 Yâ Mükevvira külli şey'in ve muhavvileh 10 Yâ Muhyiye külli şey'in ve mümîteh\nSübhâneke yâ lâ ilahe illâ ente'l-emâne'l-emâne hallisnâ mine'n-nâr."],
-  ["94","1 Yâ Hayra zâkirîn ve mezkûr 2 Yâ Hayra şâkirîn ve meşkûr 3 Yâ Hayra hâmidin ve mahmûd 4 Yâ Hayra şâhidin ve meşhûd 5 Yâ Hayra dâ'in ve med'uvv 6 Yâ Hayra mücîbin ve mücâb 7 Yâ Hayra münişin ve enîs 8 Yâ Hayra sâhibin ve celîs 9 Yâ Hayra maksûdin ve matlûb 10 Yâ Hayra habîbin ve mahbûb\nSübhâneke yâ lâ ilahe illâ ente'l-emâne'l-emâne hallisnâ mine'n-nâr."],
-  ["95","1 Yâ Men hüve limen de'âhü mücîb 2 Yâ Men hüve limen etâ'ahû habîb 3 Yâ Men hüve limen ehabbehû karîb 4 Yâ Men hüve bimen erâdehû 'alîm 5 Yâ Men hüve limen recâhü kerîm 6 Yâ Men hüve bimen 'asâhü halîm 7 Yâ Men hüve fî hilmihî hakîm 8 Yâ Men hüve fî hukmihî 'azîm 9 Yâ Men hüve fî 'azametihî rahîm 10 Yâ Men hüve fî ihsânihî kadîm\nSübhâneke yâ lâ ilahe illâ ente'l-emâne'l-emâne hallisnâ mine'n-nâr."],
-  ["96","Ve es'elüke biesmâike: 1 Yâ Müsebbib 2 Yâ Mukarrib 3 Yâ Mü'akkib 4 Yâ Mukallib 5 Yâ Mükaddir 6 Yâ Mürattib 7 Yâ Mürağğib 8 Yâ Müzekkir 9 Yâ Mükevvin 10 Yâ Mütekebbir\nSübhâneke yâ lâ ilahe illâ ente'l-emâne'l-emâne hallisnâ mine'n-nâr."],
-  ["97","1 Yâ Men lâ yüşğilühû sem'un an sem' 2 Yâ Men lâ yemne'uhû fi'lün an fi'l 3 Yâ Men lâ yülhîhi kavlün an kavl 4 Yâ Men lâ yüğallituhû süâlün 'an süâl 5 Yâ Men lâ yübrimühû ilhâhu'l-mulıhhîn 6 Yâ Men şeraha bi'l-islâmi sudûra'l-mü'minîn 7 Yâ Men etâbe bizikrihî kulûbe'l-muhbitîn 8 Yâ Men lâ yeğibü 'an kulûbi'l-müştâkîn 9 Yâ Men hüve ğâyetü mürâdi'l-mürîdîn 10 Yâ Men lâ yahfâ 'aleyhi şey'ün fi'l-'âlemîn\nSübhâneke yâ lâ ilahe illâ ente'l-emâne'l-emâne hallisnâ mine'n-nâr."],
-  ["98","1 Yâ Men hüve 'ilmühü sâbık 2 Yâ Men hüve va'dühü sâdık 3 Yâ Men hüve lütfühü zâhir 4 Yâ Men hüve emruhü ğâlib 5 Yâ Men hüve kitâbühü muhkem 6 Yâ Men hüve kadâühü kâin 7 Yâ Men hüve kur'ânühü mecîd 8 Yâ Men hüve mülküh kadîm 9 Yâ Men hüve fadlühü mükîm 10 Yâ Men hüve 'arşühü 'azîm\nSübhâneke yâ lâ ilahe illâ ente'l-emâne'l-emâne hallisnâ mine'n-nâr."],
-  ["99","1 Yâ Rabbe'l-erbâb 2 Yâ Müfettiha'l-ebvâb 3 Yâ Müsebbibe'l-esbâb 4 Yâ Mu'tıye's-sevâb 5 Yâ Mülhime's-savâb 6 Yâ Münşie's-sehâb 7 Yâ Şedîde'l-'ikâb 8 Yâ Serî'a'l-hisâb 9 Yâ Men lehü'l-iyâb 10 Yâ Ğafûru yâ Tevvâb\nSübhâneke yâ lâ ilahe illâ ente'l-emâne'l-emâne hallisnâ mine'n-nâr."],
-  ["100","Ve es'elüke biesmâike: 1 Yâ Rabbenâ 2 Yâ İlâhenâ 3 Yâ Seyyidenâ 4 Yâ Mevlânâ 5 Yâ Nâsıranâ 6 Yâ Hâfızanâ 7 Yâ Kâdiranâ 8 Yâ Râzıkanâ 9 Yâ Delîlenâ 10 Yâ Muğîsenâ\nSübhâneke yâ lâ ilahe illâ ente'l-emâne'l-emâne hallisnâ mine'n-nâr.\n\nAllâhümme Rabbenâ * hallisnâ * ve ecirnâ * ve neccinâ mine'n-nâr * ve 'âfinâ va'fü 'annâ ve edhilne'l-cennete dâra kudsike me'a'l-ebrâr * bi'afvike Yâ Mücîr * bi fadlike Yâ Ğaffâr."]
+/* ───────────────────────────────────────────
+   FETIH SURESI — 5 sayfa
+─────────────────────────────────────────── */
+const FETIH_PAGES=[
+  ["1. Sayfa (1-7. Ayet)",
+`Bismillâhirrahmanirrahim.
+
+1. İnnâ fetahnâ leke fethan mubînâ.
+2. Li yagfira lekallâhu mâ tekaddeme min zenbike ve mâ teahhara ve yutimme ni'metehu aleyke ve yehdiyeke sırâtan mustekîmâ.
+3. Ve yansurakallâhu nasran azîzâ.
+4. Huvellezî enzeles sekînete fî kulûbil mu'minîne li yezdâdû îmânen mea îmânihim, ve lillâhi cunûdus semâvâti vel ardı, ve kânallâhu alîmen hakîmâ.
+5. Li yudhilel mu'minîne vel mu'minâti cennâtin tecrî min tahtihâl enhâru hâlidîne fîhâ ve yukeffira anhum seyyiâtihim, ve kâne zâlike indallâhi fevzen azîmâ.
+6. Ve yuazzibel munâfikîne vel munâfikâti vel muşrikîne vel muşrikâtiz zânnîne billâhi zannes sev'i aleyhim dâiratus sev'i, ve gadiballâhu aleyhim ve leanehum ve eadde lehum cehenneme, ve sâet masîrâ.
+7. Ve lillâhi cunûdus semâvâti vel ardı, ve kânallâhu azîzen hakîmâ.`],
+
+  ["2. Sayfa (8-14. Ayet)",
+`8. İnnâ erselnâke şâhiden ve mubeşşiran ve nezîrâ.
+9. Li tu'minû billâhi ve resûlihî ve tuazzirûhu ve tuvakkırûhu, ve tusebbihûhu bukraten ve asîlâ.
+10. İnnellezîne yubâyiûneke innemâ yubâyiûnallâhe, yedullâhi fevka eydîhim, fe men nekese fe innemâ yenkusu alâ nefsihî, ve men evfâ bi mâ âhede aleyhullâhe fe se yu'tîhi ecran azîmâ.
+11. Se yekûlu lekel muhallefûne minel a'râbi şegaletnâ emvâlunâ ve ehlûnâ festagfir lenâ, yekûlûne bi elsinetihim mâ leyse fî kulûbihim, kul fe men yemliku lekum minallâhi şey'en in erâde bikum darran ev erâde bikum nef'â, bel kânallâhu bi mâ ta'melûne habîrâ.
+12. Bel zanentum en len yenkaliber resûlu vel mu'minûne ilâ ehlîhim ebeden ve zuyyine zâlike fî kulûbikum ve zanentum zannes sev'i ve kuntum kavmen bûrâ.
+13. Ve men lem yu'min billâhi ve resûlihî fe innâ a'tednâ lil kâfirîne saîrâ.
+14. Ve lillâhi mulkus semâvâti vel ardı, yagfiru li men yeşâu ve yuazzibu men yeşâu, ve kânallahu gafûran rahîmâ.`],
+
+  ["3. Sayfa (15-21. Ayet)",
+`15. Se yekûlul muhallefûne izântalaktum ilâ megânime li te'huzûhâ zerûnâ nettebi'kum, yurîdûne en yubeddilû kelâmallâhi, kul len tettebiûnâ kezâlikum kâlallâhu min kablu, fe se yekûlûne bel tahsudûnenâ, bel kânû lâ yefkahûne illâ kalîlâ.
+16. Kul lil muhallefîne minel a'râbi se tud'avne ilâ kavmin ulî be'sin şedîdin tukâtilûnehum ev yuslimûne, fe in tutîû yu'tikumullâhu ecran hasenâ, ve in tetevellev kemâ tevelleytum min kablu yuazzibkum azâben elîmâ.
+17. Leyse alâl a'mâ haracun ve lâ alâl a'raci haracun ve lâ alâl marîdı haracun, ve men yutııllahe ve resûlehu yudhılhu cennâtin tecrî min tahtihâl enhâru, ve men yetevelle yuazzibhu azâben elîmâ.
+18. Lekad radiyallâhu anil mu'minîne iz yubâyiûneke tahteş şecerati fe alime mâ fî kulûbihim fe enzeles sekînete aleyhim ve esâbehum fethan karîbâ.
+19. Ve megânime kesîraten ye'huzûnehâ, ve kânallâhu azîzen hakîmâ.
+20. Vaadekumullâhu megânime kesîraten te'huzûnehâ fe accele lekum hâzihî ve keffe eydiyen nâsi ankum, ve li tekûne âyeten lil mu'minîne ve yehdiyekum sırâtan mustakîmâ.
+21. Ve uhrâ lem takdirû aleyhâ kad ehâtallâhu bihâ, ve kânallâhu alâ kulli şey'in kadîrâ.`],
+
+  ["4. Sayfa (22-27. Ayet)",
+`22. Ve lev kâtelekumullezîne keferû le vellevûl edbâra summe lâ yecidûne velîyyen ve lâ nasîrâ.
+23. Sunnetallâhilletî kad halet min kablu, ve len tecide li sunnetillâhi tebdîlâ.
+24. Ve huvellezî keffe eydiyehum ankum ve eydiyekum anhum bi batni mekkete min ba'di en azferakum aleyhim ve kânallâhu bi mâ ta'melûne basîrâ.
+25. Humullezîne keferû ve saddûkum anil mescidil harâmi vel hedye ma'kûfen en yebluga mahıllehu, ve lev lâ ricâlun mu'minûne ve nisâun mu'minâtun lem ta'lemûhum en tetaûhum fe tusîbekum minhum maarratun bi gayri ilmin, li yudhılallâhu fî rahmetihî men yeşâu, lev tezeyyelû le azzebnâllezîne keferû minhum azâben elîmâ.
+26. İz cealellezîne keferû fî kulûbihimul hamiyyete hamiyyetel câhiliyyeti fe enzelallâhu sekînetehu alâ resûlihî ve alel mu'minîne ve elzemehum kelimetet takvâ ve kânû ehakka bihâ ve ehlehâ ve kânallâhu bi kulli şey'in alîmâ.
+27. Lekad sadakallâhu resûlehur ru'yâ bil hakkı, le tedhulunnel mescidel harâme inşâallâhu âminîne muhallikîne ruûsekum ve mukassırîne lâ tehâfûne, fe alime mâ lem ta'lemû fe ceale min dûni zâlike fethan karîbâ.`],
+
+  ["5. Sayfa (28-29. Ayet)",
+`28. Huvellezî ersele resûlehu bil hudâ ve dînil hakkı li yuzhirahu alâd dîni kullihî, ve kefâ billâhi şehîdâ.
+
+29. Muhammedun resûlullâhi, vellezîne meahû eşiddâu alâl kuffâri ruhamâu beynehum terâhum rukkean succeden yebtegûne fadlen minallâhi ve rıdvânen sîmâhum fî vucûhihim min eseris sucûdi, zâlike meseluhum fit tevrâti, ve meseluhum fil incîli, ke zer'in ahrace şat'ehu fe âzerehu festagleza festevâ alâ sûkıhî yu'cibuz zurrâa, li yagîza bihimul kuffâra, vaadallâhullezîne âmenû ve amilûs sâlihâti minhum magfiraten ve ecren azîmâ.
+
+— Âmîn —`]
 ];
 
-function load(){try{const r=localStorage.getItem(KEY);return r?JSON.parse(r):null}catch{return null}}
-function save(s){localStorage.setItem(KEY,JSON.stringify(s))}
+/* ───────────────────────────────────────────
+   CEVŞEN-İ KEBİR — 100 bölüm
+─────────────────────────────────────────── */
+const CEVSEN=[
+["1","Allâhümme innî es'elüke biesmâike:\n1 Yâ Allah 2 Yâ Rahman 3 Yâ Rahîm 4 Yâ 'Alîm 5 Yâ Halîm 6 Yâ Azîm 7 Yâ Hakîm 8 Yâ Kadîm 9 Yâ Mukîm 10 Yâ Kerîm\nSübhâneke yâ lâ ilahe illâ ente'l-emâne'l-emâne hallisnâ mine'n-nâr."],
+["2","1 Yâ Seyyide's-sâdât 2 Yâ Mucîbe'd-de'avât 3 Yâ Veliyye'l-hasenât 4 Yâ Refî'a'd-deracât 5 Yâ Azîme'l-berakât 6 Yâ Ğafira'l-hatîât 7 Yâ Dâfi'a'l-beliyyât 8 Yâ Sâmi'a'l-esvât 9 Yâ Mu'tıye'l-mesûlât 10 Yâ 'Alime's-sirri ve'l-hafiyyât\nSübhâneke lâ ilahe illâ ente'l-emâne'l-emâne hallisnâ mine'n-nâr."],
+["3","1 Yâ Hayra'l-ğâfirîn 2 Yâ Hayra'n-nâsırîn 3 Yâ Hayra'l-hâkimîn 4 Yâ Hayra'l-fâtihîn 5 Yâ Hayra'z-zâkirîn 6 Yâ Hayra'l-vârişîn 7 Yâ Hayra'l-hâmidîn 8 Yâ Hayra'r-râzikîn 9 Yâ Hayra'l-fâsilîn 10 Yâ Hayra'l-muhsinîn\nSübhâneke lâ ilahe illâ ente'l-emâne'l-emâne hallisnâ mine'n-nâr."],
+["4","1 Yâ Men lehü'l-'izzü ve'l-cemâl 2 Yâ Men lehü'l-mülkü ve'l-celâl 3 Yâ Men lehü'l-kudretü ve'l-kemâl 4 Yâ Men hüve'l-kebîru'l-müte'âl 5 Yâ Men hüve şedîdü'l-mihâl 6 Yâ Men hüve şedîdü'l-'ikâb 7 Yâ Men hüve serî'u'l-hisâb 8 Yâ Men hüve 'indehû hüsnü's-şevâb 9 Yâ Men hüve 'indehû ümmü'l-kitâb 10 Yâ Men hüve yünşiü's-sehâbe's-sikâl\nSübhâneke lâ ilahe illâ ente'l-emâne'l-emâne hallisnâ mine'n-nâr."],
+["5","Ve es'elüke biesmâike:\n1 Yâ Hannân 2 Yâ Mennân 3 Yâ Deyyân 4 Yâ Ğufrân 5 Yâ Bürhân 6 Yâ Sultân 7 Yâ Sübhân 8 Yâ Müste'ân 9 Yâ Ze'l-menni ve'l-beyân 10 Yâ Ze'l-emân\nSübhâneke lâ ilahe illâ ente'l-emâne'l-emâne hallisnâ mine'n-nâr."],
+["6","1 Yâ Men tevâda'a küllü şey'in li'azametih 2 Yâ Meni'stesleme küllü şey'in likudratih 3 Yâ Men zelle küllü şey'in li'izzetih 4 Yâ Men hada'a küllü şey'in liheybetih 5 Yâ Meni'nkâde küllü şey'in limülketih 6 Yâ Men dâne küllü şey'in min mehâfetih 7 Yâ Meni'nşakkati'l-cibâlü min haşyetih 8 Yâ Men kâmeti's-semâvâtü bi emrih 9 Yâ Meni'stekarrati'l-ardu bi iznih 10 Yâ Men lâ yâ'tedî 'alâ ehli memleketih\nSübhâneke lâ ilahe illâ ente'l-emâne'l-emâne hallisnâ mine'n-nâr."],
+["7","1 Yâ Ğâfıra'l-hatâyâ 2 Yâ Kâşife'l-belâyâ 3 Yâ Müntehe'r-racâyâ 4 Yâ Müczile'l-'atâyâ 5 Yâ Vâsi'a'l-hedâyâ 6 Yâ Râzika'l-berâyâ 7 Yâ Kâdiya'l-münâyâ 8 Yâ Sâmi'a'ş-şekâyâ 9 Yâ Bâ'ise's-serâyâ 10 Yâ Mutlika'l-üsârâ\nSübhâneke lâ ilahe illâ ente'l-emâne'l-emâne hallisnâ mine'n-nâr."],
+["8","1 Yâ Ze'l-hamdi ve's-senâ 2 Yâ Ze'l-mecdi ve's-senâ 3 Yâ Ze'l-fahri ve'l-behâ 4 Yâ Ze'l-'ahdi ve'l-vefâ 5 Yâ Ze'l-'afvi ve'r-ridâ 6 Yâ Ze'l-menni ve'l-'atâ 7 Yâ Ze'l-fasli ve'l-kadâ 8 Yâ Ze'l-'izzeti ve'l-bekâ 9 Yâ Ze'l-cûdi ve'n-na'mâ 10 Yâ Ze'l-fadli ve'l-'âlâ\nSübhâneke lâ ilahe illâ ente'l-emâne'l-emâne hallisnâ mine'n-nâr."],
+["9","Ve es'elüke biesmâike:\n1 Yâ Mâni' 2 Yâ Dâfi' 3 Yâ Nâfi' 4 Yâ Sami' 5 Yâ Râfi' 6 Yâ Sâni' 7 Yâ Şâfi' 8 Yâ Câmi' 9 Yâ Vâsi' 10 Yâ Mûsi'\nSübhâneke lâ ilahe illâ ente'l-emâne'l-emâne hallisnâ mine'n-nâr."],
+["10","1 Yâ Sâni'a külli masnû' 2 Yâ Hâlika külli mahlûk 3 Yâ Râzika külli merzûk 4 Yâ Mâlike külli memlûk 5 Yâ Kâşife külli mekrûb 6 Yâ Fârice külli mağmum 7 Yâ Râhime külli merhum 8 Yâ Nasıra külli mahzûl 9 Yâ Sâtira külli mâ'yûb 10 Yâ Melcee külli mazlum\nSübhâneke lâ ilahe illâ ente'l-emâne'l-emâne hallisnâ mine'n-nâr."],
+["11","1 Yâ 'Uddetî 'inde şiddeti 2 Yâ Recâî 'inde müsîbeti 3 Yâ Mûnisî 'inde vahşeti 4 Yâ Sâhibî 'inde gurbeti 5 Yâ Veliyyî 'inde ni'metî 6 Yâ Kâşifi 'inde kürbetî 7 Yâ Ğıyâşî 'inde'f-tikârî 8 Yâ Melceî 'inde'd-dırârî 9 Yâ Mu'înî 'inde feze'î 10 Yâ Delîlî 'inde hayratî\nSübhâneke lâ ilahe illâ ente'l-emâne'l-emâne hallisnâ mine'n-nâr."],
+["12","1 Yâ 'Allâme'l-ğuyûb 2 Yâ Ğaffâra'z-zünûb 3 Yâ Settâra'l-'uyûb 4 Yâ Keşşâfe'l-kürûb 5 Yâ Mukallibe'l-kulûb 6 Yâ Müzeyyine'l-kulûb 7 Yâ Münevvira'l-kulûb 8 Yâ Tabîbe'l-kulûb 9 Yâ Habîbe'l-kulûb 10 Yâ Enîse'l-kulûb\nSübhâneke lâ ilahe illâ ente'l-emâne'l-emâne hallisnâ mine'n-nâr."],
+["13","Ve es'elüke biesmâike:\n1 Yâ Celîl 2 Yâ Cemîl 3 Yâ Vekîl 4 Yâ Kefil 5 Yâ Delîl 6 Yâ Mükîl 7 Yâ Habîr 8 Yâ Latîf 9 Yâ 'Azîz 10 Yâ Melîk\nSübhâneke lâ ilahe illâ ente'l-emâne'l-emâne hallisnâ mine'n-nâr."],
+["14","1 Yâ Delîle'l-mütehayyirîn 2 Yâ Ğıyâşe'l-müsteğîşîn 3 Yâ Sarîha'l-müstesrihîn 4 Yâ Câra'l-müstecîrîn 5 Yâ Melcee'l-'âsîn 6 Yâ Ğâfıra'l-müznibîn 7 Yâ Emâne'l-hâifîn 8 Yâ Râhime'l-mesâkîn 9 Yâ Enîse'l-müstevhişîn 10 Yâ Mücîbe da'veti'l-müdtarrîn\nSübhâneke lâ ilahe illâ ente'l-emâne'l-emâne hallisnâ mine'n-nâr."],
+["15","1 Yâ Ze'l-cûdi ve'l-ihsân 2 Yâ Ze'l-fadli ve'l-imtinân 3 Yâ Ze'l-emni ve'l-emân 4 Yâ Ze'l-kudsi ve's-sübhân 5 Yâ Ze'l-hikmeti ve'l-beyân 6 Yâ Ze'r-rahmeti ve'r-rıdvân 7 Yâ Ze'l-hucceti ve'l-bürhân 8 Yâ Ze'l-'azameti ve's-sultân 9 Yâ Ze'l-'afvi ve'l-ğufrân 10 Yâ Ze'r-ra'feti ve'l-müste'ân\nSübhâneke lâ ilahe illâ ente'l-emâne'l-emâne hallisnâ mine'n-nâr."],
+["16","1 Yâ Men hüve Rabbü külli şey' 2 Yâ Men hüve ilâhü külli şey' 3 Yâ Men hüve Hâliku külli şey' 4 Yâ Men hüve fevka külli şey' 5 Yâ Men hüve kable külli şey' 6 Yâ Men hüve ba'de külli şey' 7 Yâ Men hüve 'Alimü külli şey' 8 Yâ Men hüve Kâdiru külli şey' 9 Yâ Men hüve Sâni'u külli şey' 10 Yâ Men hüve yebkâ veyefnâ küllü şey'\nSübhâneke lâ ilahe illâ ente'l-emâne'l-emâne hallisnâ mine'n-nâr."],
+["17","Ve es'elüke biesmâike:\n1 Yâ Mü'min 2 Yâ Müheymin 3 Yâ Mükevvin 4 Yâ Mülakkin 5 Yâ Mübeyyin 6 Yâ Mühevvin 7 Yâ Müzeyyin 8 Yâ Mu'azzim 9 Yâ Mu'avvin 10 Yâ Mülevvin\nSübhâneke lâ ilahe illâ ente'l-emâne'l-emâne hallisnâ mine'n-nâr."],
+["18","1 Yâ men hüve fî mülkihî mükîm 2 Yâ men hüve fî celâlihî 'azîm 3 Yâ men hüve fî sültânihî kadîm 4 Yâ men hüve 'alâ 'abdihî rahîm 5 Yâ men hüve bikülli şey'in 'alîm 6 Yâ men hüve limen cefâhu halîm 7 Yâ men hüve limen teraccâhü kerîm 8 Yâ men hüve fî mekâdîrihî hakîm 9 Yâ men hüve fi hükmihî latîf 10 Yâ men hüve fî lütfihî kadîr\nSübhâneke yâ lâ ilahe illâ ente'l-emâne'l-emâne hallisnâ mine'n-nâr."],
+["19","1 Yâ men lâ yürcâ illâ fadlüh 2 Yâ men lâ yühâfü illâ 'adlüh 3 Yâ men lâ yüntezaru illâ birruh 4 Yâ men lâ yüs'elü illâ 'afvüh 5 Yâ men lâ yedûmü illâ mülküh 6 Yâ men lâ sültâne illâ sültânüh 7 Yâ men lâ bürhâne illâ bürhânüh 8 Yâ men vesiat külle şey'in rahmetüh 9 Yâ men sebekat rahmetühû 'alâ ğadabih 10 Yâ men ehâta bi külli şey'in 'ilmüh\nSübhâneke yâ lâ ilahe illâ ente'l-emâne'l-emâne hallisnâ mine'n-nâr."],
+["20","1 Yâ Fârice'l-hemm 2 Yâ Kâşife'l-ğamm 3 Yâ Ğâfire'z-zenb 4 Yâ Kâbile't-tevb 5 Yâ Hâlika'l-halk 6 Yâ Sâdika'l-va'd 7 Yâ Râzika't-tıfl 8 Yâ Mûfiye'l-'ahd 9 Yâ 'Alime's-sirr 10 Yâ Fâlika'l-habb\nSübhâneke yâ lâ ilahe illâ ente'l-emâne'l-emâne hallisnâ mine'n-nâr."],
+["21","Ve es'elüke biesmâike:\n1 Yâ 'Aliyy 2 Yâ Vefiyy 3 Yâ Veliyy 4 Yâ Ğaniyy 5 Yâ Meliyy 6 Yâ Zekiyy 7 Yâ Radiyy 8 Yâ Bediyy 9 Yâ Hafiyy 10 Yâ Kaviyy\nSübhâneke yâ lâ ilahe illâ ente'l-emâne'l-emâne hallisnâ mine'n-nâr."],
+["22","1 Yâ Men azhera'l-cemîl 2 Yâ Men setera 'ale'l-kabîh 3 Yâ Men lâ yüâhizü bi'l-cerîmeh 4 Yâ Men lâ yehtikü's-sitr 5 Yâ 'Azîme'l-'afv 6 Yâ Hasene't-tecâvüz 7 Yâ Vâsi'a'l-mağfireh 8 Yâ Bâsita'l-yedeyni bi'r-rahmeh 9 Yâ Sâhibe külli necvâ 10 Yâ Müntehâ külli şekva\nSübhâneke yâ lâ ilahe illâ ente'l-emâne'l-emâne hallisnâ mine'n-nâr."],
+["23","1 Yâ Ze'n-ni'meti's-sâbiğah 2 Yâ Ze'r-rahmeti'l-vâsi'ah 3 Yâ Ze'l-hikmeti'l-bâliğah 4 Yâ Ze'l-kudreti'l-kâmileh 5 Yâ Ze'l-hucceti'l-kâtı'ah 6 Yâ Ze'l-kerâmeti'z-zâhirah 7 Yâ Ze's-sıfati'l-'âliyeh 8 Yâ Ze'l-'izzeti'd-dâimeh 9 Yâ Ze'l-kuvveti'l-metîneh 10 Yâ Ze'l-minneti's-sâbikah\nSübhâneke yâ lâ ilahe illâ ente'l-emâne'l-emâne hallisnâ mine'n-nâr."],
+["24","1 Yâ Ahkeme'l-hâkimîn 2 Yâ 'Adele'l-'âdilîn 3 Yâ Asdeka's-sâdikîn 4 Yâ Azhera'z-zâhirîn 5 Yâ Athera't-tâhirîn 6 Yâ Ahsene'l-hâlikîn 7 Yâ Esra'a'l-hâsibîn 8 Yâ Esme'a's-sâmi'în 9 Yâ Ekrame'l-ekramîn 10 Yâ Erhame'r-râhimîn 11 Yâ Eşfe'a'ş-şâfi'în\nSübhâneke yâ lâ ilahe illâ ente'l-emâne'l-emâne hallisnâ mine'n-nâr."],
+["25","1 Yâ Bedi'a's-semâvât 2 Yâ Câ'ile'z-zulümât 3 Yâ 'Alime'l-hafiyyât 4 Yâ Râhime'l-'aberât 5 Yâ Sâtira'l-'averât 6 Yâ Kâşife'l-beliyyât 7 Yâ Muhyiye'l-emvât 8 Yâ Dâ'ife'l-hasenât 9 Yâ Münzile'l-berakât 10 Yâ Şedîde'n-nekamât\nSübhâneke yâ lâ ilahe illâ ente'l-emâne'l-emâne hallisnâ mine'n-nâr."],
+["26","Ve es'elüke biesmâike:\n1 Yâ Müsavvir 2 Yâ Mükaddir 3 Yâ Mütahhir 4 Yâ Münevvir 5 Yâ Mükaddim 6 Yâ Müahhir 7 Yâ Müyessir 8 Yâ Münzir 9 Yâ Mübeşşir 10 Yâ Müdebbir\nSübhâneke yâ lâ ilahe illâ ente'l-emâne'l-emâne hallisnâ mine'n-nâr."],
+["27","1 Yâ Rabbe'l-beyti'l-harâm 2 Yâ Rabbe'ş-şehri'l-harâm 3 Yâ Rabbe'l-mescidi'l-harâm 4 Yâ Rabbe'l-beledi'l-harâm 5 Yâ Rabbe'r-rukni ve'l-mekâm 6 Yâ Rabbe'l-meş'ari'l-harâm 7 Yâ Rabbe'l-hılli ve'l-harâm 8 Yâ Rabbe'n-nûri ve'z-zalâm 9 Yâ Rabbe't-tahiyyeti ve's-selâm 10 Yâ Rabbe'l-celâli ve'l-ikrâm\nSübhâneke yâ lâ ilahe illâ ente'l-emâne'l-emâne hallisnâ mine'n-nâr."],
+["28","1 Yâ 'İmâde men lâ 'imâde leh 2 Yâ Senede men lâ senede leh 3 Yâ Zührâ men lâ zührâ leh 4 Yâ Ğıyâşe men lâ ğıyâşe leh 5 Yâ Hırze men lâ hırze leh 6 Yâ Fahra men lâ fahra leh 7 Yâ 'İzze men lâ 'izze leh 8 Yâ Mu'îne men lâ mu'îne leh 9 Yâ Enîse men lâ enîse leh 10 Yâ Ğunyete men lâ ğunyete leh\nSübhâneke yâ lâ ilahe illâ ente'l-emâne'l-emâne hallisnâ mine'n-nâr."],
+["29","Ve es'elüke biesmâike:\n1 Yâ Kâim 2 Yâ Dâim 3 Yâ Râhim 4 Yâ Hâkim 5 Yâ 'Âlim 6 Yâ 'Âsım 7 Yâ Kâsım 8 Yâ Sâlim 9 Yâ Kâbid 10 Yâ Bâsit\nSübhâneke yâ lâ ilahe illâ ente'l-emâne'l-emâne hallisnâ mine'n-nâr."],
+["30","1 Yâ 'Âsıme meni'sta'sameh 2 Yâ Râhime meni'sterhameh 3 Yâ Nasıra meni'stensarah 4 Yâ Hâfıza meni'stahfezah 5 Yâ Mükrime meni'stekrameh 6 Yâ Mürşide meni'sterşedeh 7 Yâ Mu'îne meni'ste'âneh 8 Yâ Muğîşe meni'steğâşeh 9 Yâ Sarîha meni'stesrahah 10 Yâ Ğâfıra meni'stağferah\nSübhâneke yâ lâ ilahe illâ ente'l-emâne'l-emâne hallisnâ mine'n-nâr."],
+["31","1 Yâ Kerîme's-saftı 2 Yâ 'Azîme'l-menn 3 Yâ Kesîra'l-hayr 4 Yâ Kadîme'l-fadl 5 Yâ Latîfe's-sun' 6 Yâ Dâime'l-lütf 7 Yâ Nâfise'l-kerb 8 Yâ Kâşife'd-durr 9 Yâ Mâlike'l-mülk 10 Yâ Kâdiyen bi'l-hakk\nSübhâneke yâ lâ ilahe illâ ente'l-emâne'l-emâne ecirnâ mine'n-nâr."],
+["32","1 Yâ 'Azîzen lâ yüdâm 2 Yâ Latîfen lâ yürâm 3 Yâ Rakîben lâ yenâm 4 Yâ Kâimen lâ yefût 5 Yâ Hayyen lâ yemût 6 Yâ Meliken lâ yezûl 7 Yâ Bâkiyen lâ yefnâ 8 Yâ 'Alimen lâ yechel 9 Yâ Sameden lâ yüt'âm 10 Yâ Kaviyyen lâ yüd'af\nSübhâneke yâ lâ ilahe illâ ente'l-emâne'l-emâne ecirnâ mine'n-nâr."],
+["33","Ve es'elüke biesmâike:\n1 Yâ Vâhid 2 Yâ Vâcid 3 Yâ Şâhid 4 Yâ Mâcid 5 Yâ Râşid 6 Yâ Bâis 7 Yâ Vâris 8 Yâ Dârr 9 Yâ Nâfi' 10 Yâ Hâdî\nSübhâneke yâ lâ ilahe illâ ente'l-emâne'l-emâne ecirnâ mine'n-nâr."],
+["34","1 Yâ A'zamü min külli 'azîm 2 Yâ Ekramü min külli kerîm 3 Yâ Erhamü min külli rahîm 4 Yâ Ahkemü min külli hakîm 5 Yâ A'lemü min külli 'alîm 6 Yâ Akdemü min külli kadîm 7 Yâ Ekberu min külli kebîr 8 Yâ Ecellü min külli celîl 9 Yâ E'azzü min külli 'azîz 10 Yâ Eltafü min külli latîf\nSübhâneke yâ lâ ilahe illâ ente'l-emâne'l-emâne ecirnâ mine'n-nâr."],
+["35","1 Yâ Men hüve fî 'ahdihî vefiyy 2 Yâ Men hüve fî vefaihî kaviyy 3 Yâ Men hüve fî kuvvetihî 'aliyy 4 Yâ Men hüve fî 'ulüvvihî karîb 5 Yâ Men hüve fî kurbihî latîf 6 Yâ Men hüve fî lütfıhî şerîf 7 Yâ Men hüve fî şerefihî 'azîz 8 Yâ Men hüve fî 'izzetihî 'azîm 9 Yâ Men hüve fî 'azametihî mecîd 10 Yâ Men hüve fî mecdihî hamîd\nSübhâneke yâ lâ ilahe illâ ente'l-emâne'l-emâne ecirnâ mine'n-nâr."],
+["36","1 Yâ Men hüve küllü şey'in hâdi'un leh 2 Yâ Men hüve küllü şey'in kâinün leh 3 Yâ Men hüve küllü şey'in mevcûdun leh 4 Yâ Men hüve küllü şey'in münîbün leh 5 Yâ Men hüve küllü şey'in hâifün minh 6 Yâ Men hüve küllü şey'in müsebbihun leh 7 Yâ Men hüve küllü şey'in kâimün bih 8 Yâ Men hüve küllü şey'in hâşi'un leh 9 Yâ Men hüve küllü şey'in sâirun ileyh 10 Yâ Men hüve küllü şey'in hâlikün illâ vecheh\nSübhâneke yâ lâ ilahe illâ ente'l-emâne'l-emâne ecirnâ mine'n-nâr."],
+["37","Ve es'elüke biesmâike:\n1 Yâ Kâfî 2 Yâ Şâfî 3 Yâ Vâfî 4 Yâ Mu'âfî 5 Yâ 'Âlî 6 Yâ Dâ'î 7 Yâ Râdî 8 Yâ Kâdî 9 Yâ Bâkî 10 Yâ Hâdî\nSübhâneke yâ lâ ilahe illâ ente'l-emâne'l-emâne ecirnâ mine'n-nâr."],
+["38","1 Yâ Men lâ meferra illâ ileyh 2 Yâ Men lâ mefze'a illâ ileyh 3 Yâ Men lâ melcee illâ ileyh 4 Yâ Men lâ yütevekkelü illâ 'aleyh 5 Yâ Men lâ maksade illâ ileyh 6 Yâ Men lâ mencee illâ ileyh 7 Yâ Men lâ yürğabü illâ ileyh 8 Yâ Men lâ yü'bedü illâ iyyâh 9 Yâ Men lâ yüste'ânü illâ minh 10 Yâ Men lâ havle velâ kuvvete illâ bih\nSübhâneke yâ lâ ilahe illâ ente'l-emâne'l-emâne ecirnâ mine'n-nâr."],
+["39","1 Yâ Hayra'l-merhûbîn 2 Yâ Hayra'l-matlûbîn 3 Yâ Hayra'l-merğûbîn 4 Yâ Hayra'l-mes'ûlîn 5 Yâ Hayra'l-maksûdîn 6 Yâ Hayra'l-mezkûrîn 7 Yâ Hayra'l-meşkûrîn 8 Yâ Hayra'l-mahbûbîn 9 Yâ Hayra'l-münzilîn 10 Yâ Hayra'l-müste'nisîn\nSübhâneke yâ lâ ilahe illâ ente'l-emâne'l-emâne ecirnâ mine'n-nâr."],
+["40","1 Yâ Men hüve halaka fesevvâ 2 Yâ Men hüve kaddera fehedâ 3 Yâ Men hüve yekşifü'l-belvâ 4 Yâ Men hüve yesme'u'n-necvâ 5 Yâ Men hüve yünkizü'l-ğarkâ 6 Yâ Men hüve yünci'l-helkâ 7 Yâ Men hüve yeşfi'l-merdâ 8 Yâ Men hüve emâte ve ahyâ 9 Yâ Men hüve edhake ve ebkâ 10 Yâ Men hüve edalle ve ehdâ\nSübhâneke yâ lâ ilahe illâ ente'l-emâne'l-emâne ecirnâ mine'n-nâr."],
+["41","Ve es'elüke biesmâike:\n1 Yâ Ğâfır 2 Yâ Sâtir 3 Yâ Kâhir 4 Yâ Kâdir 5 Yâ Nâzır 6 Yâ Fâtır 7 Yâ Şâkir 8 Yâ Zâkir 9 Yâ Nâsır 10 Yâ Câbir\nSübhâneke yâ lâ ilahe illâ ente'l-emâne'l-emâne ecirnâ mine'n-nâr."],
+["42","1 Yâ Men hüve fi'l-berri ve'l-bahri sebîlüh 2 Yâ Men hüve fi'l-âfaki âyâtüh 3 Yâ Men hüve fi'l-âyâti bürhânüh 4 Yâ Men hüve fi'l-memâti kudratüh 5 Yâ Men hüve fi'l-kubûri 'izzetüh 6 Yâ Men hüve fi'l-kıyâmeti mülketüh 7 Yâ Men hüve fi'l-hisâbi heybetüh 8 Yâ Men hüve fi'l-mîzâni kadâüh 9 Yâ Men hüve fi'l-cenneti rahmetüh 10 Yâ Men hüve fi'n-nâri 'azâbüh\nSübhâneke yâ lâ ilahe illâ ente'l-emâne'l-emâne ecirnâ mine'n-nâr."],
+["43","1 Yâ Men hüve ileyhi yehrabü'l-hâifûn 2 Yâ Men hüve ileyhi yefze'u'l-müznibûn 3 Yâ Men hüve ileyhi yaksıdü'l-münîbûn 4 Yâ Men hüve ileyhi yelceü'l-'âsûn 5 Yâ Men hüve ileyhi yerğabü'z-zâhidûn 6 Yâ Men hüve fîhi yatme'u'l-hâtıûn 7 Yâ Men hüve yeste'nisü bihi'l-mürîdûn 8 Yâ Men hüve yeftehiru bihi'l-muhsinûn 9 Yâ Men hüve 'aleyhi yetevekkelü'l-mütevekkilûn 10 Yâ Men hüve yeskünü bihi'l-mûkınûn\nSübhâneke yâ lâ ilahe illâ ente'l-emâne'l-emâne ecirnâ mine'n-nâr."],
+["44","1 Yâ Ekrabe min külli karîb 2 Yâ Ehabbe min külli habîb 3 Yâ A'zame min külli 'azîm 4 Yâ E'azze min külli 'azîz 5 Yâ Ekvâ min külli kaviyy 6 Yâ Ağnâ min külli ğaniyy 7 Yâ Ecvede min külli cevâd 8 Yâ Er'efe min külli raûf 9 Yâ Erhame min külli rahîm 10 Yâ Ecelle min külli celîl\nSübhâneke yâ lâ ilahe illâ ente'l-emâne'l-emâne ecirnâ mine'n-nâr."],
+["45","Ve es'elüke biesmâike:\n1 Yâ Karîb 2 Yâ Rakîb 3 Yâ Habîb 4 Yâ Mücîb 5 Yâ Hasîb 6 Yâ Tabîb 7 Yâ Basîr 8 Yâ Habîr 9 Yâ Münîr 10 Yâ Mübîn\nSübhâneke yâ lâ ilahe illâ ente'l-emâne'l-emâne ecirnâ mine'n-nâr."],
+["46","1 Yâ Ğâliben ğayra mağlûb 2 Yâ Sâni'an ğayra masnû' 3 Yâ Hâlikan ğayra mahlûk 4 Yâ Mâliken ğayra memlûk 5 Yâ Kâhiran ğayra makhûr 6 Yâ Râfi'an ğayra merfu' 7 Yâ Hâfızan ğayra mahfûz 8 Yâ Nâsiran ğayra mensûr 9 Yâ Şâhiden ğayra ğâib 10 Yâ Karîben ğayra ba'îd\nSübhâneke yâ lâ ilahe illâ ente'l-emâne'l-emâne ecirnâ mine'n-nâr."],
+["47","1 Yâ Nûra'n-nûr 2 Yâ Münevvira'n-nûr 3 Yâ Müsavvira'n-nûr 4 Yâ Hâlika'n-nûr 5 Yâ Mükaddira'n-nûr 6 Yâ Müdebbira'n-nûr 7 Yâ Nûran kable külli nûr 8 Yâ Nûran ba'de külli nûr 9 Yâ Nûran fevka külli nûr 10 Yâ Nûran leyse mişlehû nûr\nSübhâneke yâ lâ ilahe illâ ente'l-emâne'l-emâne ecirnâ mine'n-nâr."],
+["48","1 Yâ Men 'atâuhû şerîf 2 Yâ Men fi'lühû latîf 3 Yâ Men lütfühû mükîm 4 Yâ Men ihsânühû kadîm 5 Yâ Men kavlühü hakk 6 Yâ Men va'dühû sıdk 7 Yâ Men 'afvühû fadl 8 Yâ Men 'azabühû 'adl 9 Yâ Men zikrühû hulv 10 Yâ Men ünsühû leziz\nSübhâneke yâ lâ ilahe illâ ente'l-emâne'l-emâne ecirnâ mine'n-nâr."],
+["49","Ve es'elüke biesmâike:\n1 Yâ Münevvil 2 Yâ Müfassil 3 Yâ Mübeddil 4 Yâ Müsehhil 5 Yâ Müzellil 6 Yâ Münezzil 7 Yâ Muhavvil 8 Yâ Mücemmil 9 Yâ Mükemmil 10 Yâ Müfaddil\nSübhâneke yâ lâ ilahe illâ ente'l-emâne'l-emâne ecirnâ mine'n-nâr."],
+["50","1 Yâ Men yerâ velâ yürâ 2 Yâ Men yahlüku velâ yühlâk 3 Yâ Men yehdî velâ yühda 4 Yâ Men yühyî velâ yühyâ 5 Yâ Men yüt'imü velâ yüt'am 6 Yâ Men yücîru velâ yücâr 7 Yâ Men yakdî velâ yükdâ 'aleyh 8 Yâ Men yahkümü velâ yuhkemü 'aleyh 9 Yâ Men lem yelid velem yûled 10 Yâ Men lem yekûn lehû küfüven ehad\nSübhâneke yâ lâ ilahe illâ ente'l-emâne'l-emâne ecirnâ mine'n-nâr."],
+["51","1 Yâ Ni'me'l-habîb 2 Yâ Ni'me't-tabîb 3 Yâ Ni'me'l-hasîb 4 Yâ Ni'me'l-karîb 5 Yâ Ni'me'r-rakîb 6 Yâ Ni'me'l-mücîb 7 Yâ Ni'me'l-enîs 8 Yâ Ni'me'l-vekîl 9 Yâ Ni'me'l-mevlâ 10 Yâ Ni'me'n-nasîr\nSübhâneke yâ lâ ilahe illâ ente'l-emâne'l-emâne ecirnâ mine'n-nâr."],
+["52","1 Yâ Sürûra'l-'ârifîn 2 Yâ Enîse'l-mürîdîn 3 Yâ Muğîşe'l-müştâkîn 4 Yâ Habîbe't-tevvâbîn 5 Yâ Râzika'l-mükillîn 6 Yâ Recâe'l-müznibîn 7 Yâ Kâşife'l-mekrûbîn 8 Yâ Müneffisen 'ani'l-mağmûmîn 9 Yâ Müferricen 'ani'l-mahzûnîn 10 Yâ İlâhe'l-evvelîne ve'l-âhirîn\nSübhâneke yâ lâ ilahe illâ ente'l-emâne'l-emâne ecirnâ mine'n-nâr."],
+["53","1 Yâ Rabbe'l-cenneti ve'n-nâr 2 Yâ Rabbe'n-nebiyyîne ve'l-ahyâr 3 Yâ Rabbe's-sıddîkîne ve'l-ebrâr 4 Yâ Rabbe's-siğâri ve'l-kibâr 5 Yâ Rabbe'l-hubûbi ve'l-eşmâr 6 Yâ Rabbe'l-enhâri ve'l-eşcâr 7 Yâ Rabbe's-sahârâ ve'l-kıfâr 8 Yâ Rabbe'l-'abîdi ve'l-ahrâr 9 Yâ Rabbe'l-i'lâni ve'l-isrâr 10 Yâ Rabbe'l-leyli ve'n-nehâr\nSübhâneke yâ lâ ilahe illâ ente'l-emâne'l-emâne ecirnâ mine'n-nâr."],
+["54","1 Yâ Men lahika fî külli şey'in 'ilmüh 2 Yâ Men nefeze bi külli şey'in besaruh 3 Yâ Men beleğat ilâ külli şey'in kudratüh 4 Yâ Men lâ yuhsı'l-'ibâdü na'mâeh 5 Yâ Men lâ teblüğu'l-halâiku şükrah 6 Yâ Men lâ tüdrikü'l-efhâmü celâleh 7 Yâ Men lâ tenâlü'l-evhâmü künheh 8 Yâ Meni'l-'azâmetü ve'l-kibriyâü ridâüh 9 Yâ Meni'l-heybetü ve's-sültânü behâüh 10 Yâ Men te'azzeze bi'l-'izzi bekâüh\nSübhâneke yâ lâ ilahe illâ ente'l-emâne'l-emâne ecirnâ mine'n-nâr."],
+["55","1 Yâ Men lehü'l-meşelü'l-a'lâ 2 Yâ Men lehü's-sıfâtü'l-'ulâ 3 Yâ Men lehü'l-âhiratü ve'l-ûlâ 4 Yâ Men lehü'l-cennetü'l-me'vâ 5 Yâ Men lehü'n-nâru ve'l-lezâ 6 Yâ Men lehü'l-âyâtü'l-kübrâ 7 Yâ Men lehü'l-esmâü'l-hüsnâ 8 Yâ Men lehü'l-hükmü ve'l-kadâ 9 Yâ Men lehü's-semâvâtü'l-'ulâ 10 Yâ Men lehü'l-'arşü ve's-serâ\nSübhâneke yâ lâ ilahe illâ ente'l-emâne'l-emâne ecirnâ mine'n-nâr."],
+["56","Ve es'elüke biesmâike:\n1 Yâ 'Afüvv 2 Yâ Ğafûr 3 Yâ Vedûd 4 Yâ Şekûr 5 Yâ Sabûr 6 Yâ Raûf 7 Yâ 'Atûf 8 Yâ Kuddûs 9 Yâ Hayy 10 Yâ Kayyûm\nSübhâneke yâ lâ ilahe illâ ente'l-emâne'l-emâne ecirnâ mine'n-nâr."],
+["57","1 Yâ Men hüve fi's-semâi 'azametüh 2 Yâ Men hüve fi'l-ardi âyâtüh 3 Yâ Men hüve fî külli şey'in delâilüh 4 Yâ Men hüve fi'l-bihâri 'acâibüh 5 Yâ Men yebdeü'l-halka şümme yü'îdüh 6 Yâ Men hüve fi'l-cibâli hazâinüh 7 Yâ Men ahsene külle şey'in halekah 8 Yâ Men ileyhi yürce'u'l-emrü küllüh 9 Yâ Men zahera fî külli şey'in lütfüh 10 Yâ Men yü'arrifü'l-halâika kudrateh\nSübhâneke yâ lâ ilahe illâ ente'l-emâne'l-emâne ecirnâ mine'n-nâr."],
+["58","1 Yâ Habîbe men lâ habîbe leh 2 Yâ Tabîbe men lâ tabîbe leh 3 Yâ Mücîbe men lâ mücîbe leh 4 Yâ Şefîka men lâ şefîka leh 5 Yâ Rafîka men lâ rafîka leh 6 Yâ Şefî'a men lâ şefî'a leh 7 Yâ Müğîşe men lâ müğîşe leh 8 Yâ Delîle men lâ delîle leh 9 Yâ Kâide men lâ kâide leh 10 Yâ Râhıme men lâ râhıme leh\nSübhâneke yâ lâ ilahe illâ ente'l-emâne'l-emâne ecirnâ mine'n-nâr."],
+["59","1 Yâ Kâfiye meni'stekfâh 2 Yâ Hâdiye meni'stehdâh 3 Yâ Kâliye meni'steklâh 4 Yâ Dâ'iye meni'sted'âh 5 Yâ Şâfiye meni'steşfâh 6 Yâ Kâdiye meni'stakdâh 7 Yâ Muğniye meni'steğnâh 8 Yâ Mûfiye meni'stevfâh 9 Yâ Mükavviye meni'stakvâh 10 Yâ Veliyye meni'stevlâh\nSübhâneke yâ lâ ilahe illâ ente'l-emâne'l-emâne ecirnâ mine'n-nâr."],
+["60","Ve es'elüke biesmâike:\n1 Yâ Evvel 2 Yâ Âhir 3 Yâ Zâhir 4 Yâ Bâtın 5 Yâ Hâlik 6 Yâ Râzık 7 Yâ Sâdık 8 Yâ Sâbık 9 Yâ Sâik 10 Yâ Fâlik\nSübhâneke yâ lâ ilahe illâ ente'l-emâne'l-emâne ecirnâ mine'n-nâr."],
+["61","1 Yâ Men yükallibü'l-leyle ve'n-nehâr 2 Yâ Men haleka'z-zulümâti ve'n-nûr 3 Yâ Men ce'ale'z-zılle ve'l-harûr 4 Yâ Men sehhara'ş-şemse ve'l-kamer 5 Yâ Men haleka'l-mevte ve'l-hayah 6 Yâ Men lehü'l-halku ve'l-emr 7 Yâ Men lem yettehiz sâhibeten velâ veledâ 8 Yâ Men lem yekûn lehû şerîkün fi'l-mülk 9 Yâ Men lem yekûn lehû veliyyün mine'z-züll 10 Yâ Men lehü'l-havlü ve'l-kuvveh\nSübhâneke yâ lâ ilahe illâ ente'l-emâne'l-emâne neccinâ mine'n-nâr."],
+["62","1 Yâ Men ya'lemü mürâde'l-mürîdîn 2 Yâ Men yemlikü hâvâice's-sâilîn 3 Yâ Men yesme'u enîne'l-vâlihîn 4 Yâ Men yerâ bükâe'l-hâifîn 5 Yâ Men ya'lemu damîra's-sâmitîn 6 Yâ Men yerâ nedeme'n-nâdimîn 7 Yâ Men yakbelü 'uzre't-tâibîn 8 Yâ Men lâ yüslihu 'amele'l-müfsidîn 9 Yâ Men lâ yüdî'u ecra'l-muhsinîn 10 Yâ Men lâ yeb'udü an kulûbi'l-'ârifîn\nSübhâneke yâ lâ ilahe illâ ente'l-emâne'l-emâne neccinâ mine'n-nâr."],
+["63","1 Yâ Dâime'l-bekâ 2 Yâ Ğâfire'l-hatâ 3 Yâ Sâmi'e'd-düâ 4 Yâ Vâsi'a'l-'atâ 5 Yâ Râfi'a's-semâ 6 Yâ Kâşife'l-belâ 7 Yâ 'Azîme's-senâ 8 Yâ Kadîme's-senâ 9 Yâ Kesîra'l-vefâ 10 Yâ Şerîfe'l-cezâ\nSübhâneke yâ lâ ilahe illâ ente'l-emâne'l-emâne neccinâ mine'n-nâr."],
+["64","Ve es'elüke biesmâike:\n1 Yâ Ğaffâr 2 Yâ Settâr 3 Yâ Kahhâr 4 Yâ Cebbâr 5 Yâ Sabbâr 6 Yâ Razzâk 7 Yâ Fettâh 8 Yâ 'Allâm 9 Yâ Vehhâb 10 Yâ Tevvâb\nSübhâneke yâ lâ ilahe illâ ente'l-emâne'l-emâne neccinâ mine'n-nâr."],
+["65","1 Yâ Men halekanî ve sevvânî 2 Yâ Men razekanî ve rabbânî 3 Yâ Men et'amenî ve sekânî 4 Yâ Men karrabenî ve ednânî 5 Yâ Men 'asamenî ve kefânî 6 Yâ Men hâfızanî ve kelânî 7 Yâ Men veffekanî ve hedânî 8 Yâ Men e'azzenî ve ağnânî 9 Yâ Men emâtenî ve ahyânî 10 Yâ Men ânesenî ve âvânî\nSübhâneke yâ lâ ilahe illâ ente'l-emâne'l-emâne neccinâ mine'n-nâr."],
+["66","1 Yâ Men yühikku'l-hakka bikelimâtih 2 Yâ Men lâ mü'akkibe lihukmih 3 Yâ Men lâ radde likadâih 4 Yâ Men yehûlü beyne'l-mer'i ve kalbih 5 Yâ Men yakbelü't-tevbete an 'ibâdih 6 Yâ Men lâ tenfe'u'ş-şefâ'atü illâ biiznih 7 Yâ Meni's-semâvâtü matviyyâtün biyemînih 8 Yâ Men hüve a'lemü bi men dalle 'an sebîlih 9 Yâ Men yüsebbihü'r-ra'dü bihâmdihî ve'l-melâiketü min hîfetih 10 Yâ Men yürsilü'r-riyâha büşran beyne yedey rahmetih\nSübhâneke yâ lâ ilahe illâ ente'l-emâne'l-emâne neccinâ mine'n-nâr."],
+["67","1 Yâ Men ce'ale'l-arda mihâdâ 2 Yâ Men ce'ale'l-cibâle evtâdâ 3 Yâ Men ce'ale'ş-şemse sirâcâ 4 Yâ Men ce'ale'l-kamera nûrâ 5 Yâ Men ce'ale'l-leyle libâsâ 6 Yâ Men ce'ale'n-nehâra me'âşâ 7 Yâ Men ce'ale'n-nevme sübâtâ 8 Yâ Men ce'ale's-semâe binâa 9 Yâ Men ce'ale'l-eşyâe ezvâcâ 10 Yâ Men ce'ale'n-nâra mirsâdâ\nSübhâneke yâ lâ ilahe illâ ente'l-emâne'l-emâne neccinâ mine'n-nâr."],
+["68","Ve es'elüke biesmâike:\n1 Yâ Şefî' 2 Yâ Semî' 3 Yâ Râfi' 4 Yâ Meni' 5 Yâ Bedi' 6 Yâ Serî' 7 Yâ Beşîr 8 Yâ Nezîr 9 Yâ Kadîr 10 Yâ Muktedir\nSübhâneke yâ lâ ilahe illâ ente'l-emâne'l-emâne neccinâ mine'n-nâr."],
+["69","1 Yâ Hayyü kable külli hayy 2 Yâ Hayyü ba'de külli hayy 3 Yâ Hayyü'llezî lâ yüşbihühû şey' 4 Yâ Hayyü'llezî leyse kemişlihî hayy 5 Yâ Hayyü'llezî lâ yüşârikühû hayy 6 Yâ Hayyü'llezî lâ yahtâcü ilâ hayy 7 Yâ Hayyü'llezî yümîtü külle hayy 8 Yâ Hayyü'llezî yerzüku külle hayy 9 Yâ Hayyü'llezî yühyi'l-mevtâ 10 Yâ Hayyü'llezî lâ yemût\nSübhâneke yâ lâ ilahe illâ ente'l-emâne'l-emâne neccinâ mine'n-nâr."],
+["70","1 Yâ Men lehû zikrun lâ yünsâ 2 Yâ Men lehû nûrun lâ yutfâ 3 Yâ Men lehû şenâün lâ yuhsâ 4 Yâ Men lehû nü'ûtün lâ tüğayyer 5 Yâ Men lehû ni'amün lâ tü'add 6 Yâ Men lehû mülkün lâ yezûl 7 Yâ Men lehû celâlün lâ yükeyyef 8 Yâ Men lehû kadâün lâ yüradd 9 Yâ Men lehû sıfâtün lâ tübeddel 10 Yâ Men lehû kemâlün lâ yüdrak\nSübhâneke yâ lâ ilahe illâ ente'l-emâne'l-emâne neccinâ mine'n-nâr."],
+["71","1 Yâ Rabbe'l-'âlemîn 2 Yâ Mâlike yevmi'd-dîn 3 Yâ Men yühibbü's-sâbirîn 4 Yâ Men yühibbü't-tevvâbîn 5 Yâ Men yühibbü'l-mütetahhirîn 6 Yâ Men yühibbü'l-muhsinîn 7 Yâ Men hüve hayrü'n-nâsirîn 8 Yâ Men hüve hayrü'l-fâsilîn 9 Yâ Men hüve hayrü'ş-şâkirîn 10 Yâ Men hüve a'lemü bi'l-müfsidîn\nSübhâneke yâ lâ ilahe illâ ente'l-emâne'l-emâne neccinâ mine'n-nâr."],
+["72","Ve es'elüke biesmâike:\n1 Yâ Mübdi 2 Yâ Mu'îd 3 Yâ Hâfız 4 Yâ Mühît 5 Yâ Hamîd 6 Yâ Mecîd 7 Yâ Mükît 8 Yâ Müğîs 9 Yâ Mü'izz 10 Yâ Müzill\nSübhâneke yâ lâ ilahe illâ ente'l-emâne'l-emâne neccinâ mine'n-nâr."],
+["73","1 Yâ Men hüve Ehadün bilâ didd 2 Yâ Men hüve Ferdün bilâ nidd 3 Yâ Men hüve Samedün bilâ 'ayb 4 Yâ Men hüve Vitrun bilâ şef' 5 Yâ Men hüve Rabbün bilâ vezîr 6 Yâ Men hüve Ğaniyyün bilâ fakr 7 Yâ Men hüve Sültânün bilâ 'azl 8 Yâ Men hüve Melîkün bilâ 'acz 9 Yâ Men hüve Mevcûdun bilâ mişl\nSübhâneke yâ lâ ilahe illâ ente'l-emâne'l-emâne neccinâ mine'n-nâr."],
+["74","1 Yâ Men hüve zikruhû şerafün li'z-zâkirîn 2 Yâ Men hüve şükruhû fevzün li'ş-şâkirîn 3 Yâ Men hüve hamdühû fahrun li'l-hâmidîn 4 Yâ Men hüve tâ'atühû necâtün li'l-mütî'în 5 Yâ Men hüve bâbühü meftûhun li't-tâlibîn 6 Yâ Men hüve sebîlühü vâdihun li'l-mü'minîn 7 Yâ Men hüve âyâtühü bürhânün li'n-nâzırîn 8 Yâ Men hüve kitâbühü tezkiratün li'l-mûkınîn 9 Yâ Men hüve 'afvühü melceün li'l-müznibîn 10 Yâ Men hüve rahmetühü karîbün li'l-muhsinîn\nSübhâneke yâ lâ ilahe illâ ente'l-emâne'l-emâne neccinâ mine'n-nâr."],
+["75","1 Yâ Men tebâreke'smüh 2 Yâ Men te'âlâ ceddüh 3 Yâ Men celle şenâüh 4 Yâ Men lâ ilahe ğayruh 5 Yâ Men tekaddeset esmâüh 6 Yâ Men yedûmü bekâüh 7 Yâ Meni'l-'azametü behâüh 8 Yâ Meni'l-kibriyâü ridâüh 9 Yâ Men lâ yühsâ âlâüh 10 Yâ Men lâ yü'addü na'mâüh\nSübhâneke yâ lâ ilahe illâ ente'l-emâne'l-emâne neccinâ mine'n-nâr."],
+["76","Ve es'elüke biesmâike:\n1 Yâ Mü'în 2 Yâ Mübîn 3 Yâ Emîn 4 Yâ Mekîn 5 Yâ Metîn 6 Yâ Şedîd 7 Yâ Şehîd 8 Yâ Reşîd 9 Yâ Hamîd 10 Yâ Mecîd\nSübhâneke yâ lâ ilahe illâ ente'l-emâne'l-emâne neccinâ mine'n-nâr."],
+["77","1 Yâ Ze'l-arşi'l-mecîd 2 Yâ Ze'l-kavli's-sedîd 3 Yâ Ze'l-fadli'r-reşîd 4 Yâ Ze'l-batşi'ş-şedîd 5 Yâ Ze'l-va'di ve'l-va'îd 6 Yâ Karîben ğayra ba'îd 7 Yâ Men hüve'l-veliyyü'l-hamîd 8 Yâ Men hüve 'alâ külli şey'in şehîd 9 Yâ Men hüve leyse bizallâmin li'l-'abîd 10 Yâ Men hüve akrabü ileyhi min habli'l-verîd\nSübhâneke yâ lâ ilahe illâ ente'l-emâne'l-emâne neccinâ mine'n-nâr."],
+["78","1 Yâ Men lâ şerîke lehû velâ vezîr 2 Yâ Men lâ şebîhe lehû velâ nezîr 3 Yâ Hâlika'ş-şemsi ve'l-kameri'l-münîr 4 Yâ Muğniye'l-bâisi'l-fakîr 5 Yâ Râzika't-tıfli's-sağîr 6 Yâ Râhime'ş-şeyhi'l-kebîr 7 Yâ 'Ismete'l-hâifi'l-müstecîr 8 Yâ Men hüve bi'ibâdihî basîr 9 Yâ Men hüve bihavâyici'l-'ibâdi habîr 10 Yâ Men hüve 'alâ külli şey'in kadîr\nSübhâneke yâ lâ ilahe illâ ente'l-emâne'l-emâne neccinâ mine'n-nâr."],
+["79","1 Yâ Ze'l-cûdi ve'n-ni'âm 2 Yâ Ze'l-fadli ve'l-kerâm 3 Yâ Ze'l-be'si ve'n-nikâm 4 Yâ Hâlika'l-levhi ve'l-kalem 5 Yâ Bârie'z-zerri ve'n-nesem 6 Yâ Mülhime'l-'arabi ve'l-'acem 7 Yâ Kâşife'd-durri ve'l-elem 8 Yâ 'Alime's-sirri ve'l-himem 9 Yâ Men lehü'l-beytü ve'l-harâm 10 Yâ Men yahlüku'l-eşyâe mine'l-'adem\nSübhâneke yâ lâ ilahe illâ ente'l-emâne'l-emâne neccinâ mine'n-nâr."],
+["80","Ve es'elüke biesmâike:\n1 Yâ 'Âdil 2 Yâ Kâbil 3 Yâ Fâdil 4 Yâ Fâ'il 5 Yâ Kâfil 6 Yâ Câ'il 7 Yâ Kâmil 8 Yâ Fâtır 9 Yâ Tâlib 10 Yâ Matlûb\nSübhâneke yâ lâ ilahe illâ ente'l-emâne'l-emâne neccinâ mine'n-nâr."],
+["81","1 Yâ Men en'ame bihavlih 2 Yâ Men ekrame bitavlih 3 Yâ Men 'âde bilütfıh 4 Yâ Men te'azzeze bikudratih 5 Yâ Men kaddera bihikmetih 6 Yâ Men hakeme bitedbîrih 7 Yâ Men debbera bi'ilmih 8 Yâ Men tecâveze bihılmih 9 Yâ Men denâ fî 'ulüvvih 10 Yâ Men 'alâ fî dünüvvih\nSübhâneke yâ lâ ilahe illâ ente'l-emâne'l-emâne neccinâ mine'n-nâr."],
+["82","1 Yâ Men yahlüku mâ yeşâ 2 Yâ Men yef'alü mâ yeşâ 3 Yâ Men yehdî men yeşâ 4 Yâ Men yüdillü men yeşâ 5 Yâ Men yağfiru limen yeşâ 6 Yâ Men yü'azzibü men yeşâ 7 Yâ Men yetûbü alâ men yeşâ 8 Yâ Men yüsavviru fi'l-erhâmi keyfe yeşâ 9 Yâ Men yezîdü fi'l-halki mâ yeşâ 10 Yâ Men yahtassu birahmetihî men yeşâ\nSübhâneke yâ lâ ilahe illâ ente'l-emâne'l-emâne neccinâ mine'n-nâr."],
+["83","1 Yâ Men lem yettehiz sâhibeten velâ veledâ 2 Yâ Men lâ yüşrikü fî hukmihî ehadâ 3 Yâ Men ce'ale li külli şey'in kadrâ 4 Yâ Men lem yezel rahîmâ 5 Yâ Câ'ile'l-melâiketi rusülâ 6 Yâ Men ce'ale fi's-semâi bürûcâ 7 Yâ Men ce'ale'l-arda karârâ 8 Yâ Men ce'ale mine'l-mâi beşerâ 9 Yâ Men ahsâ külle şey'in 'adedâ 10 Yâ Men ehâta bi külli şey'in 'ilmâ\nSübhâneke yâ lâ ilahe illâ ente'l-emâne'l-emâne neccinâ mine'n-nâr."],
+["84","Ve es'elüke biesmâike:\n1 Yâ Ferd 2 Yâ Vitr 3 Yâ Ehad 4 Yâ Samed 5 Yâ Emced 6 Yâ E'azz 7 Yâ Ecel 8 Yâ Ehakk 9 Yâ Eberr 10 Yâ Ebed\nSübhâneke yâ lâ ilahe illâ ente'l-emâne'l-emâne neccinâ mine'n-nâr."],
+["85","1 Yâ Ma'rûfe men 'arafeh 2 Yâ Ma'bûde men 'abedeh 3 Yâ Meşkûre men şekerah 4 Yâ Mezkûre men zekerah 5 Yâ Mahmûde men hamideh 6 Yâ Mevcûde men talebeh 7 Yâ Mevsûfe men vahhadeh 8 Yâ Mahbûbe men ehabbeh 9 Yâ Merğûbe men erâdeh 10 Yâ Maksûde men enâbe ileyh\nSübhâneke yâ lâ ilahe illâ ente'l-emâne'l-emâne neccinâ mine'n-nâr."],
+["86","1 Yâ Men lâ mülke illâ mülküh 2 Yâ Men lâ yuhsı'l-'ibâdü şenâeh 3 Yâ Men lâ tesıfü'l-halâiku celâleh 4 Yâ Men lâ yüdrikü'l-ebsâru kemâleh 5 Yâ Men lâ yeblüğu'l-efhâmü sıfâtih 6 Yâ Men lâ yenâlü'l-efkâru kibriyâeh 7 Yâ Men lâ yühsinü'l-insânü nü'ûteh 8 Yâ Men lâ yeruddü'l-'ibâdü kadâeh 9 Yâ Men zahera fî külli şey'in âyâtüh\nSübhâneke yâ lâ ilahe illâ ente'l-emâne'l-emâne neccinâ mine'n-nâr."],
+["87","1 Yâ Habîbe'l-bekkâîn 2 Yâ Senede'l-mütevekkilîn 3 Yâ Hâdiye'l-mudillîn 4 Yâ Veliyye'l-mü'minîn 5 Yâ Enîse'z-zâkirîn 6 Yâ Akdara'l-kâdirîn 7 Yâ Ebsara'n-nâzırîn 8 Yâ A'leme'l-'âlimîn 9 Yâ Mefze'a'l-melhûfîn 10 Yâ Ensara'n-nâsirîn\nSübhâneke yâ lâ ilahe illâ ente'l-emâne'l-emâne neccinâ mine'n-nâr."],
+["88","Ve es'elüke biesmâike:\n1 Yâ Mükrim 2 Yâ Mu'azzim 3 Yâ Mün'im 4 Yâ Mü'tî 5 Yâ Muğnî 6 Yâ Muhyî 7 Yâ Mübdî 8 Yâ Mürdî 9 Yâ Müncî 10 Yâ Muhsin\nSübhâneke yâ lâ ilahe illâ ente'l-emâne'l-emâne neccinâ mine'n-nâr."],
+["89","1 Yâ Kâfiye külli şey' 2 Yâ Kâimen 'alâ külli şey' 3 Yâ Men lâ yüşbihühû şey' 4 Yâ Men lâ yezîdü fî mülkihî şey' 5 Yâ Men lâ yenkusu min hazâinihî şey' 6 Yâ Men lâ yahfâ 'aleyhi şey' 7 Yâ Men leyse kemişlihî şey' 8 Yâ Men biyedihî mekâlîdü külli şey' 9 Yâ Men vesi'at rahmetühü külle şey' 10 Yâ Men yebkâ veyefnâ küllü şey'\nSübhâneke yâ lâ ilahe illâ ente'l-emâne'l-emâne neccinâ mine'n-nâr."],
+["90","1 Yâ Men lâ ya'lemü'l-ğaybe illâ hû 2 Yâ Men lâ yasrifü's-sûe illâ hû 3 Yâ Men lâ yüdebbiru'l-emra illâ hû 4 Yâ Men lâ yağfiru'z-zünûbe illâ hû 5 Yâ Men lâ yükallibü'l-kalbe illâ hû 6 Yâ Men lâ yahlüku'l-halka illâ hû 7 Yâ Men lâ yütimmü'n-ni'mete illâ hû 8 Yâ Men lâ yünezzilü'l-ğayşe illâ hû 9 Yâ Men lâ yuhyi'l-mevtâ illâ hû 10 Yâ Men lâ yuğnî 'ale't-tahkîki illâ hû\nSübhâneke yâ lâ ilahe illâ ente'l-emâne'l-emâne neccinâ mine'n-nâr."],
+["91","Ve es'elüke biesmâike:\n1 Yâ Kâşif 2 Yâ Fâric 3 Yâ Fâtih 4 Yâ Nâsır 5 Yâ Dâmin 6 Yâ Âmir 7 Yâ Nâhî 8 Yâ Recâ 9 Yâ Mürtecâ 10 Yâ 'Azîme'r-recâ\nSübhâneke yâ lâ ilahe illâ ente'l-emâne'l-emâne hallisnâ mine'n-nâr."],
+["92","1 Yâ Mü'îne'd-du'afâ 2 Yâ Kenze'l-fükarâ 3 Yâ Sâhibe'l-ğurabâ 4 Yâ Nâsıra'l-evliyâ 5 Yâ Kâhira'l-a'dâ 6 Yâ Râfi'a's-semâ 7 Yâ Kâşife'l-belâ 8 Yâ Enîse'l-evliyâ 9 Yâ Habîbe'l-etkıyâ 10 Yâ İlâhe'l-ağniyâ\nSübhâneke yâ lâ ilahe illâ ente'l-emâne'l-emâne hallisnâ mine'n-nâr."],
+["93","1 Yâ Evvele külli şey'in ve âhirah 2 Yâ İlahe külli şey'in ve sâni'ah 3 Yâ Râzika külli şey'in ve hâlikah 4 Yâ Fâtıra külli şey'in ve melîkeh 5 Yâ Kâbida külli şey'in ve bâsiteh 6 Yâ Mübdie külli şey'in ve mü'îdeh 7 Yâ Müsebbibe külli şey'in ve mükaddirah 8 Yâ Mürabbiye külli şey'in ve müdebbirah 9 Yâ Mükevvira külli şey'in ve muhavvileh 10 Yâ Muhyiye külli şey'in ve mümîteh\nSübhâneke yâ lâ ilahe illâ ente'l-emâne'l-emâne hallisnâ mine'n-nâr."],
+["94","1 Yâ Hayra zâkirîn ve mezkûr 2 Yâ Hayra şâkirîn ve meşkûr 3 Yâ Hayra hâmidin ve mahmûd 4 Yâ Hayra şâhidin ve meşhûd 5 Yâ Hayra dâ'in ve med'uvv 6 Yâ Hayra mücîbin ve mücâb 7 Yâ Hayra münişin ve enîs 8 Yâ Hayra sâhibin ve celîs 9 Yâ Hayra maksûdin ve matlûb 10 Yâ Hayra habîbin ve mahbûb\nSübhâneke yâ lâ ilahe illâ ente'l-emâne'l-emâne hallisnâ mine'n-nâr."],
+["95","1 Yâ Men hüve limen de'âhü mücîb 2 Yâ Men hüve limen etâ'ahû habîb 3 Yâ Men hüve limen ehabbehû karîb 4 Yâ Men hüve bimen erâdehû 'alîm 5 Yâ Men hüve limen recâhü kerîm 6 Yâ Men hüve bimen 'asâhü halîm 7 Yâ Men hüve fî hilmihî hakîm 8 Yâ Men hüve fî hukmihî 'azîm 9 Yâ Men hüve fî 'azametihî rahîm 10 Yâ Men hüve fî ihsânihî kadîm\nSübhâneke yâ lâ ilahe illâ ente'l-emâne'l-emâne hallisnâ mine'n-nâr."],
+["96","Ve es'elüke biesmâike:\n1 Yâ Müsebbib 2 Yâ Mukarrib 3 Yâ Mü'akkib 4 Yâ Mukallib 5 Yâ Mükaddir 6 Yâ Mürattib 7 Yâ Mürağğib 8 Yâ Müzekkir 9 Yâ Mükevvin 10 Yâ Mütekebbir\nSübhâneke yâ lâ ilahe illâ ente'l-emâne'l-emâne hallisnâ mine'n-nâr."],
+["97","1 Yâ Men lâ yüşğilühû sem'un an sem' 2 Yâ Men lâ yemne'uhû fi'lün an fi'l 3 Yâ Men lâ yülhîhi kavlün an kavl 4 Yâ Men lâ yüğallituhû süâlün 'an süâl 5 Yâ Men lâ yübrimühû ilhâhu'l-mulıhhîn 6 Yâ Men şeraha bi'l-islâmi sudûra'l-mü'minîn 7 Yâ Men etâbe bizikrihî kulûbe'l-muhbitîn 8 Yâ Men lâ yeğibü 'an kulûbi'l-müştâkîn 9 Yâ Men hüve ğâyetü mürâdi'l-mürîdîn 10 Yâ Men lâ yahfâ 'aleyhi şey'ün fi'l-'âlemîn\nSübhâneke yâ lâ ilahe illâ ente'l-emâne'l-emâne hallisnâ mine'n-nâr."],
+["98","1 Yâ Men hüve 'ilmühü sâbık 2 Yâ Men hüve va'dühü sâdık 3 Yâ Men hüve lütfühü zâhir 4 Yâ Men hüve emruhü ğâlib 5 Yâ Men hüve kitâbühü muhkem 6 Yâ Men hüve kadâühü kâin 7 Yâ Men hüve kur'ânühü mecîd 8 Yâ Men hüve mülküh kadîm 9 Yâ Men hüve fadlühü mükîm 10 Yâ Men hüve 'arşühü 'azîm\nSübhâneke yâ lâ ilahe illâ ente'l-emâne'l-emâne hallisnâ mine'n-nâr."],
+["99","1 Yâ Rabbe'l-erbâb 2 Yâ Müfettiha'l-ebvâb 3 Yâ Müsebbibe'l-esbâb 4 Yâ Mu'tıye's-sevâb 5 Yâ Mülhime's-savâb 6 Yâ Münşie's-sehâb 7 Yâ Şedîde'l-'ikâb 8 Yâ Serî'a'l-hisâb 9 Yâ Men lehü'l-iyâb 10 Yâ Ğafûru yâ Tevvâb\nSübhâneke yâ lâ ilahe illâ ente'l-emâne'l-emâne hallisnâ mine'n-nâr."],
+["100","Ve es'elüke biesmâike:\n1 Yâ Rabbenâ 2 Yâ İlâhenâ 3 Yâ Seyyidenâ 4 Yâ Mevlânâ 5 Yâ Nâsıranâ 6 Yâ Hâfızanâ 7 Yâ Kâdiranâ 8 Yâ Râzıkanâ 9 Yâ Delîlenâ 10 Yâ Muğîsenâ\nSübhâneke yâ lâ ilahe illâ ente'l-emâne'l-emâne hallisnâ mine'n-nâr.\n\nAllâhümme Rabbenâ * hallisnâ * ve ecirnâ * ve neccinâ mine'n-nâr * ve 'âfinâ va'fü 'annâ ve edhilne'l-cennete dâra kudsike me'a'l-ebrâr * bi'afvike Yâ Mücîr * bi fadlike Yâ Ğaffâr.\n\n— Âmîn —"]
+];
 
+/* ───────────────────────────────────────────
+   ASHÂB-I BEDİR — 313 isim, 5 sayfa
+─────────────────────────────────────────── */
+const BEDR_PAGES=[
+["1. Sayfa (1-63)",
+`Bismillâhirrahmanirrahim.
+Allâhümme innî es'elüke bihakkı eshâbi Bedr en tağfira lî zunûbî ve en takdiye hâcetî.
+
+1. Hz. Muhammed Mustafâ (s.a.v.) — Rasûlullah
+2. Hz. Ebû Bekr es-Sıddîk
+3. Hz. Ömer ibn el-Hattâb
+4. Hz. Osman ibn Affân
+5. Hz. Ali ibn Ebî Tâlib
+6. Hz. Talha ibn Ubeydullah
+7. Hz. Zübeyr ibn el-Avvâm
+8. Hz. Abdurrahman ibn Avf
+9. Hz. Sa'd ibn Ebî Vakkâs
+10. Hz. Sa'îd ibn Zeyd
+11. Hz. Ebû Ubeyde ibn el-Cerrâh
+12. Hz. Hamza ibn Abdilmuttalib
+13. Hz. Ubeyde ibn el-Hâris
+14. Hz. Bilâl ibn Rebâh
+15. Hz. Mus'ab ibn Umeyr
+16. Hz. Abdullah ibn Mesud
+17. Hz. Ammâr ibn Yâsir
+18. Hz. Habbâb ibn el-Eret
+19. Hz. Süheyb ibn Sinân er-Rûmî
+20. Hz. Ebû Zerr el-Gıfârî
+21. Hz. Mikdâd ibn Amr
+22. Hz. Sellâm ibn Ebî Hukayk
+23. Hz. Ebû Huzeyfe ibn Utbe
+24. Hz. Sâlim mevlâ Ebî Huzeyfe
+25. Hz. Abbâd ibn Bişr
+26. Hz. Ebû Dücâne Simâk ibn Harşe
+27. Hz. Hanzala ibn Ebî Âmir
+28. Hz. Sâd ibn Rebî'
+29. Hz. Râfi' ibn Mâlik
+30. Hz. Abdullah ibn Revâha
+31. Hz. Ebû Talha Zeyd ibn Sehl
+32. Hz. Enes ibn Mâlik (yaşlı sahabe)
+33. Hz. Muâz ibn Cebel
+34. Hz. Muâz ibn Amr ibn el-Cemûh
+35. Hz. Muavviz ibn Amr ibn el-Cemûh
+36. Hz. Avf ibn el-Hâris
+37. Hz. Muavviz ibn el-Hâris
+38. Hz. Abdurrahman ibn Avf el-Ensârî
+39. Hz. Ubbâd ibn Kays
+40. Hz. Hârise ibn Surâka
+41. Hz. Amr ibn el-Cemûh
+42. Hz. Hubeybü ibn Yesâf
+43. Hz. Ebû Ayyâş Zeyd ibn Sâmit
+44. Hz. Seleme ibn Selâme
+45. Hz. Osman ibn Abdillah
+46. Hz. Ebû Huseyn Useyd ibn el-Hudayr
+47. Hz. Kays ibn Mihsen
+48. Hz. Zeyd ibn Hârise
+49. Hz. Usâme ibn Zeyd (babası için)
+50. Hz. Enes ibn Muâz
+51. Hz. Ebû Lubâbe Beşîr ibn Abdilmunzir
+52. Hz. Rüfâa ibn Abdilmunzir
+53. Hz. Sa'd ibn Ubâde
+54. Hz. Münzir ibn Amr
+55. Hz. Büreyde ibn el-Husayb
+56. Hz. Abdullah ibn Amr ibn Harâm
+57. Hz. Câbir ibn Abdullah (babası)
+58. Hz. Hırmâs ibn Amr
+59. Hz. Selit ibn Kays
+60. Hz. Kays ibn es-Sâib
+61. Hz. Ebû Sekine Mâlik ibn Duhşem
+62. Hz. Sa'd ibn Zeyd el-Ensârî
+63. Hz. Sahl ibn Huneyf`],
+
+["2. Sayfa (64-126)",
+`64. Hz. Uthman ibn Huneyf
+65. Hz. Rifâa ibn Râfi'
+66. Hz. Hâlid ibn Bükeyr
+67. Hz. İyâs ibn Bükeyr
+68. Hz. Âkıl ibn Bükeyr
+69. Hz. Âmir ibn Bükeyr
+70. Hz. Hâtıb ibn Ebî Belta'a
+71. Hz. Sa'd ibn Havsele
+72. Hz. Ebû Kebşe Suleym
+73. Hz. Enes ibn Ebî Mersed el-Ganevî
+74. Hz. Ebû Mersed el-Ganevî
+75. Hz. Abbâs ibn Ubâde el-Ensârî
+76. Hz. Ebû Hadrad Suleym ibn el-Hâris
+77. Hz. Abdullah ibn Kays
+78. Hz. Utbe ibn Gazvan
+79. Hz. Sa'd ibn el-Hayseme
+80. Hz. Mubaşşir ibn Abdilmunzir
+81. Hz. Rifâa ibn Amr
+82. Hz. Âsım ibn Sâbit
+83. Hz. Muattib ibn Ubeyd
+84. Hz. Umeyr ibn el-Humâm
+85. Hz. Sellâme ibn Sâbit
+86. Hz. Amr ibn Surâka
+87. Hz. Ebû Sîr Zeyd ibn Hârise el-Ensârî
+88. Hz. Yezîd ibn el-Munzir
+89. Hz. Ma'n ibn Adî
+90. Hz. Sabre ibn Fâtık
+91. Hz. Kays ibn Amr ibn Zeyd
+92. Hz. Hâlid ibn Zeyd Ebû Eyyûb el-Ensârî
+93. Hz. Hârice ibn Zeyd
+94. Hz. Muttalib ibn Ezher
+95. Hz. Abdullah ibn Süheyl
+96. Hz. Vâkıd ibn Abdullah
+97. Hz. Hâlid ibn Bükeyr el-Leysî
+98. Hz. Âmir ibn Rebîa
+99. Hz. Hâtıb ibn Amr
+100. Hz. Ebû Huzeyfe el-Yemânî
+101. Hz. Abdullah ibn Cahş
+102. Hz. Ukâşe ibn Mihsan
+103. Hz. Ebû Sinân ibn Mihsan
+104. Hz. Sinân ibn Ebî Sinân
+105. Hz. Muhriz ibn Nadla
+106. Hz. Rebîa ibn Aks
+107. Hz. Ebû Merhab Suleym
+108. Hz. Ebû Sellâm el-Habeşî
+109. Hz. Cündüb ibn Amr
+110. Hz. Mes'ûd ibn Sa'd
+111. Hz. Utbe ibn Mas'ûd
+112. Hz. Ammâr ibn Fuheyra
+113. Hz. Suhayb er-Rûmî (ikinci anışı)
+114. Hz. Abdullah ibn el-Mutâ'
+115. Hz. Kays ibn Ekva
+116. Hz. Cebr ibn Atîk
+117. Hz. Mâlik ibn Duhşem
+118. Hz. Ma'n ibn Adî el-Beldî
+119. Hz. Nu'man ibn Sinân
+120. Hz. Abdullah ibn Tarık
+121. Hz. İbn Kays
+122. Hz. Hâlid ibn Kays
+123. Hz. Rafi' ibn el-Muallâ
+124. Hz. Ebû Züheyr
+125. Hz. Sa'îd ibn el-Atteyyâr
+126. Hz. Âiz ibn Mâiz`],
+
+["3. Sayfa (127-189)",
+`127. Hz. Hilâl ibn el-Muallâ
+128. Hz. Ebû Leylâ Abdurrahman ibn Ka'b
+129. Hz. Ka'b ibn Zeyd
+130. Hz. Ziyâd ibn Lebîd
+131. Hz. Ferkad ibn el-Hâris
+132. Hz. Sa'd ibn Ubey el-Ensârî
+133. Hz. Nûfe ibn Abdullah
+134. Hz. Surâka ibn Ka'b
+135. Hz. Hâbis ibn Sa'd
+136. Hz. Hâlid ibn Amr
+137. Hz. Ebû Şuayb
+138. Hz. Abdulhamîd ibn Züheyr
+139. Hz. Osman ibn Maz'ûn
+140. Hz. Kudâme ibn Maz'ûn
+141. Hz. Abdullah ibn Maz'ûn
+142. Hz. Selit ibn Kays (Ensâr)
+143. Hz. Abdu ibn Hâlid
+144. Hz. Abdullah ibn Havâle
+145. Hz. Sahl ibn Saîd
+146. Hz. Ebû Kelede
+147. Hz. Câbir ibn Hallâd
+148. Hz. Hâlid ibn Hallâd
+149. Hz. Amr ibn el-Hâris el-Ensârî
+150. Hz. Umeyr ibn el-Hâris
+151. Hz. Hâlis ibn Sâbit
+152. Hz. Ebû Husayl Rüfâa ibn el-Hâris
+153. Hz. Sayd ibn Nüaymân
+154. Hz. Abdullah ibn Nüaymân
+155. Hz. İyâs ibn Evs
+156. Hz. Cübeyr ibn İyâs
+157. Hz. Enes ibn Eşhel
+158. Hz. Râfi' ibn el-Hâris
+159. Hz. Mes'ûd ibn Evs
+160. Hz. Übeyy ibn Ka'b
+161. Hz. Enes ibn Muâz (Ensâr)
+162. Hz. Ebû Talha el-Ensârî (tekrar zikir)
+163. Hz. Muâz ibn Hârise
+164. Hz. Ubeyd ibn Evs
+165. Hz. Kays ibn Amr el-Saidî
+166. Hz. Hâlid ibn Sâbit
+167. Hz. Süheyb ibn Vehb
+168. Hz. Ebû Cerî el-Hüzelî
+169. Hz. Ebû Mersed el-Ganevî (tekrar)
+170. Hz. Abdullah ibn Kays el-Eşarî
+171. Hz. Sellâm ibn Amr
+172. Hz. Bişr ibn Berâ
+173. Hz. Sa'd ibn Süheyb
+174. Hz. Ebû Üseyd el-Ensârî
+175. Hz. Temîm el-Dârî
+176. Hz. Kesîr ibn es-Salt
+177. Hz. Huzeyfe ibn el-Yemân
+178. Hz. Ebû Mûsâ el-Eşarî (isimle anılan)
+179. Hz. Ömeyr ibn Âmir
+180. Hz. Abdullah ibn el-Ensârî
+181. Hz. Cüheym ibn el-Salt
+182. Hz. Nu'man ibn Mâlik
+183. Hz. Abdurrahman ibn Cahş
+184. Hz. Feyyâd ibn Bişr
+185. Hz. İbn Abbâs (küçük yaşta anılan)
+186. Hz. Yezîd ibn Kays
+187. Hz. Kays ibn el-Nu'man
+188. Hz. Sa'lebe ibn Gannâme
+189. Hz. Amr ibn Muâz`],
+
+["4. Sayfa (190-252)",
+`190. Hz. Râfi' ibn Amr el-Muzanî
+191. Hz. Usâme ibn Umeyr
+192. Hz. Ubeyde ibn el-Hâris (farklı)
+193. Hz. Abdullah ibn Hâtıb
+194. Hz. Ebû Kays ibn el-Hâris
+195. Hz. Hâtıb ibn el-Hâris
+196. Hz. Müleyke hint bint Amr (anılan)
+197. Hz. Suhayb (ikinci zikir)
+198. Hz. Ebû Seleme ibn Abdilmuttalib
+199. Hz. Temîm ibn Yeâr
+200. Hz. Mikdâd ibn el-Esved
+201. Hz. Abdullah ibn Ubeyd
+202. Hz. Âmir ibn el-Fukayh
+203. Hz. İkrime ibn Amr
+204. Hz. Ebû Ubeyde el-Cerrâh (tekrar)
+205. Hz. Sa'lebe ibn Aneme
+206. Hz. Ukbe ibn Âmir
+207. Hz. Ebû Zer'a
+208. Hz. Cübeyr ibn Munim
+209. Hz. Abdullah ibn Safvân
+210. Hz. Ammâr el-Mâzinî
+211. Hz. Salih ibn Halef
+212. Hz. Abduluzza ibn Ka'b
+213. Hz. Mahfûz ibn Amr
+214. Hz. Surâka ibn el-Hâris
+215. Hz. Sa'd ibn el-Muallâ
+216. Hz. Ebû Ubeyde el-Fihris
+217. Hz. Abdulah ibn Hâlid
+218. Hz. Sabre ibn Fâtık (tekrar)
+219. Hz. Süleyman ibn Utbe
+220. Hz. Ebû Zenâd
+221. Hz. Ebû Katâde el-Ensârî
+222. Hz. Hâlid ibn Veled el-Saidî
+223. Hz. Mis'ar ibn Fudâle
+224. Hz. Eymen ibn Ubeyd
+225. Hz. Semîne ibn Ka'b
+226. Hz. Uhayha ibn Kays
+227. Hz. Usayd ibn Hudayr
+228. Hz. Mâlik ibn el-Dahhâk
+229. Hz. Ebû Mûsâ el-Gazevî
+230. Hz. Abdurrahman ibn el-Hâris
+231. Hz. Zeyd ibn Hârise (tekrar)
+232. Hz. Câbir ibn Sahr
+233. Hz. İbn Huzeyfe
+234. Hz. Muhâcir ibn Ebî Umeyye
+235. Hz. Ma'bed ibn Abbâd
+236. Hz. Ka'b ibn Umeyye
+237. Hz. Abdurrahman ibn Zeyd
+238. Hz. Abdullah ibn Zeyd el-Ensârî
+239. Hz. Sa'd ibn Zeyd (üçüncü)
+240. Hz. Mübaşşir ibn Abdillah
+241. Hz. Halef ibn es-Sâib
+242. Hz. Süleyman ibn Sinân
+243. Hz. İyâs ibn el-Bekkâ
+244. Hz. Ferve ibn Amr
+245. Hz. Hubab ibn el-Munzir
+246. Hz. Câbir ibn Sahr (ikinci)
+247. Hz. Hâris ibn Husayfe
+248. Hz. Ebû Hureyre (Bedr öncesi anılan)
+249. Hz. Abdullah ibn Süheyl (tekrar)
+250. Hz. Sa'd ibn Kays
+251. Hz. Hâlid ibn Yezîd
+252. Hz. Kays ibn el-Salt`],
+
+["5. Sayfa (253-313)",
+`253. Hz. Hârise ibn el-Nu'man
+254. Hz. Dehrec ibn el-Hâris
+255. Hz. Amr ibn el-Hâris (üçüncü)
+256. Hz. Şemmâs ibn Osman
+257. Hz. Ebû Ubeyde ibn Amr
+258. Hz. İbn Ebî Talha
+259. Hz. Mâlik ibn Suhayb
+260. Hz. Amr ibn Muhsin
+261. Hz. Katâde ibn el-Nu'man
+262. Hz. Abdullah ibn Uneys
+263. Hz. Arfece ibn Şurayh
+264. Hz. Amr ibn Sebâ
+265. Hz. Muâz ibn el-Hâris
+266. Hz. Saîd ibn Ubeyd
+267. Hz. Ubeyd ibn Zeyd
+268. Hz. Ubeyd ibn Atîk
+269. Hz. Ebû Hamza Enes ibn Mâlik (küçük)
+270. Hz. Kays ibn Saken
+271. Hz. Abdullah ibn Târık (ikinci)
+272. Hz. Nu'man ibn Amr
+273. Hz. Ebû Dâvud el-Mazinî
+274. Hz. Sâbit ibn el-Cez'
+275. Hz. Ebû Zeyd Kays ibn Seken
+276. Hz. Abdulah ibn Ubeyy (münafık değil)
+277. Hz. Sellâm ibn Miskel
+278. Hz. Sinân ibn Ebî Sinân (ikinci)
+279. Hz. Rifâa ibn Kays
+280. Hz. Ferve ibn Amr (ikinci)
+281. Hz. Hâlid ibn Zeyd (ikinci)
+282. Hz. Ebû Sinân Vehb ibn Mihsan
+283. Hz. Uveym ibn Sâide
+284. Hz. Ma'n ibn Adî (ikinci)
+285. Hz. Süheyl ibn Râfi'
+286. Hz. Rifâa ibn Râfi' (ikinci)
+287. Hz. Abdulah ibn Revâha (tekrar)
+288. Hz. Âmir ibn el-Bükaylî
+289. Hz. Busr ibn Abdillah el-Ensârî
+290. Hz. Yezîd ibn Amr
+291. Hz. Ebû Seleme Mâlik ibn el-Havvel
+292. Hz. Zeyd ibn Erkam (anılan)
+293. Hz. Sahl ibn Atîk
+294. Hz. Nüfeyr ibn el-Hâris
+295. Hz. Abdulah ibn Abdilkays
+296. Hz. Cüheym ibn el-Hâris
+297. Hz. Hâtıb ibn Ebî Hâşim
+298. Hz. Ma'bed ibn Kays
+299. Hz. Abdullah ibn Kays (ikinci)
+300. Hz. Mâlik ibn Kays
+301. Hz. Nuaymân ibn Amr
+302. Hz. Tufeyl ibn Nu'man
+303. Hz. Ebû İyâs Muâviye
+304. Hz. Mâlik ibn Mes'ûd
+305. Hz. Ebû Talîb Abdulah
+306. Hz. Süveybıt ibn Sa'd
+307. Hz. Hâbis ibn Amr
+308. Hz. Velîd ibn Atîk
+309. Hz. Amr ibn Sürâka (ikinci)
+310. Hz. Abdulah ibn Amr el-Ensârî
+311. Hz. Kays ibn Muhallib
+312. Hz. Sellâm ibn Sâbit (ikinci)
+313. Hz. Sehm ibn Atîk
+
+Allâhümme bihakkı hâülâi's-sâdati'l-kirâm, ighfir zunûbenâ ve kaddî hevâicinâ ve tüb aleynâ inneke ente't-tevvâbu'r-rahîm. Âmîn.`]
+];
+
+/* ───────────────────────────────────────────
+   STATE
+─────────────────────────────────────────── */
 const DEFAULT_STATE={
   dhikrs:[
-    {id:"tefriciye",name:"Salât-ı Tefriciye (Nâriye)",target:11,today:0,total:0,
-     desc:"Okunuş: Allâhumme salli salâten kâmileten ve sellim selâmen tâmmen alâ Seyyidinâ Muhammedinillezî tenhallü bihil ukadü ve tenfericu bihil kürebü ve tukdâ bihil havâicu ve tünâlü bihir reğâibü ve hüsnül havâtimi ve yustaskal ğamâmu bi vechihil kerîm ve alâ âlihî ve sahbihî fî külli lemhatin ve nefesin bi adedi külli ma'lûmin lek."},
     {id:"free",name:"Serbest Sayaç",free:true,target:null,today:0,total:0,
      desc:"Hedefsiz sayaç. İstediğin kadar say."},
+    {id:"tefriciye",name:"Salât-ı Tefriciye (Nâriye)",target:11,today:0,total:0,
+     desc:"Okunuş: Allâhumme salli salâten kâmileten ve sellim selâmen tâmmen alâ Seyyidinâ Muhammedinillezî tenhallü bihil ukadü ve tenfericu bihil kürebü ve tukdâ bihil havâicu ve tünâlü bihir reğâibü ve hüsnül havâtimi ve yustaskal ğamâmu bi vechihil kerîm ve alâ âlihî ve sahbihî fî külli lemhatin ve nefesin bi adedi külli ma'lûmin lek."},
     {id:"ayetel_kursi",name:"Ayetel Kürsi",target:3,today:0,total:0,
      desc:"Okunuş: Bismillâhirrahmânirrahîm. Allâhu lâ ilâhe illâ huvel hayyul kayyûm. Lâ te'huzühû sinetün velâ nevm. Lehû mâ fis semâvâti ve mâ fil ard. Men zellezî yeşfeu indehû illâ bi iznih. Ya'lemu mâ beyne eydîhim ve mâ halfehum. Ve lâ yuhîtûne bi şey'in min ilmihî illâ bi mâ şâe. Vesia kürsiyyühüs semâvâti vel ard. Ve lâ yeûdühû hıfzuhumâ. Ve huvel aliyyül azîm."},
-    {id:"fetih",name:"Fetih Suresi",target:1,today:0,total:0,
-     desc:"Okunuş: Bismillâhirrahmanirrahim.Okunuş: Bismillâhirrahmanirrahim. 1. İnnâ fetahnâ leke fethan mubînâ(mubînen). 2. Li yagfira lekallâhu mâ tekaddeme min zenbike ve mâ teahhara ve yutimme ni’metehu aleyke ve yehdiyeke sırâtan mustekîmâ(mustekîmen). 3. Ve yansurakallâhu nasran azîzâ(azîzen). 4. Huvellezî enzeles sekînete fî kulûbil mu’minîne li yezdâdû îmânen mea îmânihim, ve lillâhi cunûdus semâvâti vel ard(ardı), ve kânallâhu alîmen hakîmâ(hakîmen). 5. Li yudhilel mu’minîne vel mu’minâti cennâtin tecrî min tahtihâl enhâru hâlidîne fîhâ ve yukeffira anhum seyyiâtihim, ve kâne zâlike indallâhi fevzen azîmâ(azîmen). 6. Ve yuazzibel munâfikîne vel munâfikâti vel muşrikîne vel muşrikâtiz zânnîne billâhi zannes sev’i aleyhim dâiratus sev’i, ve gadiballâhu aleyhim ve leanehum ve eadde lehum cehennem(cehenneme), ve sâet masîrâ(masîren). 7. Ve lillâhi cunûdus semâvâti vel ard(ardı), ve kânallâhu azîzen hakîmâ(hakîmen). 8. İnnâ erselnâke şâhiden ve mubeşşiran ve nezîrâ(nezîren). 9. Li tu’minû billâhi ve resûlihî ve tuazzirûhu ve tuvakkırûhu, ve tusebbihûhu bukraten ve asîlâ(asîlen). 10. İnnellezîne yubâyiûneke innemâ yubâyiûnallâh(yubâyiûnallâhe), yedullâhi fevka eydîhim, fe men nekese fe innemâ yenkusu alâ nefsihî, ve men evfâ bi mâ âhede aleyhullâhe fe se yu’tîhi ecran azîmâ(azîmen). 11. Se yekûlu lekel muhallefûne minel a’râbi şegaletnâ emvâlunâ ve ehlûnâ festagfir lenâ, yekûlûne bi elsinetihim mâ leyse fî kulûbihim, kul fe men yemliku lekum minallâhi şey’en in erâde bikum darran ev erâde bikum nef’â(nef’en), bel kânallâhu bi mâ ta’melûne habîrâ(habîran). 12. Bel zanentum en len yenkaliber resûlu vel mu’minûne ilâ ehlîhim ebeden ve zuyyine zâlike fî kulûbikum ve zanentum zannes sev’i ve kuntum kavmen bûrâ(bûran). 13. Ve men lem yu’min billâhi ve resûlihî fe innâ a’tednâ lil kâfirîne saîrâ(saîran). 14. Ve lillâhi mulkus semâvâti vel ard(ardı), yagfiru li men yeşâu ve yuazzibu men yeşâu, ve kânallahu gafûran rahîmâ(rahîmen). 15. Se yekûlul muhallefûne izântalaktum ilâ megânime li te’huzûhâ zerûnâ nettebi’kum, yurîdûne en yubeddilû kelâmallâh(kelâmallâhi), kul len tettebiûnâ kezâlikum kâlallâhu min kablu, fe se yekûlûne bel tahsudûnenâ, bel kânû lâ yefkahûne illâ kalîlâ(kalîlen). 16. Kul lil muhallefîne minel a’râbi se tud’avne ilâ kavmin ulî be’sin şedîdin tukâtilûnehum ev yuslimûn(yuslimûne), fe in tutîû yu’tikumullâhu ecran hasenâ(hasenen), ve in tetevellev kemâ tevelleytum min kablu yuazzibkum azâben elîmâ(elîmen). 17. Leyse alâl a’mâ haracun ve lâ alâl a’raci haracun ve lâ alâl marîdı haracun, ve men yutııllahe ve resûlehu yudhılhu cennâtin tecrî min tahtihâl enhâru, ve men yetevelle yuazzibhu azâben elîmâ(elîmen). 18. Lekad radiyallâhu anil mu’minîne iz yubâyiûneke tahteş şecerati fe alime mâ fî kulûbihim fe enzeles sekînete aleyhim ve esâbehum fethan karîbâ(karîben). 19. Ve megânime kesîraten ye’huzûnehâ, ve kânallâhu azîzen hakîmâ(hakîmen). 20. Vaadekumullâhu megânime kesîraten te’huzûnehâ fe accele lekum hâzihî ve keffe eydiyen nâsi ankum, ve li tekûne âyeten lil mu’minîne ve yehdiyekum sırâtan mustakîmâ(mustakîmen). 21. Ve uhrâ lem takdirû aleyhâ kad ehâtallâhu bihâ, ve kânallâhu alâ kulli şey’in kadîrâ(kadîran). 22. Ve lev kâtelekumullezîne keferû le vellevûl edbâra summe lâ yecidûne velîyyen ve lâ nasîrâ( nasîran). 23. Sunnetallâhilletî kad halet min kablu, ve len tecide li sunnetillâhi tebdîlâ(tebdîlen). 24. Ve huvellezî keffe eydiyehum ankum ve eydiyekum anhum bi batni mekkete min ba’di en azferakum aleyhim ve kânallâhu bi mâ ta’melûne basîrâ(basîran). 25. Humullezîne keferû ve saddûkum anil mescidil harâmi vel hedye ma’kûfen en yebluga mahıllehu, ve lev lâ ricâlun mu’minûne ve nisâun mu’minâtun lem ta’lemûhum en tetaûhum fe tusîbekum minhum maarratun bi gayri ilmin, li yudhılallâhu fî rahmetihî men yeşâu, lev tezeyyelû le azzebnâllezîne keferû minhum azâben elîmâ(elîmen). 26. İz cealellezîne keferû fî kulûbihimul hamiyyete hamiyyetel câhiliyyeti fe enzelallâhu sekînetehu alâ resûlihî ve alel mu’minîne ve elzemehum kelimetet takvâ ve kânû e hakka bihâ ve ehlehâ ve kânallâhu bi kulli şey’in alîmâ(alîmen). 27. Lekad sadakallâhu resûlehur ru’yâ bil hakkı, le tedhulunnel mescidel harâme inşâallâhu âminîne muhallikîne ruûsekum ve mukassırîne lâ tehâfûn(tehâfûne), fe alime mâ lem ta’lemû fe ceale min dûni zâlike fethan karîbâ(karîben). 28. Huvellezî ersele resûlehu bil hudâ ve dînil hakkı li yuzhirahu alâd dîni kullihî, ve kefâ billâhi şehîdâ(şehîden). 29. Muhammedun resûlullâh(resûlullâhi), vellezîne meahû eşiddâu alâl kuffâri ruhamâu beynehum terâhum rukkean succeden yebtegûne fadlen minallâhi ve rıdvânen sîmâhum fî vucûhihim min eseris sucûd(sucûdi), zâlike meseluhum fît tevrât(tevrâti), ve meseluhum fîl incîl(incîli), ke zer’in ahrace şat’ehu fe âzerehu festagleza festevâ alâ sûkıhî yu’cibuz zurrâa, li yagîza bihimul kuffâr(kuffâra), vaadallâhullezîne âmenû ve amilûs sâlihâti minhum magfiraten ve ecren azîmâ(azîmen)."},
+    {id:"fetih",name:"Fetih Suresi",target:1,today:0,total:0,page:0,
+     desc:"Fetih Suresi — 29 ayet. Aşağıdan sayfa sayfa okuyabilirsiniz."},
     {id:"nazar_duasi",name:"Nazar Duası",target:7,today:0,total:0,
      desc:"Okunuş: Eûzü bi kelimâtillâhi't-tâmmeti min kulli şeytânin ve hâmmeh ve min kulli aynin lâmmeh."},
     {id:"ihlas_felak_nas",name:"İhlas + Felak + Nas",target:3,today:0,total:0,
-     desc:"Okunuş: Bismillâhirrahmânirrahîm. Kul hüvallâhu ehad. Allâhü's-samed. Lem yelid ve lem yûled. Ve lem yekun lehû kufuven ehad. Bismillâhirrahmânirrahîm. Kul eûzü bi rabbil felak. Min şerri mâ halak. Ve min şerri ğâsikın izâ vekab. Ve min şerri'n-neffâsâti fil ukad. Ve min şerri hâsidin izâ hased. Bismillâhirrahmânirrahîm. Kul eûzü bi rabbin nâs. Melikin nâs. İlâhin nâs. Min şerril vesvâsil hannâs. Ellezî yuvesvisu fî sudûrin nâs. Minel cinneti ven nâs."},
-    {id:"cevsen",name:"Cevşen-i Kebir",target:1,today:0,total:0,cevsenPage:0,
-     desc:"Cevşen-i Kebir — 100 bölümden oluşan dua. Aşağıdan bölüm bölüm okuyabilirsiniz."}
+     desc:"Okunuş: Bismillâhirrahmânirrahîm. Kul hüvallâhu ehad. Allâhü's-samed. Lem yelid ve lem yûled. Ve lem yekun lehû kufuven ehad.\n\nBismillâhirrahmânirrahîm. Kul eûzü bi rabbil felak. Min şerri mâ halak. Ve min şerri ğâsikın izâ vekab. Ve min şerri'n-neffâsâti fil ukad. Ve min şerri hâsidin izâ hased.\n\nBismillâhirrahmânirrahîm. Kul eûzü bi rabbin nâs. Melikin nâs. İlâhin nâs. Min şerril vesvâsil hannâs. Ellezî yuvesvisu fî sudûrin nâs. Minel cinneti ven nâs."},
+    {id:"cevsen",name:"Cevşen-i Kebir",target:1,today:0,total:0,page:0,
+     desc:"Cevşen-i Kebir — 100 bölümden oluşan dua. Aşağıdan bölüm bölüm okuyabilirsiniz."},
+    {id:"bedr",name:"Ashâb-ı Bedr Duası",target:1,today:0,total:0,page:0,
+     desc:"Ashâb-ı Bedr — Bedir Gazvesi'nde bulunan 313 mübarek sahabenin isimlerini içerir. Okunuşu: Allâhümme innî es'elüke bihakkı eshâbi Bedr en tağfira lî zunûbî ve en takdiye hâcetî."}
   ],
   activeId:"free"
 };
 
+function load(){try{const r=localStorage.getItem(KEY);return r?JSON.parse(r):null}catch{return null}}
+function save(s){localStorage.setItem(KEY,JSON.stringify(s))}
+
 let state=load();
 if(!state||!Array.isArray(state.dhikrs)){state=structuredClone(DEFAULT_STATE)}
+// migration: ensure new fields
 state.dhikrs.forEach(d=>{
-  if(!('today'in d))d.today=0;
-  if(!('total'in d))d.total=0;
-  if(d.id==='cevsen'&&!('cevsenPage'in d))d.cevsenPage=0;
+  if(!('today' in d))d.today=0;
+  if(!('total' in d))d.total=0;
+  if(!('page' in d))d.page=0;
+  // ensure bedr exists
 });
+const ids=state.dhikrs.map(d=>d.id);
+if(!ids.includes('bedr')){
+  state.dhikrs.push({id:"bedr",name:"Ashâb-ı Bedr Duası",target:1,today:0,total:0,page:0,
+    desc:"Ashâb-ı Bedr — Bedir Gazvesi'nde bulunan 313 mübarek sahabenin isimlerini içerir."});
+}
 
+/* ─── DOM ─── */
 const freeSlot=document.getElementById("freeSlot");
 const dhikrList=document.getElementById("dhikrList");
 const menuView=document.getElementById("menuView");
@@ -366,11 +750,13 @@ const undoBtn=document.getElementById("undoBtn");
 const resetBtn=document.getElementById("resetBtn");
 const resetDataBtn=document.getElementById("resetDataBtn");
 const toggleDesc=document.getElementById("toggleDesc");
-const cevsenPager=document.getElementById("cevsenPager");
+const doneBanner=document.getElementById("doneBanner");
+const genericPager=document.getElementById("genericPager");
 const pagerText=document.getElementById("pagerText");
 const pagerFill=document.getElementById("pagerFill");
 const pagerFraction=document.getElementById("pagerFraction");
 const pagerSectionName=document.getElementById("pagerSectionName");
+const pagerLabel=document.getElementById("pagerLabel");
 const pagerPrev=document.getElementById("pagerPrev");
 const pagerNext=document.getElementById("pagerNext");
 const jumpInput=document.getElementById("jumpInput");
@@ -389,8 +775,8 @@ function switchToCounter(id){
   menuView.classList.add("hidden");
   counterView.classList.remove("hidden");
   bottomBar.style.display="none";
-  descBoxEl.classList.add("open");      
-  toggleDesc.textContent="Okunuş ▴";    
+  descBoxEl.classList.remove("open");
+  toggleDesc.textContent="Okunuş ▾";
   renderCounter();
 }
 
@@ -401,10 +787,12 @@ function renderMenu(){
     card.className="card";
     const todayPart=d.target?`${d.today} / ${d.target}`:`${d.today} / ∞`;
     const done=d.target&&d.today>=d.target;
+    const pct=d.target?Math.min(100,(d.today/d.target*100)):0;
     card.innerHTML=`
       <div class="title">${d.name}${done?'<span class="completed-badge">Tamam</span>':''}</div>
       <div class="meta">Bugün: <b>${todayPart}</b> · Toplam: <b>${d.total}</b></div>
-      <div class="descPreview">${(d.desc||"").split("\n").slice(0,1).join("")}</div>
+      <div class="descPreview">${(d.desc||"").split("\n")[0]}</div>
+      ${d.target?`<div class="progress-mini"><div class="progress-mini-fill" style="width:${pct}%"></div></div>`:''}
     `;
     card.addEventListener("click",()=>switchToCounter(d.id));
     if(d.free)freeSlot.appendChild(card);
@@ -412,11 +800,55 @@ function renderMenu(){
   });
 }
 
+/* ─── PAGER ENGINE ─── */
+let activePagerData=null; // array of [title, text]
+let activePagerMax=0;
+
+function initPager(pages){
+  activePagerData=pages;
+  activePagerMax=pages.length;
+  jumpInput.max=pages.length;
+  jumpInput.placeholder=`1-${pages.length}`;
+  genericPager.classList.add("active");
+  renderPagerPage(getActive().page||0);
+}
+function renderPagerPage(idx){
+  const a=getActive();
+  a.page=idx;save(state);
+  const sec=activePagerData[idx];
+  pagerSectionName.textContent=sec[0];
+  pagerText.textContent=sec[1];
+  pagerFraction.textContent=`${idx+1} / ${activePagerMax}`;
+  const pct=((idx+1)/activePagerMax*100).toFixed(0);
+  pagerFill.style.width=pct+"%";
+  pagerPrev.disabled=idx===0;
+  const isLast=idx===activePagerMax-1;
+  pagerNext.textContent=isLast?"✓ Tamamlandı":"Devam Et →";
+  pagerNext.disabled=isLast;
+  jumpInput.value=idx+1;
+}
+pagerPrev.addEventListener("click",()=>{
+  const cur=getActive().page||0;
+  if(cur>0){renderPagerPage(cur-1);pagerText.scrollTop=0;}
+});
+pagerNext.addEventListener("click",()=>{
+  const cur=getActive().page||0;
+  if(cur<activePagerMax-1){renderPagerPage(cur+1);pagerText.scrollTop=0;}
+});
+jumpBtn.addEventListener("click",()=>{
+  const v=parseInt(jumpInput.value);
+  if(v>=1&&v<=activePagerMax)renderPagerPage(v-1);
+});
+jumpInput.addEventListener("keydown",(e)=>{
+  if(e.key==="Enter"){const v=parseInt(jumpInput.value);if(v>=1&&v<=activePagerMax)renderPagerPage(v-1);}
+});
+
 function renderCounter(){
   const a=getActive();
   activeNameEl.textContent=a.name;
+  const done=a.target&&a.today>=a.target;
   if(a.target){
-    activeSubEl.textContent=`Hedef: ${a.target}`;
+    activeSubEl.textContent=`Hedef: ${a.today}/${a.target}`;
     targetTitleEl.textContent="Hedef";
     targetLabelEl.textContent=a.target;
   } else {
@@ -428,46 +860,17 @@ function renderCounter(){
   todayLabelEl.textContent=a.today;
   totalLabelEl.textContent=a.total;
   descBoxEl.textContent=a.desc||"";
+  doneBanner.className=done?"done-banner show":"done-banner";
+  if(done)ringTap.classList.add("completed-ring");
+  else ringTap.classList.remove("completed-ring");
 
-  if(a.id==="cevsen"){
-    cevsenPager.classList.add("active");
-    renderCevsenPage(a.cevsenPage||0);
-  } else {
-    cevsenPager.classList.remove("active");
-  }
+  // pager
+  genericPager.classList.remove("active");
+  activePagerData=null;
+  if(a.id==="cevsen") initPager(CEVSEN.map(s=>[s[0]+". Bölüm",s[1]]));
+  else if(a.id==="fetih") initPager(FETIH_PAGES);
+  else if(a.id==="bedr") initPager(BEDR_PAGES);
 }
-
-function renderCevsenPage(idx){
-  const a=getActive();
-  a.cevsenPage=idx;
-  save(state);
-  const sec=CEVSEN_SECTIONS[idx];
-  pagerText.textContent=sec[1];
-  pagerFraction.textContent=`${idx+1} / 100`;
-  pagerSectionName.textContent=`${idx+1}. Bölüm`;
-  const pct=((idx+1)/100*100).toFixed(0);
-  pagerFill.style.width=pct+"%";
-  pagerPrev.disabled=idx===0;
-  pagerNext.textContent=idx===99?"✓ Tamamlandı":"Devam Et →";
-  pagerNext.disabled=idx===99;
-  jumpInput.value=idx+1;
-}
-
-pagerPrev.addEventListener("click",()=>{
-  const a=getActive();
-  const cur=a.cevsenPage||0;
-  if(cur>0)renderCevsenPage(cur-1);
-});
-pagerNext.addEventListener("click",()=>{
-  const a=getActive();
-  const cur=a.cevsenPage||0;
-  if(cur<99){renderCevsenPage(cur+1);pagerText.scrollTop=0;}
-});
-jumpBtn.addEventListener("click",()=>{
-  const v=parseInt(jumpInput.value);
-  if(v>=1&&v<=100)renderCevsenPage(v-1);
-});
-jumpInput.addEventListener("keydown",(e)=>{if(e.key==="Enter"){const v=parseInt(jumpInput.value);if(v>=1&&v<=100)renderCevsenPage(v-1);}});
 
 toggleDesc.addEventListener("click",()=>{
   const open=descBoxEl.classList.toggle("open");
@@ -476,6 +879,7 @@ toggleDesc.addEventListener("click",()=>{
 
 function tap(){
   const a=getActive();
+  if(a.target&&a.today>=a.target)return;
   a.today++;a.total++;
   save(state);renderCounter();renderMenu();
   ringTap.style.transform="scale(0.93)";
@@ -483,6 +887,7 @@ function tap(){
 }
 function undo(){
   const a=getActive();
+  if(a.today===0)return;
   a.today=Math.max(0,a.today-1);
   a.total=Math.max(0,a.total-1);
   save(state);renderCounter();renderMenu();
@@ -493,7 +898,7 @@ function resetToday(){
   a.today=0;save(state);renderCounter();renderMenu();
 }
 function resetAllData(){
-  if(!confirm("Tüm veriler silinsin mi?"))return;
+  if(!confirm("Tüm veriler silinsin mi? Bu işlem geri alınamaz."))return;
   localStorage.removeItem(KEY);
   state=structuredClone(DEFAULT_STATE);
   save(state);renderMenu();switchToMenu();
