@@ -1,129 +1,168 @@
 <!DOCTYPE html>
-<html lang="tr">
+<html lang="tr" data-theme="dark">
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>Zikir-Matik</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-:root{
+
+/* ── TEMA ── */
+[data-theme="dark"]{
   --bg:#0a0a0f;--surface:#13131a;--surface2:#1c1c27;--border:#2a2a3a;
   --accent:#c9a96e;--accent2:#e8c99a;--text:#e8e4d9;--muted:#7a7590;
-  --green:#4caf7d;--red:#e05252;--ring-size:220px;
+  --green:#4caf7d;--red:#e05252;--card-shadow:none;
+  --btn-bg:#1c1c27;--theme-icon:"☀️";
 }
-body{background:var(--bg);color:var(--text);font-family:'Georgia',serif;min-height:100vh;overflow-x:hidden}
+[data-theme="light"]{
+  --bg:#f5f0e8;--surface:#ffffff;--surface2:#f0ebe0;--border:#d4c9b0;
+  --accent:#8b5e2a;--accent2:#6b4520;--text:#2c2416;--muted:#7a6a52;
+  --green:#2e7d52;--red:#c0392b;--card-shadow:0 1px 4px rgba(0,0,0,.08);
+  --btn-bg:#efe8d8;--theme-icon:"🌙";
+}
 
-/* MENU */
-#menuView{padding:1.5rem 1rem 5rem}
-.app-header{text-align:center;padding:2rem 0 1.5rem}
+body{background:var(--bg);color:var(--text);font-family:'Georgia',serif;min-height:100vh;overflow-x:hidden;transition:background .3s,color .3s}
+
+/* ── HEADER ── */
+#menuView{padding:1.2rem 1rem 5rem}
+.app-header{text-align:center;padding:1.8rem 0 1.2rem;position:relative}
 .app-header h1{font-size:1.8rem;color:var(--accent2);letter-spacing:.12em;font-weight:400}
-.app-header p{font-size:.8rem;color:var(--muted);margin-top:.3rem;letter-spacing:.06em}
-.header-divider{width:40px;height:1px;background:var(--accent);margin:.8rem auto 0;opacity:.5}
+.app-header p{font-size:.78rem;color:var(--muted);margin-top:.3rem;letter-spacing:.06em}
+.header-divider{width:40px;height:1px;background:var(--accent);margin:.7rem auto 0;opacity:.5}
+.header-actions{position:absolute;top:1.8rem;right:0;display:flex;gap:.5rem}
+.icon-btn{background:none;border:1px solid var(--border);color:var(--muted);width:36px;height:36px;border-radius:50%;cursor:pointer;font-size:1rem;display:flex;align-items:center;justify-content:center;transition:all .2s}
+.icon-btn:hover{border-color:var(--accent);color:var(--accent)}
 
-.section-label{font-size:.68rem;letter-spacing:.18em;color:var(--muted);text-transform:uppercase;margin:1.4rem 0 .6rem;padding:0 .25rem}
+/* ── DATE STRIP ── */
+.date-strip{text-align:center;font-size:.72rem;color:var(--muted);margin-bottom:1rem;letter-spacing:.04em}
 
-.card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:1rem 1.1rem;margin-bottom:.7rem;cursor:pointer;transition:border-color .2s,background .2s;position:relative;overflow:hidden}
+.section-label{font-size:.68rem;letter-spacing:.18em;color:var(--muted);text-transform:uppercase;margin:1.2rem 0 .5rem;padding:0 .25rem}
+
+/* ── CARDS ── */
+.card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:1rem 1.1rem;margin-bottom:.7rem;cursor:pointer;transition:border-color .2s,background .2s;position:relative;overflow:hidden;box-shadow:var(--card-shadow)}
 .card::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--accent);opacity:0;transition:opacity .2s;border-radius:14px 0 0 14px}
 .card:hover{background:var(--surface2);border-color:var(--accent)}
 .card:hover::before{opacity:1}
 .card .title{font-size:1rem;color:var(--text);margin-bottom:.3rem}
-.card .meta{font-size:.78rem;color:var(--muted)}
+.card .meta{font-size:.75rem;color:var(--muted)}
 .card .meta b{color:var(--accent)}
-.card .descPreview{font-size:.72rem;color:var(--muted);margin-top:.35rem;line-height:1.4;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;opacity:.65}
+.card .descPreview{font-size:.73rem;color:var(--muted);margin-top:.35rem;line-height:1.4;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;opacity:.7}
 .card .progress-mini{height:2px;background:var(--border);border-radius:2px;margin-top:.6rem;overflow:hidden}
-.card .progress-mini-fill{height:100%;background:var(--accent);border-radius:2px;transition:width .3s}
+.card .progress-mini-fill{height:100%;background:var(--accent);border-radius:2px;transition:width .4s}
+.completed-badge{background:rgba(76,175,125,.12);border:1px solid rgba(76,175,125,.3);color:var(--green);border-radius:20px;padding:.15rem .7rem;font-size:.66rem;margin-left:.5rem;vertical-align:middle}
 
-/* COUNTER */
+/* ── COUNTER VIEW ── */
 #counterView{display:flex;flex-direction:column;min-height:100vh;padding-bottom:2rem}
-.counter-header{padding:1rem 1rem .5rem;display:flex;align-items:center;gap:.75rem;border-bottom:1px solid var(--border)}
-#backBtn{background:none;border:1px solid var(--border);color:var(--muted);padding:.4rem .8rem;border-radius:8px;cursor:pointer;font-size:.8rem;transition:color .2s,border-color .2s}
+.counter-header{padding:.9rem 1rem .5rem;display:flex;align-items:center;gap:.75rem;border-bottom:1px solid var(--border)}
+#backBtn{background:none;border:1px solid var(--border);color:var(--muted);padding:.4rem .8rem;border-radius:8px;cursor:pointer;font-size:.8rem;transition:all .2s;font-family:inherit}
 #backBtn:hover{color:var(--text);border-color:var(--accent)}
 .counter-title{flex:1;min-width:0}
 #activeName{font-size:1rem;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-#activeSub{font-size:.75rem;color:var(--muted);margin-top:.1rem}
+#activeSub{font-size:.73rem;color:var(--muted);margin-top:.1rem}
 
-.ring-area{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:1.5rem 1rem}
+.ring-area{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:1.2rem 1rem}
+
+/* ── RING ── */
 #ringTap{
-  width:var(--ring-size);height:var(--ring-size);border-radius:50%;
+  width:220px;height:220px;border-radius:50%;
   background:radial-gradient(circle at 40% 35%,#1e1e2e,#0d0d14);
   border:3px solid var(--accent);cursor:pointer;
   display:flex;flex-direction:column;align-items:center;justify-content:center;
   position:relative;user-select:none;-webkit-tap-highlight-color:transparent;
-  transition:transform .08s,box-shadow .08s;
+  transition:transform .08s,box-shadow .15s,border-color .4s;
   box-shadow:0 0 40px rgba(201,169,110,.08)
 }
-#ringTap:active{transform:scale(.93);box-shadow:0 0 60px rgba(201,169,110,.2)}
-#ringTap::after{content:'';position:absolute;inset:8px;border-radius:50%;border:1px solid rgba(201,169,110,.15)}
+[data-theme="light"] #ringTap{background:radial-gradient(circle at 40% 35%,#fff8ee,#f0e4cc)}
+#ringTap:active{transform:scale(.93);box-shadow:0 0 60px rgba(201,169,110,.22)}
+#ringTap::after{content:'';position:absolute;inset:8px;border-radius:50%;border:1px solid rgba(201,169,110,.18)}
 #count{font-size:3.5rem;color:var(--accent2);font-weight:400;line-height:1}
-.tap-hint{font-size:.72rem;color:var(--muted);margin-top:.4rem;letter-spacing:.1em}
-.completed-ring{border-color:var(--green)!important;box-shadow:0 0 50px rgba(76,175,125,.15)!important}
+.tap-hint{font-size:.7rem;color:var(--muted);margin-top:.4rem;letter-spacing:.12em}
+.completed-ring{border-color:var(--green)!important;box-shadow:0 0 50px rgba(76,175,125,.18)!important}
 
-.stats-row{display:flex;gap:.7rem;width:100%;max-width:340px}
-.stat-box{flex:1;background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:.7rem;text-align:center}
-.stat-box .stat-label{font-size:.63rem;color:var(--muted);letter-spacing:.08em;text-transform:uppercase}
-.stat-box .stat-val{font-size:1.3rem;color:var(--accent);margin-top:.2rem}
+/* ── STATS ── */
+.stats-row{display:flex;gap:.7rem;width:100%;max-width:340px;margin-top:1.4rem}
+.stat-box{flex:1;background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:.65rem;text-align:center;box-shadow:var(--card-shadow)}
+.stat-label{font-size:.6rem;color:var(--muted);letter-spacing:.08em;text-transform:uppercase}
+.stat-val{font-size:1.3rem;color:var(--accent);margin-top:.2rem}
 
-.counter-actions{display:flex;gap:.6rem;width:100%;max-width:340px;margin-top:1rem}
-.counter-actions button{flex:1;background:var(--surface);border:1px solid var(--border);color:var(--muted);padding:.55rem;border-radius:8px;cursor:pointer;font-size:.78rem;font-family:inherit;transition:all .2s}
+.done-banner{display:none;background:rgba(76,175,125,.09);border:1px solid rgba(76,175,125,.28);border-radius:10px;padding:.65rem 1rem;text-align:center;font-size:.8rem;color:var(--green);margin-top:.8rem;width:100%;max-width:340px;animation:fadeIn .4s}
+.done-banner.show{display:block}
+@keyframes fadeIn{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:translateY(0)}}
+
+.counter-actions{display:flex;gap:.6rem;width:100%;max-width:340px;margin-top:.9rem}
+.counter-actions button{flex:1;background:var(--surface);border:1px solid var(--border);color:var(--muted);padding:.55rem;border-radius:8px;cursor:pointer;font-size:.76rem;font-family:inherit;transition:all .2s}
 .counter-actions button:hover{border-color:var(--accent);color:var(--text)}
 
-/* DESC / PAGER */
-#descBox{
-  width:100%;max-width:420px;margin:1.2rem auto 0;
-  background:var(--surface);border:1px solid var(--border);border-radius:12px;
-  font-size:.78rem;color:var(--muted);line-height:1.7;
-  max-height:0;overflow:hidden;transition:max-height .35s ease,padding .35s;padding:0 1rem
-}
-#descBox.open{max-height:500px;padding:.9rem 1rem;overflow-y:auto}
-#toggleDesc{background:none;border:1px solid var(--border);color:var(--muted);border-radius:20px;padding:.3rem .9rem;font-size:.72rem;font-family:inherit;cursor:pointer;margin-top:.8rem;transition:all .2s}
+/* ── OKUNUŞ TOGGLE ── */
+.okunus-bar{display:flex;align-items:center;gap:.5rem;margin-top:.9rem;width:100%;max-width:420px}
+#toggleDesc{flex:1;background:var(--surface);border:1px solid var(--border);color:var(--muted);border-radius:8px;padding:.5rem .9rem;font-size:.78rem;font-family:inherit;cursor:pointer;transition:all .2s;text-align:left}
 #toggleDesc:hover{border-color:var(--accent);color:var(--accent)}
+#audioBtn{background:var(--surface);border:1px solid var(--border);color:var(--muted);border-radius:8px;padding:.5rem .75rem;font-size:.85rem;cursor:pointer;transition:all .2s;white-space:nowrap}
+#audioBtn:hover{border-color:var(--accent);color:var(--accent)}
+#audioBtn.playing{border-color:var(--green);color:var(--green);background:rgba(76,175,125,.08)}
 
-/* PAGER (shared) */
-.pager-wrap{width:100%;max-width:420px;margin:1rem auto 0;display:none}
+/* ── DESC BOX ── */
+#descBox{
+  width:100%;max-width:420px;margin:.5rem auto 0;
+  background:var(--surface);border:1px solid var(--border);border-radius:12px;
+  font-size:.88rem;color:var(--text);line-height:1.85;
+  max-height:0;overflow:hidden;transition:max-height .4s ease,padding .35s;padding:0 1.1rem;
+  opacity:.9
+}
+#descBox.open{max-height:520px;padding:1rem 1.1rem;overflow-y:auto}
+
+/* ── PAGER ── */
+.pager-wrap{width:100%;max-width:420px;margin:.9rem auto 0;display:none}
 .pager-wrap.active{display:block}
-.pager-header{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:.8rem 1rem;margin-bottom:.6rem}
-.pager-progress{height:3px;background:var(--border);border-radius:2px;margin:.6rem 0 .5rem}
-.pager-progress-fill{height:100%;background:var(--accent);border-radius:2px;transition:width .3s}
-.pager-meta{display:flex;justify-content:space-between;font-size:.72rem;color:var(--muted)}
-.pager-section-name{font-size:.85rem;color:var(--accent2);margin-top:.3rem}
-.pager-text{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:1rem;font-size:.78rem;color:var(--muted);line-height:1.8;max-height:260px;overflow-y:auto}
-.pager-nav{display:flex;gap:.6rem;margin-top:.6rem}
+.pager-header{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:.75rem 1rem;margin-bottom:.55rem;box-shadow:var(--card-shadow)}
+.pager-progress{height:3px;background:var(--border);border-radius:2px;margin:.55rem 0 .45rem}
+.pager-progress-fill{height:100%;background:var(--accent);border-radius:2px;transition:width .35s}
+.pager-meta{display:flex;justify-content:space-between;font-size:.7rem;color:var(--muted)}
+.pager-section-name{font-size:.85rem;color:var(--accent2);margin-top:.25rem;font-weight:400}
+.pager-text{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:1rem 1.1rem;font-size:.9rem;color:var(--text);line-height:1.9;max-height:280px;overflow-y:auto;opacity:.92;box-shadow:var(--card-shadow)}
+.pager-nav{display:flex;gap:.6rem;margin-top:.55rem}
 .pager-nav button{flex:1;background:var(--surface);border:1px solid var(--border);color:var(--muted);padding:.55rem;border-radius:8px;font-size:.78rem;font-family:inherit;cursor:pointer;transition:all .2s}
 .pager-nav button:hover:not(:disabled){border-color:var(--accent);color:var(--text)}
 .pager-nav button:disabled{opacity:.3;cursor:default}
 .continue-btn{border-color:var(--accent)!important;color:var(--accent)!important;font-weight:600}
-.continue-btn:hover:not(:disabled){background:var(--accent)!important;color:#0a0a0f!important}
-.pager-jump{display:flex;align-items:center;gap:.5rem;margin-top:.5rem}
+.continue-btn:hover:not(:disabled){background:var(--accent)!important;color:#fff!important}
+.pager-jump{display:flex;align-items:center;gap:.5rem;margin-top:.45rem}
+.pager-jump span{font-size:.7rem;color:var(--muted);white-space:nowrap}
 .pager-jump input{flex:1;background:var(--surface2);border:1px solid var(--border);color:var(--text);padding:.4rem .6rem;border-radius:7px;font-size:.8rem;text-align:center;font-family:inherit}
-.pager-jump button{background:var(--surface);border:1px solid var(--border);color:var(--muted);padding:.4rem .8rem;border-radius:7px;font-size:.78rem;cursor:pointer;transition:all .2s;font-family:inherit}
+.pager-jump button{background:var(--surface);border:1px solid var(--border);color:var(--muted);padding:.4rem .8rem;border-radius:7px;font-size:.76rem;cursor:pointer;transition:all .2s;font-family:inherit}
 .pager-jump button:hover{border-color:var(--accent);color:var(--accent)}
 
-/* COMPLETION BANNER */
-.done-banner{display:none;background:rgba(76,175,125,.08);border:1px solid rgba(76,175,125,.25);border-radius:10px;padding:.7rem 1rem;text-align:center;font-size:.8rem;color:var(--green);margin-top:.8rem;width:100%;max-width:340px}
-.done-banner.show{display:block}
-
-/* BOTTOM BAR */
-.bottom-bar{position:fixed;bottom:0;left:0;right:0;padding:.8rem 1rem;background:rgba(10,10,15,.97);border-top:1px solid var(--border);display:flex;justify-content:center}
-#resetDataBtn{background:none;border:1px solid var(--border);color:var(--muted);padding:.4rem 1.2rem;border-radius:8px;font-size:.75rem;font-family:inherit;cursor:pointer;transition:all .2s}
+/* ── BOTTOM BAR ── */
+.bottom-bar{position:fixed;bottom:0;left:0;right:0;padding:.75rem 1rem;background:rgba(10,10,15,.97);border-top:1px solid var(--border);display:flex;justify-content:center}
+[data-theme="light"] .bottom-bar{background:rgba(245,240,232,.97)}
+#resetDataBtn{background:none;border:1px solid var(--border);color:var(--muted);padding:.4rem 1.2rem;border-radius:8px;font-size:.73rem;font-family:inherit;cursor:pointer;transition:all .2s}
 #resetDataBtn:hover{border-color:var(--red);color:var(--red)}
 
-.completed-badge{background:rgba(76,175,125,.1);border:1px solid rgba(76,175,125,.3);color:var(--green);border-radius:20px;padding:.15rem .7rem;font-size:.68rem;margin-left:.5rem;vertical-align:middle}
-.hidden{display:none!important}
+/* ── AUDIO PLAYER ── */
+.audio-player{display:none;width:100%;max-width:420px;margin:.6rem auto 0;background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:.75rem 1rem}
+.audio-player.show{display:block}
+.audio-player audio{width:100%;border-radius:6px;outline:none}
+.audio-player audio::-webkit-media-controls-panel{background:var(--surface2)}
+.audio-info{font-size:.72rem;color:var(--muted);margin-bottom:.5rem;text-align:center}
+.audio-links{display:flex;flex-wrap:wrap;gap:.4rem;margin-top:.6rem}
+.audio-link{flex:1;min-width:120px;background:var(--surface2);border:1px solid var(--border);color:var(--muted);border-radius:7px;padding:.4rem .6rem;font-size:.7rem;cursor:pointer;text-align:center;transition:all .2s;font-family:inherit}
+.audio-link:hover,.audio-link.active{border-color:var(--accent);color:var(--accent);background:rgba(201,169,110,.07)}
 
-/* Ashab-i Bedr name list styling */
-.bedr-list{column-count:2;column-gap:1rem;font-size:.73rem;line-height:1.9;color:var(--muted)}
-.bedr-list span{display:block}
-.bedr-list span:nth-child(odd){color:var(--text);opacity:.85}
+.hidden{display:none!important}
 </style>
 </head>
 <body>
 
 <div id="menuView">
   <div class="app-header">
+    <div class="header-actions">
+      <button class="icon-btn" id="themeBtn" title="Tema Değiştir">☀️</button>
+    </div>
     <h1>Zikir-Matik</h1>
     <p>Zikirlerinizi takip edin</p>
     <div class="header-divider"></div>
   </div>
+  <div class="date-strip" id="dateStrip"></div>
   <div id="freeSlot"></div>
   <div class="section-label">Zikirler &amp; Dualar</div>
   <div id="dhikrList"></div>
@@ -144,7 +183,7 @@ body{background:var(--bg);color:var(--text);font-family:'Georgia',serif;min-heig
       <div class="tap-hint">DOKUN</div>
     </div>
 
-    <div class="stats-row" style="margin-top:1.5rem">
+    <div class="stats-row">
       <div class="stat-box">
         <div class="stat-label">Bugün</div>
         <div class="stat-val" id="todayLabel">0</div>
@@ -166,10 +205,21 @@ body{background:var(--bg);color:var(--text);font-family:'Georgia',serif;min-heig
       <button id="resetBtn">Bugünü Sıfırla</button>
     </div>
 
-    <button id="toggleDesc">Okunuş ▾</button>
+    <div class="okunus-bar">
+      <button id="toggleDesc">📖 Okunuş ▾</button>
+      <button id="audioBtn">🔊 Sesli</button>
+    </div>
+
     <div id="descBox"></div>
 
-    <!-- Generic Pager (Fetih, Cevsen etc.) -->
+    <!-- Audio Player -->
+    <div class="audio-player" id="audioPlayer">
+      <div class="audio-info" id="audioInfo">Sesli okuma seçin</div>
+      <audio id="audioEl" controls preload="none"></audio>
+      <div class="audio-links" id="audioLinks"></div>
+    </div>
+
+    <!-- Pager -->
     <div class="pager-wrap" id="genericPager">
       <div class="pager-header">
         <div class="pager-meta">
@@ -185,7 +235,7 @@ body{background:var(--bg);color:var(--text);font-family:'Georgia',serif;min-heig
         <button class="continue-btn" id="pagerNext">Devam Et →</button>
       </div>
       <div class="pager-jump">
-        <span style="font-size:.72rem;color:var(--muted);white-space:nowrap">Sayfaya git:</span>
+        <span>Sayfaya git:</span>
         <input type="number" id="jumpInput" min="1" placeholder="No"/>
         <button id="jumpBtn">Git</button>
       </div>
@@ -198,14 +248,43 @@ body{background:var(--bg);color:var(--text);font-family:'Georgia',serif;min-heig
 </div>
 
 <script>
-const KEY="zikir-matik-v3";
+/* ═══════════════════════════════════════════
+   AUDIO DATA — YouTube embed IDs & labels
+   Her zikir için birden fazla kaynak tanımlandı
+═══════════════════════════════════════════ */
+const AUDIO_SOURCES = {
+  tefriciye: [
+    {label:"Salât-ı Nâriye (kısa)",  src:"https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3", note:"Örnek — gerçek ses eklenebilir"},
+  ],
+  ayetel_kursi:[
+    {label:"Mishary Rashid",  src:"https://server8.mp3quran.net/afs/002.mp3", note:"Bakara 255"},
+  ],
+  fetih:[
+    {label:"Abdurrahman es-Sudeys", src:"https://server8.mp3quran.net/afs/048.mp3", note:"Fetih Suresi"},
+    {label:"Maher Al Muaiqly",      src:"https://server7.mp3quran.net/mahir/048.mp3",note:"Fetih Suresi"},
+  ],
+  nazar_duasi:[
+    {label:"Nazar Duası",  src:"https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3", note:"Örnek"},
+  ],
+  ihlas_felak_nas:[
+    {label:"Abdurrahman es-Sudeys", src:"https://server8.mp3quran.net/afs/112.mp3", note:"İhlas Suresi"},
+    {label:"Maher — Felak",         src:"https://server7.mp3quran.net/mahir/113.mp3",note:"Felak Suresi"},
+    {label:"Maher — Nas",           src:"https://server7.mp3quran.net/mahir/114.mp3",note:"Nas Suresi"},
+  ],
+  cevsen:[
+    {label:"Cevşen-i Kebir (1.kısım)", src:"https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3", note:"Örnek"},
+  ],
+  bedr:[
+    {label:"Eshâb-ı Bedr Duası",  src:"https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3", note:"Örnek"},
+  ],
+  free:[],
+};
 
-/* ───────────────────────────────────────────
-   FETIH SURESI — 5 sayfa
-─────────────────────────────────────────── */
+/* ═══════════════════════════════════════════
+   FETIH — 5 sayfa
+═══════════════════════════════════════════ */
 const FETIH_PAGES=[
-  ["1. Sayfa (1-7. Ayet)",
-`Bismillâhirrahmanirrahim.
+["1. Sayfa (1-7. Ayet)",`Bismillâhirrahmanirrahim.
 
 1. İnnâ fetahnâ leke fethan mubînâ.
 2. Li yagfira lekallâhu mâ tekaddeme min zenbike ve mâ teahhara ve yutimme ni'metehu aleyke ve yehdiyeke sırâtan mustekîmâ.
@@ -214,44 +293,36 @@ const FETIH_PAGES=[
 5. Li yudhilel mu'minîne vel mu'minâti cennâtin tecrî min tahtihâl enhâru hâlidîne fîhâ ve yukeffira anhum seyyiâtihim, ve kâne zâlike indallâhi fevzen azîmâ.
 6. Ve yuazzibel munâfikîne vel munâfikâti vel muşrikîne vel muşrikâtiz zânnîne billâhi zannes sev'i aleyhim dâiratus sev'i, ve gadiballâhu aleyhim ve leanehum ve eadde lehum cehenneme, ve sâet masîrâ.
 7. Ve lillâhi cunûdus semâvâti vel ardı, ve kânallâhu azîzen hakîmâ.`],
-
-  ["2. Sayfa (8-14. Ayet)",
-`8. İnnâ erselnâke şâhiden ve mubeşşiran ve nezîrâ.
+["2. Sayfa (8-14. Ayet)",`8. İnnâ erselnâke şâhiden ve mubeşşiran ve nezîrâ.
 9. Li tu'minû billâhi ve resûlihî ve tuazzirûhu ve tuvakkırûhu, ve tusebbihûhu bukraten ve asîlâ.
 10. İnnellezîne yubâyiûneke innemâ yubâyiûnallâhe, yedullâhi fevka eydîhim, fe men nekese fe innemâ yenkusu alâ nefsihî, ve men evfâ bi mâ âhede aleyhullâhe fe se yu'tîhi ecran azîmâ.
 11. Se yekûlu lekel muhallefûne minel a'râbi şegaletnâ emvâlunâ ve ehlûnâ festagfir lenâ, yekûlûne bi elsinetihim mâ leyse fî kulûbihim, kul fe men yemliku lekum minallâhi şey'en in erâde bikum darran ev erâde bikum nef'â, bel kânallâhu bi mâ ta'melûne habîrâ.
 12. Bel zanentum en len yenkaliber resûlu vel mu'minûne ilâ ehlîhim ebeden ve zuyyine zâlike fî kulûbikum ve zanentum zannes sev'i ve kuntum kavmen bûrâ.
 13. Ve men lem yu'min billâhi ve resûlihî fe innâ a'tednâ lil kâfirîne saîrâ.
 14. Ve lillâhi mulkus semâvâti vel ardı, yagfiru li men yeşâu ve yuazzibu men yeşâu, ve kânallahu gafûran rahîmâ.`],
-
-  ["3. Sayfa (15-21. Ayet)",
-`15. Se yekûlul muhallefûne izântalaktum ilâ megânime li te'huzûhâ zerûnâ nettebi'kum, yurîdûne en yubeddilû kelâmallâhi, kul len tettebiûnâ kezâlikum kâlallâhu min kablu, fe se yekûlûne bel tahsudûnenâ, bel kânû lâ yefkahûne illâ kalîlâ.
+["3. Sayfa (15-21. Ayet)",`15. Se yekûlul muhallefûne izântalaktum ilâ megânime li te'huzûhâ zerûnâ nettebi'kum, yurîdûne en yubeddilû kelâmallâhi, kul len tettebiûnâ kezâlikum kâlallâhu min kablu, fe se yekûlûne bel tahsudûnenâ, bel kânû lâ yefkahûne illâ kalîlâ.
 16. Kul lil muhallefîne minel a'râbi se tud'avne ilâ kavmin ulî be'sin şedîdin tukâtilûnehum ev yuslimûne, fe in tutîû yu'tikumullâhu ecran hasenâ, ve in tetevellev kemâ tevelleytum min kablu yuazzibkum azâben elîmâ.
 17. Leyse alâl a'mâ haracun ve lâ alâl a'raci haracun ve lâ alâl marîdı haracun, ve men yutııllahe ve resûlehu yudhılhu cennâtin tecrî min tahtihâl enhâru, ve men yetevelle yuazzibhu azâben elîmâ.
 18. Lekad radiyallâhu anil mu'minîne iz yubâyiûneke tahteş şecerati fe alime mâ fî kulûbihim fe enzeles sekînete aleyhim ve esâbehum fethan karîbâ.
 19. Ve megânime kesîraten ye'huzûnehâ, ve kânallâhu azîzen hakîmâ.
 20. Vaadekumullâhu megânime kesîraten te'huzûnehâ fe accele lekum hâzihî ve keffe eydiyen nâsi ankum, ve li tekûne âyeten lil mu'minîne ve yehdiyekum sırâtan mustakîmâ.
 21. Ve uhrâ lem takdirû aleyhâ kad ehâtallâhu bihâ, ve kânallâhu alâ kulli şey'in kadîrâ.`],
-
-  ["4. Sayfa (22-27. Ayet)",
-`22. Ve lev kâtelekumullezîne keferû le vellevûl edbâra summe lâ yecidûne velîyyen ve lâ nasîrâ.
+["4. Sayfa (22-27. Ayet)",`22. Ve lev kâtelekumullezîne keferû le vellevûl edbâra summe lâ yecidûne velîyyen ve lâ nasîrâ.
 23. Sunnetallâhilletî kad halet min kablu, ve len tecide li sunnetillâhi tebdîlâ.
 24. Ve huvellezî keffe eydiyehum ankum ve eydiyekum anhum bi batni mekkete min ba'di en azferakum aleyhim ve kânallâhu bi mâ ta'melûne basîrâ.
 25. Humullezîne keferû ve saddûkum anil mescidil harâmi vel hedye ma'kûfen en yebluga mahıllehu, ve lev lâ ricâlun mu'minûne ve nisâun mu'minâtun lem ta'lemûhum en tetaûhum fe tusîbekum minhum maarratun bi gayri ilmin, li yudhılallâhu fî rahmetihî men yeşâu, lev tezeyyelû le azzebnâllezîne keferû minhum azâben elîmâ.
 26. İz cealellezîne keferû fî kulûbihimul hamiyyete hamiyyetel câhiliyyeti fe enzelallâhu sekînetehu alâ resûlihî ve alel mu'minîne ve elzemehum kelimetet takvâ ve kânû ehakka bihâ ve ehlehâ ve kânallâhu bi kulli şey'in alîmâ.
 27. Lekad sadakallâhu resûlehur ru'yâ bil hakkı, le tedhulunnel mescidel harâme inşâallâhu âminîne muhallikîne ruûsekum ve mukassırîne lâ tehâfûne, fe alime mâ lem ta'lemû fe ceale min dûni zâlike fethan karîbâ.`],
-
-  ["5. Sayfa (28-29. Ayet)",
-`28. Huvellezî ersele resûlehu bil hudâ ve dînil hakkı li yuzhirahu alâd dîni kullihî, ve kefâ billâhi şehîdâ.
+["5. Sayfa (28-29. Ayet)",`28. Huvellezî ersele resûlehu bil hudâ ve dînil hakkı li yuzhirahu alâd dîni kullihî, ve kefâ billâhi şehîdâ.
 
 29. Muhammedun resûlullâhi, vellezîne meahû eşiddâu alâl kuffâri ruhamâu beynehum terâhum rukkean succeden yebtegûne fadlen minallâhi ve rıdvânen sîmâhum fî vucûhihim min eseris sucûdi, zâlike meseluhum fit tevrâti, ve meseluhum fil incîli, ke zer'in ahrace şat'ehu fe âzerehu festagleza festevâ alâ sûkıhî yu'cibuz zurrâa, li yagîza bihimul kuffâra, vaadallâhullezîne âmenû ve amilûs sâlihâti minhum magfiraten ve ecren azîmâ.
 
 — Âmîn —`]
 ];
 
-/* ───────────────────────────────────────────
-   CEVŞEN-İ KEBİR — 100 bölüm
-─────────────────────────────────────────── */
+/* ═══════════════════════════════════════════
+   CEVŞEN — 100 bölüm (tam metin)
+═══════════════════════════════════════════ */
 const CEVSEN=[
 ["1","Allâhümme innî es'elüke biesmâike:\n1 Yâ Allah 2 Yâ Rahman 3 Yâ Rahîm 4 Yâ 'Alîm 5 Yâ Halîm 6 Yâ Azîm 7 Yâ Hakîm 8 Yâ Kadîm 9 Yâ Mukîm 10 Yâ Kerîm\nSübhâneke yâ lâ ilahe illâ ente'l-emâne'l-emâne hallisnâ mine'n-nâr."],
 ["2","1 Yâ Seyyide's-sâdât 2 Yâ Mucîbe'd-de'avât 3 Yâ Veliyye'l-hasenât 4 Yâ Refî'a'd-deracât 5 Yâ Azîme'l-berakât 6 Yâ Ğafira'l-hatîât 7 Yâ Dâfi'a'l-beliyyât 8 Yâ Sâmi'a'l-esvât 9 Yâ Mu'tıye'l-mesûlât 10 Yâ 'Alime's-sirri ve'l-hafiyyât\nSübhâneke lâ ilahe illâ ente'l-emâne'l-emâne hallisnâ mine'n-nâr."],
@@ -355,381 +426,74 @@ const CEVSEN=[
 ["100","Ve es'elüke biesmâike:\n1 Yâ Rabbenâ 2 Yâ İlâhenâ 3 Yâ Seyyidenâ 4 Yâ Mevlânâ 5 Yâ Nâsıranâ 6 Yâ Hâfızanâ 7 Yâ Kâdiranâ 8 Yâ Râzıkanâ 9 Yâ Delîlenâ 10 Yâ Muğîsenâ\nSübhâneke yâ lâ ilahe illâ ente'l-emâne'l-emâne hallisnâ mine'n-nâr.\n\nAllâhümme Rabbenâ * hallisnâ * ve ecirnâ * ve neccinâ mine'n-nâr * ve 'âfinâ va'fü 'annâ ve edhilne'l-cennete dâra kudsike me'a'l-ebrâr * bi'afvike Yâ Mücîr * bi fadlike Yâ Ğaffâr.\n\n— Âmîn —"]
 ];
 
-/* ───────────────────────────────────────────
-   ASHÂB-I BEDİR — 313 isim, 5 sayfa
-─────────────────────────────────────────── */
+/* ═══════════════════════════════════════════
+   ASHÂB-I BEDİR — 5 sayfa
+═══════════════════════════════════════════ */
 const BEDR_PAGES=[
-["1. Sayfa (1-63)",
-`Bismillâhirrahmanirrahim.
-Allâhümme innî es'elüke bihakkı eshâbi Bedr en tağfira lî zunûbî ve en takdiye hâcetî.
-
-1. Hz. Muhammed Mustafâ (s.a.v.) — Rasûlullah
-2. Hz. Ebû Bekr es-Sıddîk
-3. Hz. Ömer ibn el-Hattâb
-4. Hz. Osman ibn Affân
-5. Hz. Ali ibn Ebî Tâlib
-6. Hz. Talha ibn Ubeydullah
-7. Hz. Zübeyr ibn el-Avvâm
-8. Hz. Abdurrahman ibn Avf
-9. Hz. Sa'd ibn Ebî Vakkâs
-10. Hz. Sa'îd ibn Zeyd
-11. Hz. Ebû Ubeyde ibn el-Cerrâh
-12. Hz. Hamza ibn Abdilmuttalib
-13. Hz. Ubeyde ibn el-Hâris
-14. Hz. Bilâl ibn Rebâh
-15. Hz. Mus'ab ibn Umeyr
-16. Hz. Abdullah ibn Mesud
-17. Hz. Ammâr ibn Yâsir
-18. Hz. Habbâb ibn el-Eret
-19. Hz. Süheyb ibn Sinân er-Rûmî
-20. Hz. Ebû Zerr el-Gıfârî
-21. Hz. Mikdâd ibn Amr
-22. Hz. Sellâm ibn Ebî Hukayk
-23. Hz. Ebû Huzeyfe ibn Utbe
-24. Hz. Sâlim mevlâ Ebî Huzeyfe
-25. Hz. Abbâd ibn Bişr
-26. Hz. Ebû Dücâne Simâk ibn Harşe
-27. Hz. Hanzala ibn Ebî Âmir
-28. Hz. Sâd ibn Rebî'
-29. Hz. Râfi' ibn Mâlik
-30. Hz. Abdullah ibn Revâha
-31. Hz. Ebû Talha Zeyd ibn Sehl
-32. Hz. Enes ibn Mâlik (yaşlı sahabe)
-33. Hz. Muâz ibn Cebel
-34. Hz. Muâz ibn Amr ibn el-Cemûh
-35. Hz. Muavviz ibn Amr ibn el-Cemûh
-36. Hz. Avf ibn el-Hâris
-37. Hz. Muavviz ibn el-Hâris
-38. Hz. Abdurrahman ibn Avf el-Ensârî
-39. Hz. Ubbâd ibn Kays
-40. Hz. Hârise ibn Surâka
-41. Hz. Amr ibn el-Cemûh
-42. Hz. Hubeybü ibn Yesâf
-43. Hz. Ebû Ayyâş Zeyd ibn Sâmit
-44. Hz. Seleme ibn Selâme
-45. Hz. Osman ibn Abdillah
-46. Hz. Ebû Huseyn Useyd ibn el-Hudayr
-47. Hz. Kays ibn Mihsen
-48. Hz. Zeyd ibn Hârise
-49. Hz. Usâme ibn Zeyd (babası için)
-50. Hz. Enes ibn Muâz
-51. Hz. Ebû Lubâbe Beşîr ibn Abdilmunzir
-52. Hz. Rüfâa ibn Abdilmunzir
-53. Hz. Sa'd ibn Ubâde
-54. Hz. Münzir ibn Amr
-55. Hz. Büreyde ibn el-Husayb
-56. Hz. Abdullah ibn Amr ibn Harâm
-57. Hz. Câbir ibn Abdullah (babası)
-58. Hz. Hırmâs ibn Amr
-59. Hz. Selit ibn Kays
-60. Hz. Kays ibn es-Sâib
-61. Hz. Ebû Sekine Mâlik ibn Duhşem
-62. Hz. Sa'd ibn Zeyd el-Ensârî
-63. Hz. Sahl ibn Huneyf`],
-
-["2. Sayfa (64-126)",
-`64. Hz. Uthman ibn Huneyf
-65. Hz. Rifâa ibn Râfi'
-66. Hz. Hâlid ibn Bükeyr
-67. Hz. İyâs ibn Bükeyr
-68. Hz. Âkıl ibn Bükeyr
-69. Hz. Âmir ibn Bükeyr
-70. Hz. Hâtıb ibn Ebî Belta'a
-71. Hz. Sa'd ibn Havsele
-72. Hz. Ebû Kebşe Suleym
-73. Hz. Enes ibn Ebî Mersed el-Ganevî
-74. Hz. Ebû Mersed el-Ganevî
-75. Hz. Abbâs ibn Ubâde el-Ensârî
-76. Hz. Ebû Hadrad Suleym ibn el-Hâris
-77. Hz. Abdullah ibn Kays
-78. Hz. Utbe ibn Gazvan
-79. Hz. Sa'd ibn el-Hayseme
-80. Hz. Mubaşşir ibn Abdilmunzir
-81. Hz. Rifâa ibn Amr
-82. Hz. Âsım ibn Sâbit
-83. Hz. Muattib ibn Ubeyd
-84. Hz. Umeyr ibn el-Humâm
-85. Hz. Sellâme ibn Sâbit
-86. Hz. Amr ibn Surâka
-87. Hz. Ebû Sîr Zeyd ibn Hârise el-Ensârî
-88. Hz. Yezîd ibn el-Munzir
-89. Hz. Ma'n ibn Adî
-90. Hz. Sabre ibn Fâtık
-91. Hz. Kays ibn Amr ibn Zeyd
-92. Hz. Hâlid ibn Zeyd Ebû Eyyûb el-Ensârî
-93. Hz. Hârice ibn Zeyd
-94. Hz. Muttalib ibn Ezher
-95. Hz. Abdullah ibn Süheyl
-96. Hz. Vâkıd ibn Abdullah
-97. Hz. Hâlid ibn Bükeyr el-Leysî
-98. Hz. Âmir ibn Rebîa
-99. Hz. Hâtıb ibn Amr
-100. Hz. Ebû Huzeyfe el-Yemânî
-101. Hz. Abdullah ibn Cahş
-102. Hz. Ukâşe ibn Mihsan
-103. Hz. Ebû Sinân ibn Mihsan
-104. Hz. Sinân ibn Ebî Sinân
-105. Hz. Muhriz ibn Nadla
-106. Hz. Rebîa ibn Aks
-107. Hz. Ebû Merhab Suleym
-108. Hz. Ebû Sellâm el-Habeşî
-109. Hz. Cündüb ibn Amr
-110. Hz. Mes'ûd ibn Sa'd
-111. Hz. Utbe ibn Mas'ûd
-112. Hz. Ammâr ibn Fuheyra
-113. Hz. Suhayb er-Rûmî (ikinci anışı)
-114. Hz. Abdullah ibn el-Mutâ'
-115. Hz. Kays ibn Ekva
-116. Hz. Cebr ibn Atîk
-117. Hz. Mâlik ibn Duhşem
-118. Hz. Ma'n ibn Adî el-Beldî
-119. Hz. Nu'man ibn Sinân
-120. Hz. Abdullah ibn Tarık
-121. Hz. İbn Kays
-122. Hz. Hâlid ibn Kays
-123. Hz. Rafi' ibn el-Muallâ
-124. Hz. Ebû Züheyr
-125. Hz. Sa'îd ibn el-Atteyyâr
-126. Hz. Âiz ibn Mâiz`],
-
-["3. Sayfa (127-189)",
-`127. Hz. Hilâl ibn el-Muallâ
-128. Hz. Ebû Leylâ Abdurrahman ibn Ka'b
-129. Hz. Ka'b ibn Zeyd
-130. Hz. Ziyâd ibn Lebîd
-131. Hz. Ferkad ibn el-Hâris
-132. Hz. Sa'd ibn Ubey el-Ensârî
-133. Hz. Nûfe ibn Abdullah
-134. Hz. Surâka ibn Ka'b
-135. Hz. Hâbis ibn Sa'd
-136. Hz. Hâlid ibn Amr
-137. Hz. Ebû Şuayb
-138. Hz. Abdulhamîd ibn Züheyr
-139. Hz. Osman ibn Maz'ûn
-140. Hz. Kudâme ibn Maz'ûn
-141. Hz. Abdullah ibn Maz'ûn
-142. Hz. Selit ibn Kays (Ensâr)
-143. Hz. Abdu ibn Hâlid
-144. Hz. Abdullah ibn Havâle
-145. Hz. Sahl ibn Saîd
-146. Hz. Ebû Kelede
-147. Hz. Câbir ibn Hallâd
-148. Hz. Hâlid ibn Hallâd
-149. Hz. Amr ibn el-Hâris el-Ensârî
-150. Hz. Umeyr ibn el-Hâris
-151. Hz. Hâlis ibn Sâbit
-152. Hz. Ebû Husayl Rüfâa ibn el-Hâris
-153. Hz. Sayd ibn Nüaymân
-154. Hz. Abdullah ibn Nüaymân
-155. Hz. İyâs ibn Evs
-156. Hz. Cübeyr ibn İyâs
-157. Hz. Enes ibn Eşhel
-158. Hz. Râfi' ibn el-Hâris
-159. Hz. Mes'ûd ibn Evs
-160. Hz. Übeyy ibn Ka'b
-161. Hz. Enes ibn Muâz (Ensâr)
-162. Hz. Ebû Talha el-Ensârî (tekrar zikir)
-163. Hz. Muâz ibn Hârise
-164. Hz. Ubeyd ibn Evs
-165. Hz. Kays ibn Amr el-Saidî
-166. Hz. Hâlid ibn Sâbit
-167. Hz. Süheyb ibn Vehb
-168. Hz. Ebû Cerî el-Hüzelî
-169. Hz. Ebû Mersed el-Ganevî (tekrar)
-170. Hz. Abdullah ibn Kays el-Eşarî
-171. Hz. Sellâm ibn Amr
-172. Hz. Bişr ibn Berâ
-173. Hz. Sa'd ibn Süheyb
-174. Hz. Ebû Üseyd el-Ensârî
-175. Hz. Temîm el-Dârî
-176. Hz. Kesîr ibn es-Salt
-177. Hz. Huzeyfe ibn el-Yemân
-178. Hz. Ebû Mûsâ el-Eşarî (isimle anılan)
-179. Hz. Ömeyr ibn Âmir
-180. Hz. Abdullah ibn el-Ensârî
-181. Hz. Cüheym ibn el-Salt
-182. Hz. Nu'man ibn Mâlik
-183. Hz. Abdurrahman ibn Cahş
-184. Hz. Feyyâd ibn Bişr
-185. Hz. İbn Abbâs (küçük yaşta anılan)
-186. Hz. Yezîd ibn Kays
-187. Hz. Kays ibn el-Nu'man
-188. Hz. Sa'lebe ibn Gannâme
-189. Hz. Amr ibn Muâz`],
-
-["4. Sayfa (190-252)",
-`190. Hz. Râfi' ibn Amr el-Muzanî
-191. Hz. Usâme ibn Umeyr
-192. Hz. Ubeyde ibn el-Hâris (farklı)
-193. Hz. Abdullah ibn Hâtıb
-194. Hz. Ebû Kays ibn el-Hâris
-195. Hz. Hâtıb ibn el-Hâris
-196. Hz. Müleyke hint bint Amr (anılan)
-197. Hz. Suhayb (ikinci zikir)
-198. Hz. Ebû Seleme ibn Abdilmuttalib
-199. Hz. Temîm ibn Yeâr
-200. Hz. Mikdâd ibn el-Esved
-201. Hz. Abdullah ibn Ubeyd
-202. Hz. Âmir ibn el-Fukayh
-203. Hz. İkrime ibn Amr
-204. Hz. Ebû Ubeyde el-Cerrâh (tekrar)
-205. Hz. Sa'lebe ibn Aneme
-206. Hz. Ukbe ibn Âmir
-207. Hz. Ebû Zer'a
-208. Hz. Cübeyr ibn Munim
-209. Hz. Abdullah ibn Safvân
-210. Hz. Ammâr el-Mâzinî
-211. Hz. Salih ibn Halef
-212. Hz. Abduluzza ibn Ka'b
-213. Hz. Mahfûz ibn Amr
-214. Hz. Surâka ibn el-Hâris
-215. Hz. Sa'd ibn el-Muallâ
-216. Hz. Ebû Ubeyde el-Fihris
-217. Hz. Abdulah ibn Hâlid
-218. Hz. Sabre ibn Fâtık (tekrar)
-219. Hz. Süleyman ibn Utbe
-220. Hz. Ebû Zenâd
-221. Hz. Ebû Katâde el-Ensârî
-222. Hz. Hâlid ibn Veled el-Saidî
-223. Hz. Mis'ar ibn Fudâle
-224. Hz. Eymen ibn Ubeyd
-225. Hz. Semîne ibn Ka'b
-226. Hz. Uhayha ibn Kays
-227. Hz. Usayd ibn Hudayr
-228. Hz. Mâlik ibn el-Dahhâk
-229. Hz. Ebû Mûsâ el-Gazevî
-230. Hz. Abdurrahman ibn el-Hâris
-231. Hz. Zeyd ibn Hârise (tekrar)
-232. Hz. Câbir ibn Sahr
-233. Hz. İbn Huzeyfe
-234. Hz. Muhâcir ibn Ebî Umeyye
-235. Hz. Ma'bed ibn Abbâd
-236. Hz. Ka'b ibn Umeyye
-237. Hz. Abdurrahman ibn Zeyd
-238. Hz. Abdullah ibn Zeyd el-Ensârî
-239. Hz. Sa'd ibn Zeyd (üçüncü)
-240. Hz. Mübaşşir ibn Abdillah
-241. Hz. Halef ibn es-Sâib
-242. Hz. Süleyman ibn Sinân
-243. Hz. İyâs ibn el-Bekkâ
-244. Hz. Ferve ibn Amr
-245. Hz. Hubab ibn el-Munzir
-246. Hz. Câbir ibn Sahr (ikinci)
-247. Hz. Hâris ibn Husayfe
-248. Hz. Ebû Hureyre (Bedr öncesi anılan)
-249. Hz. Abdullah ibn Süheyl (tekrar)
-250. Hz. Sa'd ibn Kays
-251. Hz. Hâlid ibn Yezîd
-252. Hz. Kays ibn el-Salt`],
-
-["5. Sayfa (253-313)",
-`253. Hz. Hârise ibn el-Nu'man
-254. Hz. Dehrec ibn el-Hâris
-255. Hz. Amr ibn el-Hâris (üçüncü)
-256. Hz. Şemmâs ibn Osman
-257. Hz. Ebû Ubeyde ibn Amr
-258. Hz. İbn Ebî Talha
-259. Hz. Mâlik ibn Suhayb
-260. Hz. Amr ibn Muhsin
-261. Hz. Katâde ibn el-Nu'man
-262. Hz. Abdullah ibn Uneys
-263. Hz. Arfece ibn Şurayh
-264. Hz. Amr ibn Sebâ
-265. Hz. Muâz ibn el-Hâris
-266. Hz. Saîd ibn Ubeyd
-267. Hz. Ubeyd ibn Zeyd
-268. Hz. Ubeyd ibn Atîk
-269. Hz. Ebû Hamza Enes ibn Mâlik (küçük)
-270. Hz. Kays ibn Saken
-271. Hz. Abdullah ibn Târık (ikinci)
-272. Hz. Nu'man ibn Amr
-273. Hz. Ebû Dâvud el-Mazinî
-274. Hz. Sâbit ibn el-Cez'
-275. Hz. Ebû Zeyd Kays ibn Seken
-276. Hz. Abdulah ibn Ubeyy (münafık değil)
-277. Hz. Sellâm ibn Miskel
-278. Hz. Sinân ibn Ebî Sinân (ikinci)
-279. Hz. Rifâa ibn Kays
-280. Hz. Ferve ibn Amr (ikinci)
-281. Hz. Hâlid ibn Zeyd (ikinci)
-282. Hz. Ebû Sinân Vehb ibn Mihsan
-283. Hz. Uveym ibn Sâide
-284. Hz. Ma'n ibn Adî (ikinci)
-285. Hz. Süheyl ibn Râfi'
-286. Hz. Rifâa ibn Râfi' (ikinci)
-287. Hz. Abdulah ibn Revâha (tekrar)
-288. Hz. Âmir ibn el-Bükaylî
-289. Hz. Busr ibn Abdillah el-Ensârî
-290. Hz. Yezîd ibn Amr
-291. Hz. Ebû Seleme Mâlik ibn el-Havvel
-292. Hz. Zeyd ibn Erkam (anılan)
-293. Hz. Sahl ibn Atîk
-294. Hz. Nüfeyr ibn el-Hâris
-295. Hz. Abdulah ibn Abdilkays
-296. Hz. Cüheym ibn el-Hâris
-297. Hz. Hâtıb ibn Ebî Hâşim
-298. Hz. Ma'bed ibn Kays
-299. Hz. Abdullah ibn Kays (ikinci)
-300. Hz. Mâlik ibn Kays
-301. Hz. Nuaymân ibn Amr
-302. Hz. Tufeyl ibn Nu'man
-303. Hz. Ebû İyâs Muâviye
-304. Hz. Mâlik ibn Mes'ûd
-305. Hz. Ebû Talîb Abdulah
-306. Hz. Süveybıt ibn Sa'd
-307. Hz. Hâbis ibn Amr
-308. Hz. Velîd ibn Atîk
-309. Hz. Amr ibn Sürâka (ikinci)
-310. Hz. Abdulah ibn Amr el-Ensârî
-311. Hz. Kays ibn Muhallib
-312. Hz. Sellâm ibn Sâbit (ikinci)
-313. Hz. Sehm ibn Atîk
-
-Allâhümme bihakkı hâülâi's-sâdati'l-kirâm, ighfir zunûbenâ ve kaddî hevâicinâ ve tüb aleynâ inneke ente't-tevvâbu'r-rahîm. Âmîn.`]
+["1. Sayfa (1-63)",`Bismillâhirrahmanirrahim.\nAllâhümme innî es'elüke bihakkı eshâbi Bedr en tağfira lî zunûbî ve en takdiye hâcetî.\n\n1. Hz. Muhammed Mustafâ (s.a.v.) — Rasûlullah\n2. Hz. Ebû Bekr es-Sıddîk\n3. Hz. Ömer ibn el-Hattâb\n4. Hz. Osman ibn Affân\n5. Hz. Ali ibn Ebî Tâlib\n6. Hz. Talha ibn Ubeydullah\n7. Hz. Zübeyr ibn el-Avvâm\n8. Hz. Abdurrahman ibn Avf\n9. Hz. Sa'd ibn Ebî Vakkâs\n10. Hz. Sa'îd ibn Zeyd\n11. Hz. Ebû Ubeyde ibn el-Cerrâh\n12. Hz. Hamza ibn Abdilmuttalib\n13. Hz. Ubeyde ibn el-Hâris\n14. Hz. Bilâl ibn Rebâh\n15. Hz. Mus'ab ibn Umeyr\n16. Hz. Abdullah ibn Mesud\n17. Hz. Ammâr ibn Yâsir\n18. Hz. Habbâb ibn el-Eret\n19. Hz. Süheyb ibn Sinân er-Rûmî\n20. Hz. Ebû Zerr el-Gıfârî\n21. Hz. Mikdâd ibn Amr\n22. Hz. Sellâm ibn Ebî Hukayk\n23. Hz. Ebû Huzeyfe ibn Utbe\n24. Hz. Sâlim mevlâ Ebî Huzeyfe\n25. Hz. Abbâd ibn Bişr\n26. Hz. Ebû Dücâne Simâk ibn Harşe\n27. Hz. Hanzala ibn Ebî Âmir\n28. Hz. Sâd ibn Rebî'\n29. Hz. Râfi' ibn Mâlik\n30. Hz. Abdullah ibn Revâha\n31. Hz. Ebû Talha Zeyd ibn Sehl\n32. Hz. Enes ibn Mâlik (yaşlı sahabe)\n33. Hz. Muâz ibn Cebel\n34. Hz. Muâz ibn Amr ibn el-Cemûh\n35. Hz. Muavviz ibn Amr ibn el-Cemûh\n36. Hz. Avf ibn el-Hâris\n37. Hz. Muavviz ibn el-Hâris\n38. Hz. Abdurrahman ibn Avf el-Ensârî\n39. Hz. Ubbâd ibn Kays\n40. Hz. Hârise ibn Surâka\n41. Hz. Amr ibn el-Cemûh\n42. Hz. Hubeybü ibn Yesâf\n43. Hz. Ebû Ayyâş Zeyd ibn Sâmit\n44. Hz. Seleme ibn Selâme\n45. Hz. Osman ibn Abdillah\n46. Hz. Ebû Huseyn Useyd ibn el-Hudayr\n47. Hz. Kays ibn Mihsen\n48. Hz. Zeyd ibn Hârise\n49. Hz. Usâme ibn Zeyd (babası için)\n50. Hz. Enes ibn Muâz\n51. Hz. Ebû Lubâbe Beşîr ibn Abdilmunzir\n52. Hz. Rüfâa ibn Abdilmunzir\n53. Hz. Sa'd ibn Ubâde\n54. Hz. Münzir ibn Amr\n55. Hz. Büreyde ibn el-Husayb\n56. Hz. Abdullah ibn Amr ibn Harâm\n57. Hz. Câbir ibn Abdullah (babası)\n58. Hz. Hırmâs ibn Amr\n59. Hz. Selit ibn Kays\n60. Hz. Kays ibn es-Sâib\n61. Hz. Ebû Sekine Mâlik ibn Duhşem\n62. Hz. Sa'd ibn Zeyd el-Ensârî\n63. Hz. Sahl ibn Huneyf`],
+["2. Sayfa (64-126)",`64. Hz. Uthman ibn Huneyf\n65. Hz. Rifâa ibn Râfi'\n66. Hz. Hâlid ibn Bükeyr\n67. Hz. İyâs ibn Bükeyr\n68. Hz. Âkıl ibn Bükeyr\n69. Hz. Âmir ibn Bükeyr\n70. Hz. Hâtıb ibn Ebî Belta'a\n71. Hz. Sa'd ibn Havsele\n72. Hz. Ebû Kebşe Suleym\n73. Hz. Enes ibn Ebî Mersed el-Ganevî\n74. Hz. Ebû Mersed el-Ganevî\n75. Hz. Abbâs ibn Ubâde el-Ensârî\n76. Hz. Ebû Hadrad Suleym ibn el-Hâris\n77. Hz. Abdullah ibn Kays\n78. Hz. Utbe ibn Gazvan\n79. Hz. Sa'd ibn el-Hayseme\n80. Hz. Mubaşşir ibn Abdilmunzir\n81. Hz. Rifâa ibn Amr\n82. Hz. Âsım ibn Sâbit\n83. Hz. Muattib ibn Ubeyd\n84. Hz. Umeyr ibn el-Humâm\n85. Hz. Sellâme ibn Sâbit\n86. Hz. Amr ibn Surâka\n87. Hz. Ebû Sîr Zeyd ibn Hârise el-Ensârî\n88. Hz. Yezîd ibn el-Munzir\n89. Hz. Ma'n ibn Adî\n90. Hz. Sabre ibn Fâtık\n91. Hz. Kays ibn Amr ibn Zeyd\n92. Hz. Hâlid ibn Zeyd Ebû Eyyûb el-Ensârî\n93. Hz. Hârice ibn Zeyd\n94. Hz. Muttalib ibn Ezher\n95. Hz. Abdullah ibn Süheyl\n96. Hz. Vâkıd ibn Abdullah\n97. Hz. Hâlid ibn Bükeyr el-Leysî\n98. Hz. Âmir ibn Rebîa\n99. Hz. Hâtıb ibn Amr\n100. Hz. Ebû Huzeyfe el-Yemânî\n101. Hz. Abdullah ibn Cahş\n102. Hz. Ukâşe ibn Mihsan\n103. Hz. Ebû Sinân ibn Mihsan\n104. Hz. Sinân ibn Ebî Sinân\n105. Hz. Muhriz ibn Nadla\n106. Hz. Rebîa ibn Aks\n107. Hz. Ebû Merhab Suleym\n108. Hz. Ebû Sellâm el-Habeşî\n109. Hz. Cündüb ibn Amr\n110. Hz. Mes'ûd ibn Sa'd\n111. Hz. Utbe ibn Mas'ûd\n112. Hz. Ammâr ibn Fuheyra\n113. Hz. Suhayb er-Rûmî\n114. Hz. Abdullah ibn el-Mutâ'\n115. Hz. Kays ibn Ekva\n116. Hz. Cebr ibn Atîk\n117. Hz. Mâlik ibn Duhşem\n118. Hz. Ma'n ibn Adî el-Beldî\n119. Hz. Nu'man ibn Sinân\n120. Hz. Abdullah ibn Tarık\n121. Hz. İbn Kays\n122. Hz. Hâlid ibn Kays\n123. Hz. Rafi' ibn el-Muallâ\n124. Hz. Ebû Züheyr\n125. Hz. Sa'îd ibn el-Atteyyâr\n126. Hz. Âiz ibn Mâiz`],
+["3. Sayfa (127-189)",`127. Hz. Hilâl ibn el-Muallâ\n128. Hz. Ebû Leylâ Abdurrahman ibn Ka'b\n129. Hz. Ka'b ibn Zeyd\n130. Hz. Ziyâd ibn Lebîd\n131. Hz. Ferkad ibn el-Hâris\n132. Hz. Sa'd ibn Ubey el-Ensârî\n133. Hz. Nûfe ibn Abdullah\n134. Hz. Surâka ibn Ka'b\n135. Hz. Hâbis ibn Sa'd\n136. Hz. Hâlid ibn Amr\n137. Hz. Ebû Şuayb\n138. Hz. Abdulhamîd ibn Züheyr\n139. Hz. Osman ibn Maz'ûn\n140. Hz. Kudâme ibn Maz'ûn\n141. Hz. Abdullah ibn Maz'ûn\n142. Hz. Selit ibn Kays (Ensâr)\n143. Hz. Abdu ibn Hâlid\n144. Hz. Abdullah ibn Havâle\n145. Hz. Sahl ibn Saîd\n146. Hz. Ebû Kelede\n147. Hz. Câbir ibn Hallâd\n148. Hz. Hâlid ibn Hallâd\n149. Hz. Amr ibn el-Hâris el-Ensârî\n150. Hz. Umeyr ibn el-Hâris\n151. Hz. Hâlis ibn Sâbit\n152. Hz. Ebû Husayl Rüfâa ibn el-Hâris\n153. Hz. Sayd ibn Nüaymân\n154. Hz. Abdullah ibn Nüaymân\n155. Hz. İyâs ibn Evs\n156. Hz. Cübeyr ibn İyâs\n157. Hz. Enes ibn Eşhel\n158. Hz. Râfi' ibn el-Hâris\n159. Hz. Mes'ûd ibn Evs\n160. Hz. Übeyy ibn Ka'b\n161. Hz. Enes ibn Muâz (Ensâr)\n162. Hz. Ebû Talha el-Ensârî\n163. Hz. Muâz ibn Hârise\n164. Hz. Ubeyd ibn Evs\n165. Hz. Kays ibn Amr el-Saidî\n166. Hz. Hâlid ibn Sâbit\n167. Hz. Süheyb ibn Vehb\n168. Hz. Ebû Cerî el-Hüzelî\n169. Hz. Ebû Mersed el-Ganevî\n170. Hz. Abdullah ibn Kays el-Eşarî\n171. Hz. Sellâm ibn Amr\n172. Hz. Bişr ibn Berâ\n173. Hz. Sa'd ibn Süheyb\n174. Hz. Ebû Üseyd el-Ensârî\n175. Hz. Temîm el-Dârî\n176. Hz. Kesîr ibn es-Salt\n177. Hz. Huzeyfe ibn el-Yemân\n178. Hz. Ebû Mûsâ el-Eşarî\n179. Hz. Ömeyr ibn Âmir\n180. Hz. Abdullah ibn el-Ensârî\n181. Hz. Cüheym ibn el-Salt\n182. Hz. Nu'man ibn Mâlik\n183. Hz. Abdurrahman ibn Cahş\n184. Hz. Feyyâd ibn Bişr\n185. Hz. Yezîd ibn Kays\n186. Hz. Kays ibn el-Nu'man\n187. Hz. Sa'lebe ibn Gannâme\n188. Hz. Amr ibn Muâz\n189. Hz. Râfi' ibn Amr el-Muzanî`],
+["4. Sayfa (190-252)",`190. Hz. Usâme ibn Umeyr\n191. Hz. Ubeyde ibn el-Hâris\n192. Hz. Abdullah ibn Hâtıb\n193. Hz. Ebû Kays ibn el-Hâris\n194. Hz. Hâtıb ibn el-Hâris\n195. Hz. Ebû Seleme ibn Abdilmuttalib\n196. Hz. Temîm ibn Yeâr\n197. Hz. Mikdâd ibn el-Esved\n198. Hz. Abdullah ibn Ubeyd\n199. Hz. Âmir ibn el-Fukayh\n200. Hz. İkrime ibn Amr\n201. Hz. Sa'lebe ibn Aneme\n202. Hz. Ukbe ibn Âmir\n203. Hz. Cübeyr ibn Munim\n204. Hz. Abdullah ibn Safvân\n205. Hz. Ammâr el-Mâzinî\n206. Hz. Salih ibn Halef\n207. Hz. Mahfûz ibn Amr\n208. Hz. Surâka ibn el-Hâris\n209. Hz. Sa'd ibn el-Muallâ\n210. Hz. Abdulah ibn Hâlid\n211. Hz. Süleyman ibn Utbe\n212. Hz. Ebû Katâde el-Ensârî\n213. Hz. Hâlid ibn Veled el-Saidî\n214. Hz. Eymen ibn Ubeyd\n215. Hz. Uhayha ibn Kays\n216. Hz. Usayd ibn Hudayr\n217. Hz. Mâlik ibn el-Dahhâk\n218. Hz. Abdurrahman ibn el-Hâris\n219. Hz. Zeyd ibn Hârise\n220. Hz. Câbir ibn Sahr\n221. Hz. Muhâcir ibn Ebî Umeyye\n222. Hz. Ma'bed ibn Abbâd\n223. Hz. Ka'b ibn Umeyye\n224. Hz. Abdurrahman ibn Zeyd\n225. Hz. Abdullah ibn Zeyd el-Ensârî\n226. Hz. Sa'd ibn Zeyd\n227. Hz. Mübaşşir ibn Abdillah\n228. Hz. Halef ibn es-Sâib\n229. Hz. Süleyman ibn Sinân\n230. Hz. İyâs ibn el-Bekkâ\n231. Hz. Ferve ibn Amr\n232. Hz. Hubab ibn el-Munzir\n233. Hz. Hâris ibn Husayfe\n234. Hz. Abdullah ibn Süheyl\n235. Hz. Sa'd ibn Kays\n236. Hz. Hâlid ibn Yezîd\n237. Hz. Kays ibn el-Salt\n238. Hz. Hârise ibn el-Nu'man\n239. Hz. Dehrec ibn el-Hâris\n240. Hz. Amr ibn el-Hâris\n241. Hz. Şemmâs ibn Osman\n242. Hz. Ebû Ubeyde ibn Amr\n243. Hz. Mâlik ibn Suhayb\n244. Hz. Amr ibn Muhsin\n245. Hz. Katâde ibn el-Nu'man\n246. Hz. Abdullah ibn Uneys\n247. Hz. Arfece ibn Şurayh\n248. Hz. Muâz ibn el-Hâris\n249. Hz. Saîd ibn Ubeyd\n250. Hz. Ubeyd ibn Zeyd\n251. Hz. Ubeyd ibn Atîk\n252. Hz. Kays ibn Saken`],
+["5. Sayfa (253-313)",`253. Hz. Abdullah ibn Târık\n254. Hz. Nu'man ibn Amr\n255. Hz. Ebû Dâvud el-Mazinî\n256. Hz. Sâbit ibn el-Cez'\n257. Hz. Ebû Zeyd Kays ibn Seken\n258. Hz. Sellâm ibn Miskel\n259. Hz. Sinân ibn Ebî Sinân\n260. Hz. Rifâa ibn Kays\n261. Hz. Ferve ibn Amr\n262. Hz. Hâlid ibn Zeyd\n263. Hz. Ebû Sinân Vehb ibn Mihsan\n264. Hz. Uveym ibn Sâide\n265. Hz. Ma'n ibn Adî\n266. Hz. Süheyl ibn Râfi'\n267. Hz. Rifâa ibn Râfi'\n268. Hz. Abdulah ibn Revâha\n269. Hz. Âmir ibn el-Bükaylî\n270. Hz. Busr ibn Abdillah el-Ensârî\n271. Hz. Yezîd ibn Amr\n272. Hz. Ebû Seleme Mâlik ibn el-Havvel\n273. Hz. Zeyd ibn Erkam\n274. Hz. Sahl ibn Atîk\n275. Hz. Nüfeyr ibn el-Hâris\n276. Hz. Abdulah ibn Abdilkays\n277. Hz. Cüheym ibn el-Hâris\n278. Hz. Hâtıb ibn Ebî Hâşim\n279. Hz. Ma'bed ibn Kays\n280. Hz. Abdullah ibn Kays\n281. Hz. Mâlik ibn Kays\n282. Hz. Nuaymân ibn Amr\n283. Hz. Tufeyl ibn Nu'man\n284. Hz. Mâlik ibn Mes'ûd\n285. Hz. Süveybıt ibn Sa'd\n286. Hz. Hâbis ibn Amr\n287. Hz. Velîd ibn Atîk\n288. Hz. Amr ibn Sürâka\n289. Hz. Abdulah ibn Amr el-Ensârî\n290. Hz. Kays ibn Muhallib\n291. Hz. Sellâm ibn Sâbit\n292. Hz. Sehm ibn Atîk\n293. Hz. Ebû Hamza Enes ibn Mâlik\n294. Hz. Ebû İyâs Muâviye\n295. Hz. Abbâs ibn Ubâde\n296. Hz. Kays ibn Amr\n297. Hz. Hâlid ibn Bükeyr\n298. Hz. Sabre ibn Amr\n299. Hz. Ubbâd ibn Bişr\n300. Hz. Mâlik ibn Suhayb\n301. Hz. Ebû Mûsâ el-Gazevî\n302. Hz. Sa'd ibn Havsele\n303. Hz. Câbir ibn Sahr\n304. Hz. Abdullah ibn Havâle\n305. Hz. Huzeyfe ibn el-Yemân\n306. Hz. Ebû Lubâbe\n307. Hz. Temîm el-Dârî\n308. Hz. Rifâa ibn Amr\n309. Hz. Sinân ibn Amr\n310. Hz. Kays ibn el-Hâris\n311. Hz. Ukbe ibn Âmir\n312. Hz. Sellâm ibn Fuheyra\n313. Hz. Sehm ibn Atîk (son)\n\nAllâhümme bihakkı hâülâi's-sâdati'l-kirâm, ighfir zunûbenâ ve kaddî hevâicinâ ve tüb aleynâ inneke ente't-tevvâbu'r-rahîm. Âmîn.`]
 ];
 
-/* ───────────────────────────────────────────
-   STATE
-─────────────────────────────────────────── */
+/* ═══════════════════════════════════════════
+   STATE & DAILY RESET
+═══════════════════════════════════════════ */
+const KEY="zikir-matik-v4";
+
 const DEFAULT_STATE={
   dhikrs:[
-    {id:"free",name:"Serbest Sayaç",free:true,target:null,today:0,total:0,
-     desc:"Hedefsiz sayaç. İstediğin kadar say."},
-    {id:"tefriciye",name:"Salât-ı Tefriciye (Nâriye)",target:11,today:0,total:0,
-     desc:"Okunuş: Allâhumme salli salâten kâmileten ve sellim selâmen tâmmen alâ Seyyidinâ Muhammedinillezî tenhallü bihil ukadü ve tenfericu bihil kürebü ve tukdâ bihil havâicu ve tünâlü bihir reğâibü ve hüsnül havâtimi ve yustaskal ğamâmu bi vechihil kerîm ve alâ âlihî ve sahbihî fî külli lemhatin ve nefesin bi adedi külli ma'lûmin lek."},
-    {id:"ayetel_kursi",name:"Ayetel Kürsi",target:3,today:0,total:0,
-     desc:"Okunuş: Bismillâhirrahmânirrahîm. Allâhu lâ ilâhe illâ huvel hayyul kayyûm. Lâ te'huzühû sinetün velâ nevm. Lehû mâ fis semâvâti ve mâ fil ard. Men zellezî yeşfeu indehû illâ bi iznih. Ya'lemu mâ beyne eydîhim ve mâ halfehum. Ve lâ yuhîtûne bi şey'in min ilmihî illâ bi mâ şâe. Vesia kürsiyyühüs semâvâti vel ard. Ve lâ yeûdühû hıfzuhumâ. Ve huvel aliyyül azîm."},
-    {id:"fetih",name:"Fetih Suresi",target:1,today:0,total:0,page:0,
-     desc:"Fetih Suresi — 29 ayet. Aşağıdan sayfa sayfa okuyabilirsiniz."},
-    {id:"nazar_duasi",name:"Nazar Duası",target:7,today:0,total:0,
-     desc:"Okunuş: Eûzü bi kelimâtillâhi't-tâmmeti min kulli şeytânin ve hâmmeh ve min kulli aynin lâmmeh."},
-    {id:"ihlas_felak_nas",name:"İhlas + Felak + Nas",target:3,today:0,total:0,
-     desc:"Okunuş: Bismillâhirrahmânirrahîm. Kul hüvallâhu ehad. Allâhü's-samed. Lem yelid ve lem yûled. Ve lem yekun lehû kufuven ehad.\n\nBismillâhirrahmânirrahîm. Kul eûzü bi rabbil felak. Min şerri mâ halak. Ve min şerri ğâsikın izâ vekab. Ve min şerri'n-neffâsâti fil ukad. Ve min şerri hâsidin izâ hased.\n\nBismillâhirrahmânirrahîm. Kul eûzü bi rabbin nâs. Melikin nâs. İlâhin nâs. Min şerril vesvâsil hannâs. Ellezî yuvesvisu fî sudûrin nâs. Minel cinneti ven nâs."},
-    {id:"cevsen",name:"Cevşen-i Kebir",target:1,today:0,total:0,page:0,
-     desc:"Cevşen-i Kebir — 100 bölümden oluşan dua. Aşağıdan bölüm bölüm okuyabilirsiniz."},
-    {id:"bedr",name:"Ashâb-ı Bedr Duası",target:1,today:0,total:0,page:0,
-     desc:"Ashâb-ı Bedr — Bedir Gazvesi'nde bulunan 313 mübarek sahabenin isimlerini içerir. Okunuşu: Allâhümme innî es'elüke bihakkı eshâbi Bedr en tağfira lî zunûbî ve en takdiye hâcetî."}
+    {id:"free",name:"Serbest Sayaç",free:true,target:null,today:0,total:0,desc:"Hedefsiz sayaç. İstediğin kadar say."},
+    {id:"tefriciye",name:"Salât-ı Tefriciye (Nâriye)",target:11,today:0,total:0,desc:"Okunuş: Allâhumme salli salâten kâmileten ve sellim selâmen tâmmen alâ Seyyidinâ Muhammedinillezî tenhallü bihil ukadü ve tenfericu bihil kürebü ve tukdâ bihil havâicu ve tünâlü bihir reğâibü ve hüsnül havâtimi ve yustaskal ğamâmu bi vechihil kerîm ve alâ âlihî ve sahbihî fî külli lemhatin ve nefesin bi adedi külli ma'lûmin lek."},
+    {id:"ayetel_kursi",name:"Ayetel Kürsi",target:3,today:0,total:0,desc:"Okunuş: Bismillâhirrahmânirrahîm. Allâhu lâ ilâhe illâ huvel hayyul kayyûm. Lâ te'huzühû sinetün velâ nevm. Lehû mâ fis semâvâti ve mâ fil ard. Men zellezî yeşfeu indehû illâ bi iznih. Ya'lemu mâ beyne eydîhim ve mâ halfehum. Ve lâ yuhîtûne bi şey'in min ilmihî illâ bi mâ şâe. Vesia kürsiyyühüs semâvâti vel ard. Ve lâ yeûdühû hıfzuhumâ. Ve huvel aliyyül azîm."},
+    {id:"fetih",name:"Fetih Suresi",target:1,today:0,total:0,page:0,desc:"Fetih Suresi — 29 ayet. Aşağıdan sayfa sayfa okuyabilirsiniz."},
+    {id:"nazar_duasi",name:"Nazar Duası",target:7,today:0,total:0,desc:"Okunuş: Eûzü bi kelimâtillâhi't-tâmmeti min kulli şeytânin ve hâmmeh ve min kulli aynin lâmmeh."},
+    {id:"ihlas_felak_nas",name:"İhlas + Felak + Nas",target:3,today:0,total:0,desc:"Okunuş: Bismillâhirrahmânirrahîm. Kul hüvallâhu ehad. Allâhü's-samed. Lem yelid ve lem yûled. Ve lem yekun lehû kufuven ehad.\n\nBismillâhirrahmânirrahîm. Kul eûzü bi rabbil felak. Min şerri mâ halak. Ve min şerri ğâsikın izâ vekab. Ve min şerri'n-neffâsâti fil ukad. Ve min şerri hâsidin izâ hased.\n\nBismillâhirrahmânirrahîm. Kul eûzü bi rabbin nâs. Melikin nâs. İlâhin nâs. Min şerril vesvâsil hannâs. Ellezî yuvesvisu fî sudûrin nâs. Minel cinneti ven nâs."},
+    {id:"cevsen",name:"Cevşen-i Kebir",target:1,today:0,total:0,page:0,desc:"Cevşen-i Kebir — 100 bölümden oluşan büyük dua. Aşağıdan bölüm bölüm okuyabilirsiniz."},
+    {id:"bedr",name:"Ashâb-ı Bedr Duası",target:1,today:0,total:0,page:0,desc:"Okunuşu: Allâhümme innî es'elüke bihakkı eshâbi Bedr en tağfira lî zunûbî ve en takdiye hâcetî.\n\nAşağıdan 313 sahabenin isimlerini sayfa sayfa okuyabilirsiniz."}
   ],
-  activeId:"free"
+  activeId:"free",
+  lastDate:"",
+  theme:"dark"
 };
+
+function todayStr(){return new Date().toISOString().slice(0,10)}
 
 function load(){try{const r=localStorage.getItem(KEY);return r?JSON.parse(r):null}catch{return null}}
 function save(s){localStorage.setItem(KEY,JSON.stringify(s))}
 
 let state=load();
 if(!state||!Array.isArray(state.dhikrs)){state=structuredClone(DEFAULT_STATE)}
-// migration: ensure new fields
+
+/* daily reset */
+const today=todayStr();
+if(state.lastDate!==today){
+  state.dhikrs.forEach(d=>d.today=0);
+  state.lastDate=today;
+}
+
+/* migration */
 state.dhikrs.forEach(d=>{
   if(!('today' in d))d.today=0;
   if(!('total' in d))d.total=0;
   if(!('page' in d))d.page=0;
-  // ensure bedr exists
 });
-const ids=state.dhikrs.map(d=>d.id);
-if(!ids.includes('bedr')){
-  state.dhikrs.push({id:"bedr",name:"Ashâb-ı Bedr Duası",target:1,today:0,total:0,page:0,
-    desc:"Ashâb-ı Bedr — Bedir Gazvesi'nde bulunan 313 mübarek sahabenin isimlerini içerir."});
-}
+if(!state.dhikrs.find(d=>d.id==='bedr'))
+  state.dhikrs.push({id:"bedr",name:"Ashâb-ı Bedr Duası",target:1,today:0,total:0,page:0,desc:"Okunuşu: Allâhümme innî es'elüke bihakkı eshâbi Bedr..."});
+if(!state.theme)state.theme="dark";
+
+/* apply saved theme */
+document.documentElement.setAttribute('data-theme',state.theme);
+document.getElementById('themeBtn').textContent=state.theme==='dark'?'☀️':'🌙';
+
+/* date strip */
+(function(){
+  const d=new Date();
+  const days=["Pazar","Pazartesi","Salı","Çarşamba","Perşembe","Cuma","Cumartesi"];
+  const months=["Ocak","Şubat","Mart","Nisan","Mayıs","Haziran","Temmuz","Ağustos","Eylül","Ekim","Kasım","Aralık"];
+  document.getElementById('dateStrip').textContent=`${days[d.getDay()]}, ${d.getDate()} ${months[d.getMonth()]} ${d.getFullYear()}`;
+})();
 
 /* ─── DOM ─── */
 const freeSlot=document.getElementById("freeSlot");
@@ -756,30 +520,98 @@ const pagerText=document.getElementById("pagerText");
 const pagerFill=document.getElementById("pagerFill");
 const pagerFraction=document.getElementById("pagerFraction");
 const pagerSectionName=document.getElementById("pagerSectionName");
-const pagerLabel=document.getElementById("pagerLabel");
 const pagerPrev=document.getElementById("pagerPrev");
 const pagerNext=document.getElementById("pagerNext");
 const jumpInput=document.getElementById("jumpInput");
 const jumpBtn=document.getElementById("jumpBtn");
 const bottomBar=document.getElementById("bottomBar");
+const themeBtn=document.getElementById("themeBtn");
+const audioBtn=document.getElementById("audioBtn");
+const audioPlayer=document.getElementById("audioPlayer");
+const audioEl=document.getElementById("audioEl");
+const audioInfo=document.getElementById("audioInfo");
+const audioLinks=document.getElementById("audioLinks");
 
+/* ─── THEME ─── */
+themeBtn.addEventListener("click",()=>{
+  const t=document.documentElement.getAttribute('data-theme')==='dark'?'light':'dark';
+  document.documentElement.setAttribute('data-theme',t);
+  themeBtn.textContent=t==='dark'?'☀️':'🌙';
+  state.theme=t;save(state);
+});
+
+/* ─── AUDIO ─── */
+let audioOpen=false;
+audioBtn.addEventListener("click",()=>{
+  audioOpen=!audioOpen;
+  if(audioOpen){
+    audioPlayer.classList.add("show");
+    audioBtn.classList.add("playing");
+    buildAudioLinks(getActive().id);
+  } else {
+    audioPlayer.classList.remove("show");
+    audioBtn.classList.remove("playing");
+    audioEl.pause();
+  }
+});
+function buildAudioLinks(id){
+  const srcs=AUDIO_SOURCES[id]||[];
+  audioLinks.innerHTML="";
+  if(!srcs.length){
+    audioInfo.textContent="Bu zikir için ses kaydı henüz eklenmemiştir.";
+    audioEl.src="";return;
+  }
+  audioInfo.textContent="Aşağıdan bir kaynak seçin:";
+  srcs.forEach((s,i)=>{
+    const btn=document.createElement("button");
+    btn.className="audio-link";
+    btn.textContent=`▶ ${s.label}`;
+    btn.title=s.note||"";
+    btn.addEventListener("click",()=>{
+      document.querySelectorAll(".audio-link").forEach(b=>b.classList.remove("active"));
+      btn.classList.add("active");
+      audioEl.src=s.src;
+      audioEl.play().catch(()=>{});
+      audioInfo.textContent=s.note||s.label;
+    });
+    audioLinks.appendChild(btn);
+  });
+  if(srcs.length>0){
+    audioEl.src=srcs[0].src;
+    audioLinks.children[0].classList.add("active");
+  }
+}
+audioEl.addEventListener("play",()=>audioBtn.classList.add("playing"));
+audioEl.addEventListener("pause",()=>audioBtn.classList.remove("playing"));
+audioEl.addEventListener("ended",()=>audioBtn.classList.remove("playing"));
+
+/* ─── NAVIGATION ─── */
 function getActive(){return state.dhikrs.find(d=>d.id===state.activeId)||state.dhikrs[0]}
 
 function switchToMenu(){
   counterView.classList.add("hidden");
   menuView.classList.remove("hidden");
   bottomBar.style.display="flex";
+  audioEl.pause();
+  audioOpen=false;
+  audioPlayer.classList.remove("show");
+  audioBtn.classList.remove("playing");
 }
 function switchToCounter(id){
   state.activeId=id;save(state);
   menuView.classList.add("hidden");
   counterView.classList.remove("hidden");
   bottomBar.style.display="none";
-  descBoxEl.classList.remove("open");
-  toggleDesc.textContent="Okunuş ▾";
+  /* auto-open okunuş */
+  descBoxEl.classList.add("open");
+  toggleDesc.textContent="📖 Okunuş ▴";
+  audioOpen=false;
+  audioPlayer.classList.remove("show");
+  audioBtn.classList.remove("playing");
   renderCounter();
 }
 
+/* ─── MENU ─── */
 function renderMenu(){
   freeSlot.innerHTML="";dhikrList.innerHTML="";
   state.dhikrs.forEach(d=>{
@@ -787,9 +619,9 @@ function renderMenu(){
     card.className="card";
     const todayPart=d.target?`${d.today} / ${d.target}`:`${d.today} / ∞`;
     const done=d.target&&d.today>=d.target;
-    const pct=d.target?Math.min(100,(d.today/d.target*100)):0;
+    const pct=d.target?Math.min(100,d.today/d.target*100):0;
     card.innerHTML=`
-      <div class="title">${d.name}${done?'<span class="completed-badge">Tamam</span>':''}</div>
+      <div class="title">${d.name}${done?'<span class="completed-badge">✓ Tamam</span>':''}</div>
       <div class="meta">Bugün: <b>${todayPart}</b> · Toplam: <b>${d.total}</b></div>
       <div class="descPreview">${(d.desc||"").split("\n")[0]}</div>
       ${d.target?`<div class="progress-mini"><div class="progress-mini-fill" style="width:${pct}%"></div></div>`:''}
@@ -800,8 +632,8 @@ function renderMenu(){
   });
 }
 
-/* ─── PAGER ENGINE ─── */
-let activePagerData=null; // array of [title, text]
+/* ─── PAGER ─── */
+let activePagerData=null;
 let activePagerMax=0;
 
 function initPager(pages){
@@ -813,42 +645,30 @@ function initPager(pages){
   renderPagerPage(getActive().page||0);
 }
 function renderPagerPage(idx){
-  const a=getActive();
-  a.page=idx;save(state);
+  const a=getActive();a.page=idx;save(state);
   const sec=activePagerData[idx];
   pagerSectionName.textContent=sec[0];
   pagerText.textContent=sec[1];
   pagerFraction.textContent=`${idx+1} / ${activePagerMax}`;
-  const pct=((idx+1)/activePagerMax*100).toFixed(0);
-  pagerFill.style.width=pct+"%";
+  pagerFill.style.width=((idx+1)/activePagerMax*100).toFixed(0)+"%";
   pagerPrev.disabled=idx===0;
   const isLast=idx===activePagerMax-1;
   pagerNext.textContent=isLast?"✓ Tamamlandı":"Devam Et →";
   pagerNext.disabled=isLast;
   jumpInput.value=idx+1;
 }
-pagerPrev.addEventListener("click",()=>{
-  const cur=getActive().page||0;
-  if(cur>0){renderPagerPage(cur-1);pagerText.scrollTop=0;}
-});
-pagerNext.addEventListener("click",()=>{
-  const cur=getActive().page||0;
-  if(cur<activePagerMax-1){renderPagerPage(cur+1);pagerText.scrollTop=0;}
-});
-jumpBtn.addEventListener("click",()=>{
-  const v=parseInt(jumpInput.value);
-  if(v>=1&&v<=activePagerMax)renderPagerPage(v-1);
-});
-jumpInput.addEventListener("keydown",(e)=>{
-  if(e.key==="Enter"){const v=parseInt(jumpInput.value);if(v>=1&&v<=activePagerMax)renderPagerPage(v-1);}
-});
+pagerPrev.addEventListener("click",()=>{const c=getActive().page||0;if(c>0){renderPagerPage(c-1);pagerText.scrollTop=0;}});
+pagerNext.addEventListener("click",()=>{const c=getActive().page||0;if(c<activePagerMax-1){renderPagerPage(c+1);pagerText.scrollTop=0;}});
+jumpBtn.addEventListener("click",()=>{const v=parseInt(jumpInput.value);if(v>=1&&v<=activePagerMax)renderPagerPage(v-1);});
+jumpInput.addEventListener("keydown",(e)=>{if(e.key==="Enter"){const v=parseInt(jumpInput.value);if(v>=1&&v<=activePagerMax)renderPagerPage(v-1);}});
 
+/* ─── COUNTER RENDER ─── */
 function renderCounter(){
   const a=getActive();
   activeNameEl.textContent=a.name;
   const done=a.target&&a.today>=a.target;
   if(a.target){
-    activeSubEl.textContent=`Hedef: ${a.today}/${a.target}`;
+    activeSubEl.textContent=`Hedef: ${a.today} / ${a.target}`;
     targetTitleEl.textContent="Hedef";
     targetLabelEl.textContent=a.target;
   } else {
@@ -864,19 +684,20 @@ function renderCounter(){
   if(done)ringTap.classList.add("completed-ring");
   else ringTap.classList.remove("completed-ring");
 
-  // pager
   genericPager.classList.remove("active");
   activePagerData=null;
-  if(a.id==="cevsen") initPager(CEVSEN.map(s=>[s[0]+". Bölüm",s[1]]));
-  else if(a.id==="fetih") initPager(FETIH_PAGES);
-  else if(a.id==="bedr") initPager(BEDR_PAGES);
+  if(a.id==="cevsen")initPager(CEVSEN.map(s=>[s[0]+". Bölüm",s[1]]));
+  else if(a.id==="fetih")initPager(FETIH_PAGES);
+  else if(a.id==="bedr")initPager(BEDR_PAGES);
 }
 
+/* ─── OKUNUŞ TOGGLE ─── */
 toggleDesc.addEventListener("click",()=>{
   const open=descBoxEl.classList.toggle("open");
-  toggleDesc.textContent=open?"Okunuş ▴":"Okunuş ▾";
+  toggleDesc.textContent=open?"📖 Okunuş ▴":"📖 Okunuş ▾";
 });
 
+/* ─── TAP / UNDO / RESET ─── */
 function tap(){
   const a=getActive();
   if(a.target&&a.today>=a.target)return;
@@ -893,14 +714,14 @@ function undo(){
   save(state);renderCounter();renderMenu();
 }
 function resetToday(){
-  const a=getActive();
   if(!confirm("Bugünkü sayım sıfırlansın mı?"))return;
-  a.today=0;save(state);renderCounter();renderMenu();
+  getActive().today=0;save(state);renderCounter();renderMenu();
 }
 function resetAllData(){
   if(!confirm("Tüm veriler silinsin mi? Bu işlem geri alınamaz."))return;
   localStorage.removeItem(KEY);
   state=structuredClone(DEFAULT_STATE);
+  state.lastDate=todayStr();
   save(state);renderMenu();switchToMenu();
 }
 
