@@ -4,315 +4,374 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
 <meta name="apple-mobile-web-app-capable" content="yes"/>
-<meta name="apple-mobile-web-app-title" content="Müslüman Uygulaması"/>
-<meta name="theme-color" content="#1a3a2a"/>
+<meta name="theme-color" content="#1b4332"/>
 <title>Dini Takip</title>
-<link rel="preconnect" href="https://fonts.googleapis.com"/>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Lato:wght@300;400;700&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
 <style>
-*{box-sizing:border-box;margin:0;padding:0}
-[data-theme="light"]{
-  --bg:#f4f1eb;--surface:#fff;--surface2:#eee8da;--border:#d5ccb8;
-  --accent:#2d6a4f;--accent2:#1b4332;--gold:#b5813a;--gold2:#8a5f28;
-  --text:#1a1a14;--muted:#6b6450;--green:#2d6a4f;--red:#b5341a;
-  --card-shadow:0 2px 12px rgba(27,67,50,.08);
-  --header-bg:linear-gradient(135deg,#1b4332 0%,#2d6a4f 60%,#40916c 100%);
-  --ring-grad:radial-gradient(circle at 38% 32%,#e9f5ee,#c8e6d4);
-  --ring-glow:rgba(45,106,79,.2);
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+:root{
+  --bg:#f0ede6;--surface:#fff;--surface2:#e8e4dc;--border:#dbd5c8;
+  --g1:#1b4332;--g2:#2d6a4f;--g3:#40916c;
+  --gold:#c6893a;--gold2:#f5c842;
+  --text:#1a1a14;--muted:#6b6450;--green:#2d6a4f;--red:#c0392b;
+  --shadow:0 2px 16px rgba(27,67,50,.1);--shadowsm:0 1px 6px rgba(27,67,50,.07);
 }
 [data-theme="dark"]{
-  --bg:#0d1f17;--surface:#122318;--surface2:#1a3025;--border:#243d2e;
-  --accent:#52b788;--accent2:#74c69d;--gold:#d4a847;--gold2:#f0c060;
-  --text:#e8f0eb;--muted:#6b8c76;--green:#52b788;--red:#e05252;
-  --card-shadow:none;
-  --header-bg:linear-gradient(135deg,#0a1a10 0%,#122318 60%,#1a3025 100%);
-  --ring-grad:radial-gradient(circle at 38% 32%,#1a3025,#0d1f17);
-  --ring-glow:rgba(82,183,136,.15);
+  --bg:#0c1b13;--surface:#122318;--surface2:#1a3025;--border:#243d2e;
+  --g1:#0a1a10;--g2:#122318;--g3:#1a3025;
+  --gold:#d4a847;--gold2:#f0c060;
+  --text:#e4ede7;--muted:#6b8c76;--green:#52b788;--red:#e05252;
+  --shadow:0 2px 16px rgba(0,0,0,.3);--shadowsm:0 1px 6px rgba(0,0,0,.2);
 }
-body{background:var(--bg);color:var(--text);font-family:'Lato',sans-serif;min-height:100vh;transition:background .3s,color .3s}
+body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;min-height:100vh;transition:background .3s,color .3s;overflow-x:hidden}
 
-/* ── HEADER ── */
-.app-header{background:var(--header-bg);padding:1.4rem 1.2rem 2rem;position:relative;overflow:hidden}
-.app-header::after{content:'';position:absolute;bottom:-1px;left:0;right:0;height:28px;background:var(--bg);border-radius:28px 28px 0 0}
-.header-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:1.2rem}
-.app-brand{display:flex;align-items:center;gap:.6rem}
-.brand-icon{font-size:1.5rem}
-.brand-name{font-family:'Playfair Display',serif;font-size:1.1rem;color:#e8f5ee;font-style:italic;opacity:.9}
-.header-controls{display:flex;gap:.5rem}
-.hc-btn{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);color:#e8f5ee;width:34px;height:34px;border-radius:50%;cursor:pointer;font-size:.9rem;display:flex;align-items:center;justify-content:center;transition:all .2s}
-.hc-btn:hover{background:rgba(255,255,255,.22)}
-.header-date{font-size:.72rem;color:rgba(232,245,238,.65);letter-spacing:.08em;margin-bottom:.5rem}
-.header-greeting{font-family:'Playfair Display',serif;font-size:1.6rem;color:#e8f5ee;font-weight:600}
-.header-sub{font-size:.75rem;color:rgba(232,245,238,.6);margin-top:.25rem}
+/* ── VIEWS ── */
+#mainView{padding-bottom:70px}
+#counterView{min-height:100vh;display:flex;flex-direction:column}
 
-/* ── MAIN ── */
-#mainView{padding:.8rem 1rem 5rem}
-.section-title{font-size:.6rem;letter-spacing:.22em;color:var(--muted);text-transform:uppercase;margin:1.4rem 0 .6rem;font-family:'Playfair Display',serif}
+/* ── TOP HEADER ── */
+.top-bar{background:linear-gradient(160deg,var(--g1) 0%,var(--g2) 55%,var(--g3) 100%);padding:env(safe-area-inset-top,0) 0 0;position:relative;overflow:hidden}
+.top-bar::before{content:'';position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")}
+.top-inner{padding:1rem 1.2rem 0;position:relative;z-index:1}
+.top-row1{display:flex;justify-content:space-between;align-items:center}
+.brand{display:flex;align-items:center;gap:.5rem}
+.brand-ico{width:32px;height:32px;background:rgba(255,255,255,.15);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:1rem}
+.brand-name{font-family:'Playfair Display',serif;font-size:1rem;color:rgba(255,255,255,.9);font-style:italic}
+.top-btns{display:flex;gap:.4rem}
+.t-btn{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.18);color:rgba(255,255,255,.85);width:32px;height:32px;border-radius:8px;cursor:pointer;font-size:.85rem;display:flex;align-items:center;justify-content:center;transition:all .2s}
+.t-btn:hover{background:rgba(255,255,255,.22)}
+.top-greeting{margin-top:.9rem}
+.tg-date{font-size:.68rem;color:rgba(255,255,255,.5);letter-spacing:.06em}
+.tg-main{font-family:'Playfair Display',serif;font-size:1.55rem;color:#fff;font-weight:600;margin-top:.1rem}
+.tg-sub{font-size:.72rem;color:rgba(255,255,255,.55);margin-top:.1rem}
 
-/* ── NAMAZ VAKİTLERİ ── */
-.prayer-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;overflow:hidden;box-shadow:var(--card-shadow);margin-bottom:.8rem}
-.prayer-card-header{background:linear-gradient(135deg,var(--accent2),var(--accent));padding:.75rem 1rem;display:flex;justify-content:space-between;align-items:center}
-.prayer-card-title{font-size:.78rem;color:#e8f5ee;font-weight:700;letter-spacing:.1em}
-.city-select-btn{background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.3);color:#e8f5ee;border-radius:8px;padding:.25rem .65rem;font-size:.68rem;cursor:pointer;transition:all .2s}
-.city-select-btn:hover{background:rgba(255,255,255,.28)}
-.prayer-times-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:0}
-.vakt-cell{padding:.7rem .4rem;text-align:center;border-right:1px solid var(--border);border-bottom:1px solid var(--border);transition:background .2s}
-.vakt-cell:nth-child(3n){border-right:none}
-.vakt-cell:nth-child(4),.vakt-cell:nth-child(5),.vakt-cell:nth-child(6){border-bottom:none}
-.vakt-cell.current{background:linear-gradient(135deg,rgba(45,106,79,.12),rgba(64,145,108,.06))}
-[data-theme="dark"] .vakt-cell.current{background:rgba(82,183,136,.1)}
-.vakt-name{font-size:.56rem;color:var(--muted);text-transform:uppercase;letter-spacing:.1em}
-.vakt-time{font-size:.95rem;color:var(--accent2);font-weight:700;margin-top:.15rem;font-family:'Playfair Display',serif}
-[data-theme="dark"] .vakt-time{color:var(--accent)}
-.vakt-cell.current .vakt-time{color:var(--accent);font-size:1.05rem}
-[data-theme="dark"] .vakt-cell.current .vakt-time{color:var(--gold)}
-.vakt-dot{width:5px;height:5px;background:var(--accent);border-radius:50%;margin:.25rem auto 0;opacity:0}
-.vakt-cell.current .vakt-dot{opacity:1}
-.prayer-footer{padding:.55rem 1rem;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;background:var(--surface2)}
-.next-prayer-info{font-size:.68rem;color:var(--muted)}
-.next-prayer-info b{color:var(--accent2)}
-[data-theme="dark"] .next-prayer-info b{color:var(--accent)}
-.ezan-btn{background:var(--accent2);color:#e8f5ee;border:none;border-radius:8px;padding:.35rem .75rem;font-size:.68rem;cursor:pointer;transition:all .2s;font-family:'Lato',sans-serif}
-.ezan-btn:hover{background:var(--accent)}
-.ezan-btn.playing{background:#b5341a}
-.prayer-loading{padding:1rem;text-align:center;font-size:.72rem;color:var(--muted)}
-.prayer-error{padding:.8rem 1rem;text-align:center;font-size:.72rem;color:var(--red)}
-.retry-btn{background:none;border:1px solid var(--border);color:var(--muted);border-radius:7px;padding:.3rem .7rem;font-size:.68rem;cursor:pointer;margin-top:.4rem;display:block;margin-left:auto;margin-right:auto}
+/* ── COUNTDOWN HERO (namazvakitleri.com.tr style) ── */
+.countdown-hero{background:linear-gradient(160deg,var(--g1),var(--g2));margin:0;padding:1rem 1.2rem 1.4rem;position:relative;z-index:1}
+.ch-vakit-label{font-size:.6rem;color:rgba(255,255,255,.5);letter-spacing:.18em;text-transform:uppercase;text-align:center;margin-bottom:.2rem}
+.ch-vakit-name{font-size:.95rem;color:rgba(255,255,255,.8);text-align:center;margin-bottom:.6rem;font-weight:500}
+.ch-timer{display:flex;justify-content:center;align-items:center;gap:.6rem}
+.ch-seg{text-align:center}
+.ch-num{font-size:2.6rem;font-weight:700;color:#fff;font-family:'Playfair Display',serif;line-height:1;min-width:2.2ch;display:block;font-variant-numeric:tabular-nums}
+.ch-unit{font-size:.55rem;color:rgba(255,255,255,.45);letter-spacing:.12em;text-transform:uppercase;margin-top:.1rem;display:block}
+.ch-sep{font-size:2rem;color:rgba(255,255,255,.3);font-weight:300;line-height:1;margin-top:-.2rem}
+.hero-curve{height:22px;background:var(--bg);border-radius:22px 22px 0 0;margin-top:-.5px}
 
-/* ── ŞEHİR MODAL ── */
-.overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:200;display:flex;align-items:flex-end;justify-content:center}
-.modal{background:var(--surface);border-radius:20px 20px 0 0;padding:1.2rem 1rem 2.5rem;width:100%;max-width:480px}
-.modal-title{font-size:.85rem;color:var(--accent2);font-weight:700;text-align:center;margin-bottom:.8rem;letter-spacing:.06em;font-family:'Playfair Display',serif}
-[data-theme="dark"] .modal-title{color:var(--accent)}
-.city-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:.4rem}
-.city-btn{background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:.55rem .7rem;cursor:pointer;font-size:.78rem;color:var(--text);transition:all .2s;text-align:center}
-.city-btn:hover,.city-btn.sel{border-color:var(--accent);color:var(--accent);background:rgba(45,106,79,.07)}
-[data-theme="dark"] .city-btn:hover,[data-theme="dark"] .city-btn.sel{background:rgba(82,183,136,.08)}
-.modal-close{display:block;margin:.9rem auto 0;background:none;border:1px solid var(--border);color:var(--muted);padding:.4rem 1.4rem;border-radius:8px;font-size:.74rem;cursor:pointer}
+/* ── NAMAZ VAKİTLERİ KART ── */
+.section-pad{padding:0 1rem}
+.sec-label{font-size:.6rem;letter-spacing:.2em;color:var(--muted);text-transform:uppercase;margin:1.2rem 0 .6rem;font-weight:600}
+.prayer-card{background:var(--surface);border-radius:18px;box-shadow:var(--shadow);overflow:hidden;margin-bottom:1rem}
+.prayer-card-top{padding:.75rem 1rem;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--border)}
+.pct-city{display:flex;align-items:center;gap:.4rem;font-size:.82rem;font-weight:600;color:var(--text)}
+.pct-city-ico{font-size:1rem}
+.city-change-btn{font-size:.68rem;color:var(--green);border:1px solid rgba(45,106,79,.3);background:rgba(45,106,79,.07);border-radius:8px;padding:.22rem .6rem;cursor:pointer;transition:all .2s;font-family:inherit}
+.city-change-btn:hover{background:rgba(45,106,79,.14)}
+[data-theme="dark"] .city-change-btn{color:var(--green);border-color:rgba(82,183,136,.3);background:rgba(82,183,136,.07)}
 
-/* ── QUICK ACTIONS ── */
-.quick-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:.55rem;margin-bottom:.8rem}
-.quick-btn{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:.9rem .5rem;text-align:center;cursor:pointer;transition:all .2s;box-shadow:var(--card-shadow)}
-.quick-btn:hover{border-color:var(--accent);transform:translateY(-1px)}
-.quick-btn:active{transform:scale(.96)}
-.qb-icon{font-size:1.4rem;margin-bottom:.3rem}
-.qb-label{font-size:.62rem;color:var(--muted);letter-spacing:.06em}
+/* 6-cell prayer grid */
+.prayer-grid{display:grid;grid-template-columns:repeat(3,1fr)}
+.vk{padding:.8rem .4rem;text-align:center;border-right:1px solid var(--border);border-bottom:1px solid var(--border);cursor:default;transition:background .2s;position:relative}
+.vk:nth-child(3n){border-right:none}
+.vk:nth-child(4),.vk:nth-child(5),.vk:nth-child(6){border-bottom:none}
+.vk-ico{font-size:.9rem;margin-bottom:.15rem;display:block}
+.vk-name{font-size:.6rem;color:var(--muted);letter-spacing:.08em;text-transform:uppercase;display:block;margin-bottom:.2rem}
+.vk-time{font-size:1.1rem;color:var(--g1);font-weight:700;font-variant-numeric:tabular-nums;display:block;font-family:'Playfair Display',serif}
+[data-theme="dark"] .vk-time{color:var(--green)}
+.vk.active-vk{background:linear-gradient(135deg,rgba(45,106,79,.1),rgba(64,145,108,.05))}
+[data-theme="dark"] .vk.active-vk{background:rgba(82,183,136,.1)}
+.vk.active-vk .vk-time{color:var(--green);font-size:1.2rem}
+.vk.active-vk::after{content:'▶';position:absolute;top:4px;right:5px;font-size:.5rem;color:var(--green);opacity:.6}
+.vk.next-vk{background:rgba(198,137,58,.06)}
+[data-theme="dark"] .vk.next-vk{background:rgba(212,168,71,.06)}
+.vk.next-vk .vk-time{color:var(--gold)}
+.vk.next-vk::after{content:'⏭';position:absolute;top:4px;right:5px;font-size:.5rem;color:var(--gold);opacity:.7}
+.prayer-loading{padding:1.5rem;text-align:center;font-size:.78rem;color:var(--muted)}
+.prayer-spinner{display:inline-block;width:18px;height:18px;border:2px solid var(--border);border-top-color:var(--green);border-radius:50%;animation:spin .7s linear infinite;margin-right:.4rem;vertical-align:middle}
+@keyframes spin{to{transform:rotate(360deg)}}
+.prayer-err{padding:1rem;text-align:center;font-size:.75rem;color:var(--muted)}
+.retry-lnk{color:var(--green);cursor:pointer;text-decoration:underline;margin-left:.3rem}
 
-/* ── ZİKİR CARDS ── */
-.feature-banner{background:linear-gradient(135deg,var(--gold2),var(--gold));border-radius:14px;padding:.8rem 1rem;margin-bottom:.8rem;display:flex;align-items:center;gap:.75rem}
-.fb-icon{font-size:1.6rem}
-.fb-text h3{font-family:'Playfair Display',serif;font-size:.9rem;color:#fff;font-weight:600}
-.fb-text p{font-size:.65rem;color:rgba(255,255,255,.8);margin-top:.15rem}
+/* HICRI / TARIH BADGE */
+.date-badges{display:flex;gap:.5rem;margin-bottom:1rem}
+.date-badge{flex:1;background:var(--surface);border-radius:12px;padding:.65rem .8rem;box-shadow:var(--shadowsm);text-align:center}
+.db-label{font-size:.58rem;color:var(--muted);letter-spacing:.1em;text-transform:uppercase}
+.db-val{font-size:.82rem;color:var(--text);font-weight:600;margin-top:.2rem;line-height:1.3}
 
-.dhikr-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:.9rem 1rem;margin-bottom:.6rem;cursor:pointer;transition:all .2s;box-shadow:var(--card-shadow);display:flex;align-items:center;gap:.85rem}
-.dhikr-card:hover{border-color:var(--accent);background:var(--surface2)}
-.dhikr-card:active{transform:scale(.98)}
-.dc-icon{width:40px;height:40px;background:linear-gradient(135deg,var(--accent2),var(--accent));border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0}
+/* QUICK TABS */
+.quick-tabs{display:flex;gap:.5rem;margin-bottom:.8rem;overflow-x:auto;padding-bottom:2px}
+.quick-tabs::-webkit-scrollbar{display:none}
+.qtab{background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:.4rem .9rem;font-size:.72rem;color:var(--muted);cursor:pointer;white-space:nowrap;transition:all .2s;font-family:inherit}
+.qtab.on,.qtab:hover{background:var(--g1);color:#fff;border-color:var(--g1)}
+[data-theme="dark"] .qtab.on,[data-theme="dark"] .qtab:hover{background:var(--green);border-color:var(--green)}
+
+/* ZİKİR SECTION */
+.zikir-header{display:flex;align-items:center;gap:.5rem;margin-bottom:.6rem}
+.zikir-header-icon{font-size:1.2rem}
+.zikir-header-text h3{font-size:.88rem;font-weight:700;color:var(--text)}
+.zikir-header-text p{font-size:.65rem;color:var(--muted);margin-top:.05rem}
+
+.dhikr-card{background:var(--surface);border-radius:14px;padding:.85rem .95rem;margin-bottom:.55rem;cursor:pointer;transition:all .2s;box-shadow:var(--shadowsm);display:flex;align-items:center;gap:.8rem;border:1.5px solid transparent}
+.dhikr-card:hover{border-color:var(--green);transform:translateX(2px)}
+.dhikr-card:active{transform:scale(.97)}
+.dc-icon-wrap{width:42px;height:42px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.2rem;flex-shrink:0}
+.dc-icon-wrap.c0{background:linear-gradient(135deg,#1b4332,#2d6a4f)}
+.dc-icon-wrap.c1{background:linear-gradient(135deg,#744210,#b7791f)}
+.dc-icon-wrap.c2{background:linear-gradient(135deg,#234e52,#285e61)}
+.dc-icon-wrap.c3{background:linear-gradient(135deg,#44337a,#6b46c1)}
+.dc-icon-wrap.c4{background:linear-gradient(135deg,#2c5282,#2b6cb0)}
+.dc-icon-wrap.c5{background:linear-gradient(135deg,#742a2a,#c53030)}
 .dc-body{flex:1;min-width:0}
-.dc-name{font-size:.88rem;color:var(--text);font-weight:700;margin-bottom:.2rem}
-.dc-meta{font-size:.68rem;color:var(--muted)}
-.dc-meta b{color:var(--accent2)}
-[data-theme="dark"] .dc-meta b{color:var(--accent)}
-.dc-prog{height:2px;background:var(--border);border-radius:2px;margin-top:.4rem;overflow:hidden}
-.dc-prog-fill{height:100%;background:linear-gradient(90deg,var(--accent2),var(--accent));border-radius:2px;transition:width .4s}
-.dc-done{font-size:.62rem;background:rgba(45,106,79,.12);color:var(--green);border:1px solid rgba(45,106,79,.25);border-radius:20px;padding:.1rem .55rem;margin-left:.4rem;vertical-align:middle}
+.dc-name{font-size:.88rem;color:var(--text);font-weight:600;display:flex;align-items:center;gap:.4rem;flex-wrap:wrap}
+.dc-badge-done{font-size:.6rem;background:rgba(45,106,79,.12);color:var(--green);border:1px solid rgba(45,106,79,.25);border-radius:10px;padding:.1rem .45rem}
+.dc-sub{font-size:.67rem;color:var(--muted);margin-top:.2rem}
+.dc-prog{height:3px;background:var(--border);border-radius:3px;margin-top:.45rem;overflow:hidden}
+.dc-prog-fill{height:100%;background:linear-gradient(90deg,var(--g2),var(--g3));border-radius:3px;transition:width .4s}
+.dc-arrow{font-size:.8rem;color:var(--border);flex-shrink:0}
+.dc-count{font-size:1rem;font-weight:700;color:var(--g2);min-width:2ch;text-align:right;font-family:'Playfair Display',serif;flex-shrink:0}
+[data-theme="dark"] .dc-count{color:var(--green)}
 
-/* ── COUNTER VIEW ── */
-#counterView{display:flex;flex-direction:column;min-height:100vh}
-.counter-topbar{background:var(--header-bg);padding:.9rem 1rem;display:flex;align-items:center;gap:.75rem}
-.back-btn{background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.25);color:#e8f5ee;padding:.4rem .8rem;border-radius:9px;cursor:pointer;font-size:.78rem;transition:all .2s}
-.back-btn:hover{background:rgba(255,255,255,.25)}
-.counter-head{flex:1;min-width:0}
-.counter-head-name{font-size:.92rem;color:#e8f5ee;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-family:'Playfair Display',serif}
-.counter-head-sub{font-size:.68rem;color:rgba(232,245,238,.6);margin-top:.1rem}
-.ring-area{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:1.2rem 1rem;background:var(--bg)}
-#ringTap{width:200px;height:200px;border-radius:50%;background:var(--ring-grad);border:3px solid var(--accent);cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative;user-select:none;-webkit-tap-highlight-color:transparent;transition:transform .08s,box-shadow .15s;box-shadow:0 0 0 12px rgba(45,106,79,.06),0 0 40px var(--ring-glow)}
-#ringTap:active{transform:scale(.92)}
-#ringTap::after{content:'';position:absolute;inset:12px;border-radius:50%;border:1px solid rgba(45,106,79,.2)}
-#countNum{font-size:3.4rem;color:var(--accent2);font-weight:400;line-height:1;font-family:'Playfair Display',serif}
-[data-theme="dark"] #countNum{color:var(--accent)}
-.tap-label{font-size:.6rem;color:var(--muted);margin-top:.35rem;letter-spacing:.2em}
-.done-ring{border-color:var(--green)!important;box-shadow:0 0 0 12px rgba(45,106,79,.08),0 0 50px rgba(45,106,79,.2)!important}
-.stats-row{display:flex;gap:.6rem;width:100%;max-width:330px;margin-top:1.3rem}
-.stat-box{flex:1;background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:.6rem .5rem;text-align:center;box-shadow:var(--card-shadow)}
-.stat-lbl{font-size:.55rem;color:var(--muted);letter-spacing:.1em;text-transform:uppercase}
-.stat-val{font-size:1.25rem;color:var(--accent);margin-top:.15rem;font-family:'Playfair Display',serif;font-weight:600}
-.done-msg{display:none;background:rgba(45,106,79,.09);border:1px solid rgba(45,106,79,.25);border-radius:10px;padding:.6rem 1rem;text-align:center;font-size:.78rem;color:var(--green);margin-top:.75rem;width:100%;max-width:330px;animation:pop .3s}
-.done-msg.show{display:block}
+/* COUNTER VIEW */
+.cv-header{background:linear-gradient(160deg,var(--g1),var(--g2));padding:1rem 1.2rem}
+.cv-top{display:flex;align-items:center;gap:.75rem}
+.cv-back{background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.22);color:#fff;padding:.4rem .85rem;border-radius:9px;cursor:pointer;font-size:.78rem;font-family:inherit;transition:all .2s}
+.cv-back:hover{background:rgba(255,255,255,.25)}
+.cv-title-wrap{flex:1;min-width:0}
+.cv-title{font-family:'Playfair Display',serif;font-size:.98rem;color:#fff;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cv-sub{font-size:.68rem;color:rgba(255,255,255,.55);margin-top:.1rem}
+.ring-area{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:1.5rem 1rem;background:var(--bg)}
+#ringTap{width:210px;height:210px;border-radius:50%;background:radial-gradient(circle at 38% 32%,var(--surface),var(--surface2));border:3px solid var(--g2);cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative;user-select:none;transition:transform .08s,box-shadow .2s;box-shadow:0 0 0 10px rgba(45,106,79,.07),0 8px 32px rgba(45,106,79,.18)}
+#ringTap:active{transform:scale(.91)}
+#ringTap::after{content:'';position:absolute;inset:13px;border-radius:50%;border:1px solid rgba(45,106,79,.18)}
+#countNum{font-size:3.8rem;font-weight:400;color:var(--g1);font-family:'Playfair Display',serif;line-height:1}
+[data-theme="dark"] #countNum{color:var(--green)}
+.tap-hint{font-size:.58rem;color:var(--muted);margin-top:.35rem;letter-spacing:.22em}
+.ring-done{border-color:var(--green)!important;box-shadow:0 0 0 12px rgba(45,106,79,.09),0 8px 40px rgba(45,106,79,.22)!important}
+.stats-row{display:flex;gap:.55rem;width:100%;max-width:320px;margin-top:1.2rem}
+.sbox{flex:1;background:var(--surface);border-radius:12px;padding:.6rem .5rem;text-align:center;box-shadow:var(--shadowsm)}
+.sbox-lbl{font-size:.54rem;color:var(--muted);letter-spacing:.1em;text-transform:uppercase}
+.sbox-val{font-size:1.3rem;color:var(--g2);margin-top:.15rem;font-family:'Playfair Display',serif;font-weight:600}
+[data-theme="dark"] .sbox-val{color:var(--green)}
+.done-msg{display:none;width:100%;max-width:320px;background:rgba(45,106,79,.1);border:1px solid rgba(45,106,79,.25);border-radius:12px;padding:.65rem 1rem;text-align:center;font-size:.8rem;color:var(--green);margin-top:.75rem;font-weight:600}
+.done-msg.show{display:block;animation:pop .3s}
 @keyframes pop{from{opacity:0;transform:scale(.95)}to{opacity:1;transform:scale(1)}}
-.counter-btns{display:flex;gap:.55rem;width:100%;max-width:330px;margin-top:.8rem}
-.counter-btns button{flex:1;background:var(--surface);border:1px solid var(--border);color:var(--muted);padding:.5rem;border-radius:9px;cursor:pointer;font-size:.72rem;font-family:inherit;transition:all .2s}
-.counter-btns button:hover{border-color:var(--accent);color:var(--text)}
+.action-row{display:flex;gap:.5rem;width:100%;max-width:320px;margin-top:.7rem}
+.act-btn{flex:1;background:var(--surface);border:1.5px solid var(--border);color:var(--muted);padding:.5rem;border-radius:10px;cursor:pointer;font-size:.72rem;font-family:inherit;transition:all .2s}
+.act-btn:hover{border-color:var(--green);color:var(--text)}
 
 /* AUDIO */
-.audio-bar{display:flex;gap:.5rem;margin-top:.7rem;width:100%;max-width:330px}
-.audio-toggle{flex:1;background:var(--surface);border:1px solid var(--border);color:var(--muted);border-radius:9px;padding:.5rem;font-size:.72rem;cursor:pointer;transition:all .2s;font-family:inherit}
-.audio-toggle:hover{border-color:var(--accent);color:var(--accent)}
-.audio-toggle.on{border-color:var(--green);color:var(--green);background:rgba(45,106,79,.07)}
-.loop-btn{background:var(--surface);border:1px solid var(--border);color:var(--muted);border-radius:9px;padding:.5rem .65rem;font-size:.72rem;cursor:pointer;transition:all .2s;white-space:nowrap}
-.loop-btn.on{border-color:var(--accent);color:var(--accent);background:rgba(45,106,79,.07)}
-.audio-panel{display:none;width:100%;max-width:330px;margin-top:.6rem;background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:.7rem .9rem}
+.audio-wrap{width:100%;max-width:320px;margin-top:.6rem}
+.audio-toggle-btn{width:100%;background:var(--surface);border:1.5px solid var(--border);color:var(--muted);border-radius:10px;padding:.5rem;font-size:.72rem;cursor:pointer;transition:all .2s;font-family:inherit;display:flex;align-items:center;justify-content:center;gap:.4rem}
+.audio-toggle-btn:hover{border-color:var(--green);color:var(--green)}
+.audio-toggle-btn.on{border-color:var(--green);color:var(--green);background:rgba(45,106,79,.06)}
+.loop-btn{background:var(--surface);border:1.5px solid var(--border);color:var(--muted);border-radius:10px;padding:.5rem .65rem;font-size:.72rem;cursor:pointer;transition:all .2s;flex-shrink:0}
+.loop-btn.on{border-color:var(--g2);color:var(--g2);background:rgba(45,106,79,.06)}
+.audio-row{display:flex;gap:.5rem;margin-bottom:.4rem}
+.audio-panel{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:.7rem .85rem;margin-top:.45rem;display:none}
 .audio-panel.show{display:block}
 .audio-panel audio{width:100%;border-radius:6px;outline:none}
-.audio-hint{font-size:.67rem;color:var(--muted);margin-bottom:.45rem;text-align:center}
-.audio-srcs{display:flex;flex-wrap:wrap;gap:.35rem;margin-top:.5rem}
-.a-src{flex:1;min-width:130px;background:var(--surface2);border:1px solid var(--border);color:var(--muted);border-radius:7px;padding:.38rem .5rem;font-size:.67rem;cursor:pointer;text-align:center;transition:all .2s}
-.a-src:hover,.a-src.active{border-color:var(--accent);color:var(--accent);background:rgba(45,106,79,.07)}
-.yt-src{background:none;border:1px solid var(--border);color:var(--muted);border-radius:7px;padding:.32rem .5rem;font-size:.65rem;cursor:pointer;text-align:center;transition:all .2s;text-decoration:none;display:inline-block;margin-top:.35rem}
-.yt-src:hover{border-color:#e05252;color:#e05252}
+.audio-hint{font-size:.67rem;color:var(--muted);margin-bottom:.4rem;text-align:center}
+.audio-list{display:flex;flex-wrap:wrap;gap:.35rem;margin-top:.45rem}
+.asrc{flex:1;min-width:130px;background:var(--surface2);border:1px solid var(--border);color:var(--muted);border-radius:8px;padding:.38rem .5rem;font-size:.67rem;cursor:pointer;text-align:center;transition:all .2s;font-family:inherit}
+.asrc:hover,.asrc.on{border-color:var(--green);color:var(--green);background:rgba(45,106,79,.06)}
+.yt-lnk{display:block;margin-top:.35rem;background:none;border:1px solid rgba(229,57,53,.3);color:#e05252;border-radius:8px;padding:.35rem .5rem;font-size:.65rem;cursor:pointer;text-align:center;transition:all .2s;text-decoration:none;font-family:inherit}
+.yt-lnk:hover{background:rgba(229,57,53,.07)}
 
 /* PAGER */
-.pager{width:100%;max-width:330px;margin:.8rem auto 0;display:none}
-.pager.on{display:block}
-.pager-hdr{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:.7rem .9rem;margin-bottom:.5rem}
-.pager-lang{display:flex;gap:.35rem;margin-bottom:.45rem}
-.pl-btn{flex:1;background:var(--surface2);border:1px solid var(--border);color:var(--muted);border-radius:7px;padding:.35rem;font-size:.67rem;cursor:pointer;transition:all .2s}
-.pl-btn.on{background:var(--accent2);color:#fff;border-color:var(--accent2)}
-[data-theme="dark"] .pl-btn.on{background:var(--accent)}
-.pager-meta{display:flex;justify-content:space-between;font-size:.65rem;color:var(--muted);margin-bottom:.2rem}
-.pager-sname{font-size:.8rem;color:var(--accent2);font-weight:700;margin-top:.15rem}
-[data-theme="dark"] .pager-sname{color:var(--accent)}
-.pager-bar{height:2px;background:var(--border);border-radius:2px;margin:.45rem 0}
-.pager-bar-fill{height:100%;background:linear-gradient(90deg,var(--accent2),var(--accent));border-radius:2px;transition:width .3s}
-.pager-body{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:.9rem 1rem;font-size:.85rem;color:var(--text);line-height:1.85;max-height:260px;overflow-y:auto;white-space:pre-wrap}
-.pager-nav{display:flex;gap:.5rem;margin-top:.5rem}
-.pager-nav button{flex:1;background:var(--surface);border:1px solid var(--border);color:var(--muted);padding:.5rem;border-radius:8px;font-size:.72rem;font-family:inherit;cursor:pointer;transition:all .2s}
-.pager-nav button:hover:not(:disabled){border-color:var(--accent);color:var(--text)}
-.pager-nav button:disabled{opacity:.3;cursor:default}
-.pager-cont{border-color:var(--accent)!important;color:var(--accent)!important;font-weight:700}
-.pager-cont:hover:not(:disabled){background:var(--accent)!important;color:#fff!important}
-.pager-jump{display:flex;align-items:center;gap:.45rem;margin-top:.4rem}
-.pager-jump span{font-size:.65rem;color:var(--muted);white-space:nowrap}
-.pager-jump input{flex:1;background:var(--surface2);border:1px solid var(--border);color:var(--text);padding:.38rem .55rem;border-radius:7px;font-size:.78rem;text-align:center;font-family:inherit}
-.pager-jump button{background:var(--surface);border:1px solid var(--border);color:var(--muted);padding:.38rem .75rem;border-radius:7px;font-size:.7rem;cursor:pointer;transition:all .2s;font-family:inherit}
-.pager-jump button:hover{border-color:var(--accent);color:var(--accent)}
+.pager-wrap{width:100%;max-width:320px;margin:.7rem auto 0;display:none}
+.pager-wrap.on{display:block}
+.pager-hdr{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:.7rem .85rem;margin-bottom:.45rem}
+.p-lang{display:flex;gap:.35rem;margin-bottom:.4rem}
+.plb{flex:1;background:var(--surface2);border:1px solid var(--border);color:var(--muted);border-radius:7px;padding:.33rem;font-size:.66rem;cursor:pointer;transition:all .2s;font-family:inherit}
+.plb.on{background:var(--g1);color:#fff;border-color:var(--g1)}
+[data-theme="dark"] .plb.on{background:var(--green);border-color:var(--green)}
+.p-meta{display:flex;justify-content:space-between;font-size:.64rem;color:var(--muted);margin-bottom:.15rem}
+.p-sname{font-size:.8rem;color:var(--g2);font-weight:700;margin:.1rem 0}
+[data-theme="dark"] .p-sname{color:var(--green)}
+.p-bar{height:2px;background:var(--border);border-radius:2px;margin:.4rem 0 0}
+.p-bar-fill{height:100%;background:linear-gradient(90deg,var(--g2),var(--g3));border-radius:2px;transition:width .3s}
+.pager-body{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:.9rem 1rem;font-size:.85rem;color:var(--text);line-height:1.85;max-height:255px;overflow-y:auto;white-space:pre-wrap;margin-bottom:.45rem}
+.p-nav{display:flex;gap:.45rem}
+.p-nav button{flex:1;background:var(--surface);border:1.5px solid var(--border);color:var(--muted);padding:.5rem;border-radius:9px;font-size:.72rem;font-family:inherit;cursor:pointer;transition:all .2s}
+.p-nav button:hover:not(:disabled){border-color:var(--green);color:var(--text)}
+.p-nav button:disabled{opacity:.3;cursor:default}
+.p-cont{border-color:var(--g2)!important;color:var(--g2)!important;font-weight:700}
+.p-cont:hover:not(:disabled){background:var(--g2)!important;color:#fff!important}
+[data-theme="dark"] .p-cont{border-color:var(--green)!important;color:var(--green)!important}
+[data-theme="dark"] .p-cont:hover:not(:disabled){background:var(--green)!important}
+.p-jump{display:flex;align-items:center;gap:.4rem;margin-top:.4rem}
+.p-jump span{font-size:.64rem;color:var(--muted);white-space:nowrap}
+.p-jump input{flex:1;background:var(--surface2);border:1px solid var(--border);color:var(--text);padding:.36rem .5rem;border-radius:7px;font-size:.78rem;text-align:center;font-family:inherit}
+.p-jump button{background:var(--surface);border:1px solid var(--border);color:var(--muted);padding:.36rem .7rem;border-radius:7px;font-size:.7rem;cursor:pointer;transition:all .2s;font-family:inherit}
+.p-jump button:hover{border-color:var(--green);color:var(--green)}
 
 /* BOTTOM */
-.bottom-bar{position:fixed;bottom:0;left:0;right:0;padding:.7rem 1rem;background:rgba(244,241,235,.97);border-top:1px solid var(--border);display:flex;justify-content:center}
-[data-theme="dark"] .bottom-bar{background:rgba(13,31,23,.97)}
+.bottom-bar{position:fixed;bottom:0;left:0;right:0;padding:.65rem 1rem calc(.65rem + env(safe-area-inset-bottom,0));background:rgba(240,237,230,.95);border-top:1px solid var(--border);display:flex;justify-content:center;backdrop-filter:blur(8px)}
+[data-theme="dark"] .bottom-bar{background:rgba(12,27,19,.95)}
 .reset-btn{background:none;border:1px solid var(--border);color:var(--muted);padding:.38rem 1.1rem;border-radius:8px;font-size:.7rem;font-family:inherit;cursor:pointer;transition:all .2s}
 .reset-btn:hover{border-color:var(--red);color:var(--red)}
+
+/* MODAL */
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:200;display:flex;align-items:flex-end;justify-content:center;backdrop-filter:blur(3px)}
+.modal{background:var(--surface);border-radius:22px 22px 0 0;padding:1.2rem 1rem 2.5rem;width:100%;max-width:480px;max-height:72vh;overflow-y:auto}
+.modal-handle{width:36px;height:4px;background:var(--border);border-radius:4px;margin:0 auto .9rem}
+.modal-title{font-size:.88rem;color:var(--text);font-weight:700;text-align:center;margin-bottom:.8rem}
+.city-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:.4rem}
+.city-btn{background:var(--surface2);border:1.5px solid var(--border);border-radius:10px;padding:.55rem .7rem;cursor:pointer;font-size:.78rem;color:var(--text);transition:all .2s;text-align:center;font-family:inherit}
+.city-btn:hover,.city-btn.sel{border-color:var(--green);color:var(--green);background:rgba(45,106,79,.07)}
+[data-theme="dark"] .city-btn:hover,[data-theme="dark"] .city-btn.sel{background:rgba(82,183,136,.08)}
+.modal-close{display:block;margin:.9rem auto 0;background:none;border:1.5px solid var(--border);color:var(--muted);padding:.42rem 1.4rem;border-radius:9px;font-size:.74rem;cursor:pointer;font-family:inherit;transition:all .2s}
+.modal-close:hover{border-color:var(--red);color:var(--red)}
+
 .hidden{display:none!important}
 ::-webkit-scrollbar{width:3px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:var(--border);border-radius:4px}
 </style>
 </head>
 <body>
 
+<!-- MAIN VIEW -->
 <div id="mainView">
+
   <!-- HEADER -->
-  <div class="app-header">
-    <div class="header-top">
-      <div class="app-brand">
-        <span class="brand-icon">☪</span>
-        <span class="brand-name">Dini Takip</span>
+  <div class="top-bar">
+    <div class="top-inner">
+      <div class="top-row1">
+        <div class="brand">
+          <div class="brand-ico">☪</div>
+          <span class="brand-name">Dini Takip</span>
+        </div>
+        <div class="top-btns">
+          <button class="t-btn" id="themeBtn" title="Tema">🌙</button>
+        </div>
       </div>
-      <div class="header-controls">
-        <button class="hc-btn" id="themeBtn">🌙</button>
+      <div class="top-greeting">
+        <div class="tg-date" id="topDate"></div>
+        <div class="tg-main" id="topGreeting">Esselâmü Aleyküm</div>
+        <div class="tg-sub">Bugünkü ibadetlerinizi takip edin</div>
       </div>
     </div>
-    <div class="header-date" id="headerDate"></div>
-    <div class="header-greeting" id="headerGreeting">Esselâmü Aleyküm</div>
-    <div class="header-sub">Bugünkü ibadetlerinizi takip edin</div>
+
+    <!-- COUNTDOWN HERO -->
+    <div class="countdown-hero">
+      <div class="ch-vakit-label">Bir sonraki namaza</div>
+      <div class="ch-vakit-name" id="nextVaktName">—</div>
+      <div class="ch-timer">
+        <div class="ch-seg">
+          <span class="ch-num" id="cdH">--</span>
+          <span class="ch-unit">saat</span>
+        </div>
+        <span class="ch-sep">:</span>
+        <div class="ch-seg">
+          <span class="ch-num" id="cdM">--</span>
+          <span class="ch-unit">dakika</span>
+        </div>
+        <span class="ch-sep">:</span>
+        <div class="ch-seg">
+          <span class="ch-num" id="cdS">--</span>
+          <span class="ch-unit">saniye</span>
+        </div>
+      </div>
+    </div>
+    <div class="hero-curve"></div>
   </div>
 
-  <div style="padding:.8rem 1rem 5rem">
+  <div class="section-pad">
+    <!-- TARİH BADGE'LERİ -->
+    <div class="date-badges">
+      <div class="date-badge">
+        <div class="db-label">Miladi</div>
+        <div class="db-val" id="miladiDate">—</div>
+      </div>
+      <div class="date-badge">
+        <div class="db-label">Hicri</div>
+        <div class="db-val" id="hicriDate">—</div>
+      </div>
+    </div>
+
     <!-- NAMAZ VAKİTLERİ -->
-    <div class="section-title">🕌 Namaz Vakitleri</div>
     <div class="prayer-card">
-      <div class="prayer-card-header">
-        <span class="prayer-card-title" id="prayerCityLabel">📍 Amsterdam</span>
-        <button class="city-select-btn" id="citySelectBtn">Şehir Değiştir ▾</button>
+      <div class="prayer-card-top">
+        <div class="pct-city">
+          <span class="pct-city-ico">📍</span>
+          <span id="cityLabel">Amsterdam</span>
+        </div>
+        <button class="city-change-btn" id="cityChangeBtn">Şehir Değiştir</button>
       </div>
-      <div id="prayerBody"><div class="prayer-loading">⏳ Vakitler yükleniyor…</div></div>
-      <div class="prayer-footer">
-        <div class="next-prayer-info" id="nextPrayerInfo">—</div>
-        <button class="ezan-btn" id="ezanBtn">🔊 Ezan</button>
-      </div>
-    </div>
-
-    <!-- HIZLI ERİŞİM -->
-    <div class="section-title">⚡ Hızlı Erişim</div>
-    <div class="quick-grid">
-      <div class="quick-btn" onclick="alert('Kıble yönü: Güneydoğu (yaklaşık 118°) — Hollanda\'dan Kâbe yönü')">
-        <div class="qb-icon">🧭</div>
-        <div class="qb-label">Kıble</div>
-      </div>
-      <div class="quick-btn" onclick="document.querySelector('.section-title:last-of-type').scrollIntoView({behavior:'smooth'})">
-        <div class="qb-icon">📿</div>
-        <div class="qb-label">Zikirler</div>
-      </div>
-      <div class="quick-btn" id="takvimBtn">
-        <div class="qb-icon">📅</div>
-        <div class="qb-label" id="hicriBadge">Hicri Takvim</div>
+      <div id="prayerBody">
+        <div class="prayer-loading"><span class="prayer-spinner"></span>Yükleniyor…</div>
       </div>
     </div>
 
-    <!-- ZİKİR-MATİK BANNER -->
-    <div class="section-title">📿 Zikir-Matik</div>
-    <div class="feature-banner">
-      <div class="fb-icon">📿</div>
-      <div class="fb-text">
-        <h3>Zikir & Dua Takibi</h3>
-        <p>Günlük zikirlerinizi sayın, ilerlemenizi takip edin</p>
+    <!-- ZİKİR-MATİK -->
+    <div class="sec-label">📿 Zikir-Matik</div>
+    <div class="zikir-header">
+      <div class="zikir-header-icon">📿</div>
+      <div class="zikir-header-text">
+        <h3>Günlük Zikir &amp; Dua Takibi</h3>
+        <p>Zikirlerinizi sayın, ilerlemenizi görün</p>
       </div>
     </div>
     <div id="dhikrList"></div>
-    <div style="height:4rem"></div>
+    <div style="height:20px"></div>
   </div>
 </div>
 
 <!-- COUNTER VIEW -->
 <div id="counterView" class="hidden">
-  <div class="counter-topbar">
-    <button class="back-btn" id="backBtn">← Geri</button>
-    <div class="counter-head">
-      <div class="counter-head-name" id="activeName"></div>
-      <div class="counter-head-sub" id="activeSub"></div>
+  <div class="cv-header">
+    <div class="cv-top">
+      <button class="cv-back" id="backBtn">← Geri</button>
+      <div class="cv-title-wrap">
+        <div class="cv-title" id="cvTitle"></div>
+        <div class="cv-sub" id="cvSub"></div>
+      </div>
     </div>
   </div>
   <div class="ring-area">
-    <div id="ringTap" tabindex="0" role="button">
+    <div id="ringTap" tabindex="0" role="button" aria-label="Sayaç">
       <div id="countNum">0</div>
-      <div class="tap-label">DOKUN</div>
+      <div class="tap-hint">DOKUN</div>
     </div>
     <div class="stats-row">
-      <div class="stat-box"><div class="stat-lbl">Bugün</div><div class="stat-val" id="todayVal">0</div></div>
-      <div class="stat-box"><div class="stat-lbl" id="targetLbl">Hedef</div><div class="stat-val" id="targetVal">0</div></div>
-      <div class="stat-box"><div class="stat-lbl">Toplam</div><div class="stat-val" id="totalVal">0</div></div>
+      <div class="sbox"><div class="sbox-lbl">Bugün</div><div class="sbox-val" id="sToday">0</div></div>
+      <div class="sbox"><div class="sbox-lbl" id="sTargetLbl">Hedef</div><div class="sbox-val" id="sTarget">0</div></div>
+      <div class="sbox"><div class="sbox-lbl">Toplam</div><div class="sbox-val" id="sTotal">0</div></div>
     </div>
     <div class="done-msg" id="doneMsg">✓ Tamamlandı — MâşâAllah! 🤲</div>
-    <div class="counter-btns">
-      <button id="undoBtn">↩ Geri Al</button>
-      <button id="resetTodayBtn">Sıfırla</button>
+    <div class="action-row">
+      <button class="act-btn" id="undoBtn">↩ Geri Al</button>
+      <button class="act-btn" id="resetTodayBtn">Bugünü Sıfırla</button>
     </div>
-    <div class="audio-bar">
-      <button class="audio-toggle" id="audioToggle">🔊 Sesli Dinle</button>
-      <button class="loop-btn" id="loopBtn">🔁</button>
+
+    <div class="audio-wrap">
+      <div class="audio-row">
+        <button class="audio-toggle-btn" id="audioToggle">🔊 Sesli Dinle</button>
+        <button class="loop-btn" id="loopBtn">🔁</button>
+      </div>
+      <div class="audio-panel" id="audioPanel">
+        <div class="audio-hint" id="audioHint">Kaynak seçin</div>
+        <audio id="audioEl" controls preload="none" style="width:100%;border-radius:6px"></audio>
+        <div class="audio-list" id="audioList"></div>
+      </div>
     </div>
-    <div class="audio-panel" id="audioPanel">
-      <div class="audio-hint" id="audioHint">Kaynak seçin</div>
-      <audio id="audioEl" controls preload="none" style="width:100%;border-radius:6px"></audio>
-      <div class="audio-srcs" id="audioSrcs"></div>
-    </div>
-    <div class="pager" id="pager">
+
+    <div class="pager-wrap" id="pager">
       <div class="pager-hdr">
-        <div class="pager-lang">
-          <button class="pl-btn on" id="plTr">Türkçe Okunuş</button>
-          <button class="pl-btn" id="plAr">عربي Arapça</button>
+        <div class="p-lang">
+          <button class="plb on" id="plTr">Türkçe Okunuş</button>
+          <button class="plb" id="plAr">عربي Arapça</button>
         </div>
-        <div class="pager-meta"><span>Bölüm</span><span id="pagerFrac"></span></div>
-        <div class="pager-sname" id="pagerSname"></div>
-        <div class="pager-bar"><div class="pager-bar-fill" id="pagerFill"></div></div>
+        <div class="p-meta"><span>Bölüm</span><span id="pFrac"></span></div>
+        <div class="p-sname" id="pSname"></div>
+        <div class="p-bar"><div class="p-bar-fill" id="pFill"></div></div>
       </div>
-      <div class="pager-body" id="pagerBody"></div>
-      <div class="pager-nav">
+      <div class="pager-body" id="pBody"></div>
+      <div class="p-nav">
         <button id="pPrev" disabled>← Önceki</button>
-        <button class="pager-cont" id="pNext">Devam Et →</button>
+        <button class="p-cont" id="pNext">Devam Et →</button>
       </div>
-      <div class="pager-jump">
+      <div class="p-jump">
         <span>Sayfa:</span>
-        <input type="number" id="jumpInp" min="1"/>
-        <button id="jumpGo">Git</button>
+        <input type="number" id="jInp" min="1"/>
+        <button id="jGo">Git</button>
       </div>
     </div>
   </div>
@@ -325,6 +384,7 @@ body{background:var(--bg);color:var(--text);font-family:'Lato',sans-serif;min-he
 <!-- ŞEHİR MODAL -->
 <div class="overlay hidden" id="cityOverlay">
   <div class="modal">
+    <div class="modal-handle"></div>
     <div class="modal-title">🇳🇱 Hollanda Şehirleri</div>
     <div class="city-grid" id="cityGrid"></div>
     <button class="modal-close" id="cityClose">Kapat</button>
@@ -332,148 +392,198 @@ body{background:var(--bg);color:var(--text);font-family:'Lato',sans-serif;min-he
 </div>
 
 <script>
-/* ═══ NL CITIES ═══ */
+/* ════════════════════════════════
+   NL CITIES
+════════════════════════════════ */
 const NL_CITIES=[
   {n:"Amsterdam",   lat:52.3676, lon:4.9041},
   {n:"Rotterdam",   lat:51.9225, lon:4.4792},
   {n:"Den Haag",    lat:52.0705, lon:4.3007},
   {n:"Utrecht",     lat:52.0908, lon:5.1222},
   {n:"Eindhoven",   lat:51.4416, lon:5.4697},
-  {n:"Tilburg",     lat:51.5555, lon:5.0913},
   {n:"Groningen",   lat:53.2194, lon:6.5665},
+  {n:"Tilburg",     lat:51.5555, lon:5.0913},
   {n:"Almere",      lat:52.3508, lon:5.2647},
   {n:"Breda",       lat:51.5719, lon:4.7683},
   {n:"Nijmegen",    lat:51.8426, lon:5.8546},
   {n:"Leiden",      lat:52.1601, lon:4.4970},
-  {n:"Dordrecht",   lat:51.8133, lon:4.6901},
   {n:"Arnhem",      lat:51.9851, lon:5.8987},
   {n:"Enschede",    lat:52.2215, lon:6.8937},
-  {n:"Zaandam",     lat:52.4393, lon:4.8314},
-  {n:"Zoetermeer",  lat:52.0575, lon:4.4942},
   {n:"Amersfoort",  lat:52.1561, lon:5.3878},
   {n:"Maastricht",  lat:50.8514, lon:5.6909},
   {n:"Den Bosch",   lat:51.6978, lon:5.3037},
   {n:"Delft",       lat:52.0116, lon:4.3571},
   {n:"Haarlem",     lat:52.3874, lon:4.6462},
   {n:"Zwolle",      lat:52.5168, lon:6.0830},
+  {n:"Dordrecht",   lat:51.8133, lon:4.6901},
+  {n:"Zaandam",     lat:52.4393, lon:4.8314},
+  {n:"Zoetermeer",  lat:52.0575, lon:4.4942},
 ];
 
-const VAKIT_NAMES=["İmsak","Güneş","Öğle","İkindi","Akşam","Yatsı"];
-let selCity=NL_CITIES[0], pTimes=null, ezanAudEl=null;
+const VAKIT_NAMES = ["İmsak","Güneş","Öğle","İkindi","Akşam","Yatsı"];
+const VAKIT_ICONS = ["🌙","🌅","☀️","🌤️","🌆","🌃"];
 
-/* Prayer times via Aladhan */
-async function fetchTimes(city){
-  const d=new Date();
-  const url=`https://api.aladhan.com/v1/timings/${d.getDate()}-${d.getMonth()+1}-${d.getFullYear()}?latitude=${city.lat}&longitude=${city.lon}&method=3&school=1`;
-  const ctrl=new AbortController();
-  const timer=setTimeout(()=>ctrl.abort(),8000);
-  try{
-    const r=await fetch(url,{signal:ctrl.signal});
-    clearTimeout(timer);
-    const j=await r.json();
-    if(j.code===200){
-      const t=j.data.timings;
-      return [t.Fajr,t.Sunrise,t.Dhuhr,t.Asr,t.Maghrib,t.Isha];
+let selCity = NL_CITIES.find(c=>c.n==="Groningen") || NL_CITIES[0];
+let pTimes = null;
+let nextTargetMs = null;
+
+/* ── PRAYER API ── */
+async function fetchPrayerTimes(city) {
+  const d = new Date();
+  const url = `https://api.aladhan.com/v1/timings/${d.getDate()}-${d.getMonth()+1}-${d.getFullYear()}?latitude=${city.lat}&longitude=${city.lon}&method=3&school=1`;
+  const ctrl = new AbortController();
+  const t = setTimeout(() => ctrl.abort(), 9000);
+  try {
+    const r = await fetch(url, {signal: ctrl.signal});
+    clearTimeout(t);
+    const j = await r.json();
+    if (j.code === 200) {
+      const tm = j.data.timings;
+      return [tm.Fajr, tm.Sunrise, tm.Dhuhr, tm.Asr, tm.Maghrib, tm.Isha];
     }
-  }catch(e){clearTimeout(timer);}
+  } catch(e) { clearTimeout(t); }
   return null;
 }
 
-function toMin(s){const[h,m]=s.split(":").map(Number);return h*60+m;}
-function nowMin(){const n=new Date();return n.getHours()*60+n.getMinutes();}
+function toMin(s) {
+  const [h, m] = s.split(":").map(Number);
+  return h * 60 + m;
+}
 
-function renderTimes(ts){
-  const cur=nowMin();
-  let curIdx=-1;
-  ts.forEach((t,i)=>{if(cur>=toMin(t))curIdx=i;});
-  let html='<div class="prayer-times-grid">';
-  ts.forEach((t,i)=>{
-    const isCur=i===curIdx;
-    html+=`<div class="vakt-cell${isCur?" current":""}">
-      <div class="vakt-name">${VAKIT_NAMES[i]}</div>
-      <div class="vakt-time">${t}</div>
-      <div class="vakt-dot"></div>
+function renderPrayerTimes(ts) {
+  const now = new Date();
+  const curMin = now.getHours()*60 + now.getMinutes();
+  let activeIdx = -1, nextIdx = -1;
+
+  ts.forEach((t,i) => { if (curMin >= toMin(t)) activeIdx = i; });
+  nextIdx = ts.findIndex(t => toMin(t) > curMin);
+  if (nextIdx === -1) nextIdx = 0;
+
+  // Build next target ms for countdown
+  const [nh, nm] = ts[nextIdx].split(":").map(Number);
+  const nDate = new Date();
+  nDate.setHours(nh, nm, 0, 0);
+  if (nDate <= now) nDate.setDate(nDate.getDate() + 1);
+  nextTargetMs = nDate.getTime();
+  document.getElementById("nextVaktName").textContent = VAKIT_NAMES[nextIdx] + " Namazı";
+
+  let html = '<div class="prayer-grid">';
+  ts.forEach((t,i) => {
+    const isAct = i === activeIdx;
+    const isNext = i === nextIdx;
+    html += `<div class="vk${isAct?" active-vk":""}${isNext?" next-vk":""}">
+      <span class="vk-ico">${VAKIT_ICONS[i]}</span>
+      <span class="vk-name">${VAKIT_NAMES[i]}</span>
+      <span class="vk-time">${t}</span>
     </div>`;
   });
-  html+='</div>';
-  document.getElementById("prayerBody").innerHTML=html;
-  // Next prayer
-  let nextIdx=ts.findIndex(t=>toMin(t)>cur);
-  let diff;
-  if(nextIdx===-1){nextIdx=0;diff=toMin(ts[0])+1440-cur;}
-  else diff=toMin(ts[nextIdx])-cur;
-  const h=Math.floor(diff/60),m=diff%60;
-  document.getElementById("nextPrayerInfo").innerHTML=`Sonraki: <b>${VAKIT_NAMES[nextIdx]} — ${ts[nextIdx]}</b> &nbsp;(<b>${h>0?h+"s ":""}${m}dk</b>)`;
+  html += '</div>';
+  document.getElementById("prayerBody").innerHTML = html;
 }
 
-async function loadTimes(city){
-  document.getElementById("prayerBody").innerHTML='<div class="prayer-loading">⏳ Yükleniyor…</div>';
-  pTimes=await fetchTimes(city);
-  if(pTimes){
-    renderTimes(pTimes);
+async function loadPrayerTimes(city) {
+  document.getElementById("prayerBody").innerHTML = '<div class="prayer-loading"><span class="prayer-spinner"></span>Yükleniyor…</div>';
+  nextTargetMs = null;
+  document.getElementById("nextVaktName").textContent = "—";
+  document.getElementById("cdH").textContent = "--";
+  document.getElementById("cdM").textContent = "--";
+  document.getElementById("cdS").textContent = "--";
+
+  pTimes = await fetchPrayerTimes(city);
+  if (pTimes) {
+    renderPrayerTimes(pTimes);
   } else {
-    document.getElementById("prayerBody").innerHTML=`<div class="prayer-error">⚠️ Vakitler yüklenemedi.<br><button class="retry-btn" onclick="loadTimes(selCity)">Tekrar Dene</button></div>`;
-    document.getElementById("nextPrayerInfo").textContent="—";
+    document.getElementById("prayerBody").innerHTML = `<div class="prayer-err">⚠️ Vakitler yüklenemedi. <span class="retry-lnk" onclick="loadPrayerTimes(selCity)">Tekrar dene</span></div>`;
   }
 }
 
-/* Ezan audio — Islamcan CDN */
-const EZAN_URLS=[
-  "https://www.islamcan.com/audio/adhan/azan1.mp3",
-  "https://download.quranicaudio.com/quran/abdurrahmaan_as-sudais/001.mp3"
-];
-document.getElementById("ezanBtn").addEventListener("click",()=>{
-  const btn=document.getElementById("ezanBtn");
-  if(ezanAudEl&&!ezanAudEl.paused){
-    ezanAudEl.pause();ezanAudEl.currentTime=0;
-    btn.textContent="🔊 Ezan";btn.classList.remove("playing");return;
+/* ── COUNTDOWN TICKER ── */
+function tickCountdown() {
+  if (!nextTargetMs) return;
+  const diff = nextTargetMs - Date.now();
+  if (diff <= 0) {
+    loadPrayerTimes(selCity);
+    return;
   }
-  btn.textContent="⏳ Yükleniyor…";
-  ezanAudEl=new Audio(EZAN_URLS[0]);
-  ezanAudEl.play()
-    .then(()=>{btn.textContent="⏹ Durdur";btn.classList.add("playing");})
-    .catch(()=>{
-      ezanAudEl=new Audio(EZAN_URLS[1]);
-      ezanAudEl.play()
-        .then(()=>{btn.textContent="⏹ Durdur";btn.classList.add("playing");})
-        .catch(()=>{btn.textContent="🔊 Ezan";});
-    });
-  ezanAudEl.onended=()=>{btn.textContent="🔊 Ezan";btn.classList.remove("playing");};
-});
+  const h = Math.floor(diff / 3600000);
+  const m = Math.floor((diff % 3600000) / 60000);
+  const s = Math.floor((diff % 60000) / 1000);
+  document.getElementById("cdH").textContent = String(h).padStart(2,"0");
+  document.getElementById("cdM").textContent = String(m).padStart(2,"0");
+  document.getElementById("cdS").textContent = String(s).padStart(2,"0");
+}
+setInterval(tickCountdown, 1000);
+setInterval(() => { if (pTimes) renderPrayerTimes(pTimes); }, 60000);
 
-/* City modal */
-const cityGrid=document.getElementById("cityGrid");
-NL_CITIES.forEach(c=>{
-  const el=document.createElement("button");el.className="city-btn"+(c.n===selCity.n?" sel":"");
-  el.textContent=c.n;
-  el.addEventListener("click",async()=>{
-    selCity=c;
-    document.querySelectorAll(".city-btn").forEach(x=>x.classList.remove("sel"));
-    el.classList.add("sel");
-    document.getElementById("prayerCityLabel").textContent="📍 "+c.n;
+/* ── CITY MODAL ── */
+const cityGrid = document.getElementById("cityGrid");
+NL_CITIES.forEach(c => {
+  const btn = document.createElement("button");
+  btn.className = "city-btn" + (c.n === selCity.n ? " sel" : "");
+  btn.textContent = c.n;
+  btn.addEventListener("click", async () => {
+    selCity = c;
+    document.querySelectorAll(".city-btn").forEach(b => b.classList.remove("sel"));
+    btn.classList.add("sel");
+    document.getElementById("cityLabel").textContent = c.n;
     document.getElementById("cityOverlay").classList.add("hidden");
-    state.city=c.n;save(state);
-    await loadTimes(c);
+    state.city = c.n; save(state);
+    await loadPrayerTimes(c);
   });
-  cityGrid.appendChild(el);
+  cityGrid.appendChild(btn);
 });
-document.getElementById("citySelectBtn").addEventListener("click",()=>document.getElementById("cityOverlay").classList.remove("hidden"));
-document.getElementById("cityClose").addEventListener("click",()=>document.getElementById("cityOverlay").classList.add("hidden"));
-document.getElementById("cityOverlay").addEventListener("click",e=>{if(e.target===document.getElementById("cityOverlay"))document.getElementById("cityOverlay").classList.add("hidden");});
 
-setInterval(()=>{if(pTimes)renderTimes(pTimes);},60000);
+document.getElementById("cityChangeBtn").addEventListener("click", () => document.getElementById("cityOverlay").classList.remove("hidden"));
+document.getElementById("cityClose").addEventListener("click", () => document.getElementById("cityOverlay").classList.add("hidden"));
+document.getElementById("cityOverlay").addEventListener("click", e => { if (e.target === document.getElementById("cityOverlay")) document.getElementById("cityOverlay").classList.add("hidden"); });
 
-/* ═══ AUDIO SOURCES ═══ */
-const AUDIO_SOURCES={
+/* ── DATE / GREETING ── */
+(function() {
+  const d = new Date();
+  const days = ["Pazar","Pazartesi","Salı","Çarşamba","Perşembe","Cuma","Cumartesi"];
+  const months = ["Ocak","Şubat","Mart","Nisan","Mayıs","Haziran","Temmuz","Ağustos","Eylül","Ekim","Kasım","Aralık"];
+  document.getElementById("topDate").textContent = `${days[d.getDay()]}, ${d.getDate()} ${months[d.getMonth()]} ${d.getFullYear()}`;
+
+  // Miladi
+  document.getElementById("miladiDate").textContent = `${d.getDate()} ${months[d.getMonth()]} ${d.getFullYear()}`;
+
+  // Hicri
+  try {
+    const hicri = new Intl.DateTimeFormat('tr-TN-u-ca-islamic-umalqura', {year:'numeric',month:'long',day:'numeric'}).format(d);
+    document.getElementById("hicriDate").textContent = hicri;
+  } catch(e) {
+    try {
+      const hicri2 = new Intl.DateTimeFormat('ar-SA-u-ca-islamic', {year:'numeric',month:'long',day:'numeric'}).format(d);
+      document.getElementById("hicriDate").textContent = hicri2;
+    } catch(e2) {
+      document.getElementById("hicriDate").textContent = "—";
+    }
+  }
+
+  const h = d.getHours();
+  let g = "Esselâmü Aleyküm 🤲";
+  if (h < 5)       g = "Hayırlı Geceler 🌙";
+  else if (h < 11) g = "Hayırlı Sabahlar ☀️";
+  else if (h < 14) g = "Hayırlı Öğleler 🌤️";
+  else if (h < 17) g = "Hayırlı İkindiler 🌅";
+  else if (h < 20) g = "Hayırlı Akşamlar 🌆";
+  else             g = "Hayırlı Yatsılar 🌃";
+  document.getElementById("topGreeting").textContent = g;
+})();
+
+/* ════════════════════════════════
+   AUDIO SOURCES
+════════════════════════════════ */
+const AUDIO_SOURCES = {
   tefriciye:[],
   ayetel_kursi:[
-    {label:"Mishary Rashid — Ayetel Kürsi",src:"https://server8.mp3quran.net/mshary/002.mp3",note:"Bakara 255 — Mishary Rashid"},
+    {label:"Mishary Rashid",src:"https://server8.mp3quran.net/mshary/002.mp3",note:"Bakara 255 — Mishary Rashid"},
     {label:"Maher Al Muaiqly",src:"https://server7.mp3quran.net/mahir/002.mp3",note:"Bakara 255 — Maher"},
     {label:"Bakara Tamamı — Sudeys",src:"https://server8.mp3quran.net/afs/002.mp3",note:"Bakara Suresi — Sudeys"},
   ],
   fetih:[
-    {label:"Sudeys",src:"https://server8.mp3quran.net/afs/048.mp3",note:"Fetih Suresi — Sudeys"},
-    {label:"Maher",src:"https://server7.mp3quran.net/mahir/048.mp3",note:"Fetih Suresi — Maher"},
+    {label:"Sudeys",src:"https://server8.mp3quran.net/afs/048.mp3",note:"Fetih — Sudeys"},
+    {label:"Maher",src:"https://server7.mp3quran.net/mahir/048.mp3",note:"Fetih — Maher"},
   ],
   yasin:[
     {label:"Sudeys",src:"https://server8.mp3quran.net/afs/036.mp3",note:"Yâsin — Sudeys"},
@@ -491,258 +601,236 @@ const AUDIO_SOURCES={
   bedr:[],free:[],
 };
 
-/* ═══ PAGER DATA ═══ */
+/* ════════════════════════════════
+   PAGER DATA (Türkçe okunuş, Arapça yok)
+════════════════════════════════ */
 const FETIH_PAGES=[
-["1. Sayfa (1-7. Ayet)",`Bismillâhirrahmanirrahim.\n\n1. İnnâ fetahnâ leke fethan mubînâ.\n2. Li yagfira lekallâhu mâ tekaddeme min zenbike ve mâ teahhara ve yutimme ni'metehu aleyke ve yehdiyeke sırâtan mustekîmâ.\n3. Ve yansurakallâhu nasran azîzâ.\n4. Huvellezî enzeles sekînete fî kulûbil mu'minîne li yezdâdû îmânen mea îmânihim, ve lillâhi cunûdus semâvâti vel ardı, ve kânallâhu alîmen hakîmâ.\n5. Li yudhilel mu'minîne vel mu'minâti cennâtin tecrî min tahtihâl enhâru hâlidîne fîhâ ve yukeffira anhum seyyiâtihim, ve kâne zâlike indallâhi fevzen azîmâ.\n6. Ve yuazzibel munâfikîne vel munâfikâti vel muşrikîne vel muşrikâtiz zânnîne billâhi zannes sev'i aleyhim dâiratus sev'i, ve gadiballâhu aleyhim ve leanehum ve eadde lehum cehenneme, ve sâet masîrâ.\n7. Ve lillâhi cunûdus semâvâti vel ardı, ve kânallâhu azîzen hakîmâ.`,null],
-["2. Sayfa (8-14. Ayet)",`8. İnnâ erselnâke şâhiden ve mubeşşiran ve nezîrâ.\n9. Li tu'minû billâhi ve resûlihî ve tuazzirûhu ve tuvakkırûhu, ve tusebbihûhu bukraten ve asîlâ.\n10. İnnellezîne yubâyiûneke innemâ yubâyiûnallâhe, yedullâhi fevka eydîhim, fe men nekese fe innemâ yenkusu alâ nefsihî, ve men evfâ bi mâ âhede aleyhullâhe fe se yu'tîhi ecran azîmâ.\n11-14. [Münafıkların özrü, Allah'ın hükmü ve mülkü anlatılır]`,null],
-["3. Sayfa (15-21. Ayet)",`15-17. Münafıkların ganimetlere iştahı, özürlülere hüküm.\n18. Lekad radiyallâhu anil mu'minîne iz yubâyiûneke tahteş şecerati fe alime mâ fî kulûbihim fe enzeles sekînete aleyhim ve esâbehum fethan karîbâ.\n19. Ve megânime kesîraten ye'huzûnehâ, ve kânallâhu azîzen hakîmâ.\n20-21. Allah'ın vaadi ve ihata ettiği zafer.`,null],
-["4. Sayfa (22-27. Ayet)",`22-23. Kâfirler savaşsaydı yenilirdi; Allah'ın değişmez sünneti.\n24. Mekke'de tarafları durduran Allah.\n25-26. Kâfirlerin engeli, müminlerin kurtarılması.\n27. Lekad sadakallâhu resûlehur ru'yâ bil hakkı, le tedhulunnel mescidel harâme inşâallâhu âminîne muhallikîne ruûsekum ve mukassırîne lâ tehâfûne.`,null],
-["5. Sayfa (28-29. Ayet)",`28. Huvellezî ersele resûlehu bil hudâ ve dînil hakkı li yuzhirahu alâd dîni kullihî, ve kefâ billâhi şehîdâ.\n\n29. Muhammedun resûlullâhi, vellezîne meahû eşiddâu alâl kuffâri ruhamâu beynehum terâhum rukkean succeden yebtegûne fadlen minallâhi ve rıdvânen sîmâhum fî vucûhihim min eseris sucûdi…\n\n— Âmîn —`,null]
+["1. Sayfa — Ayet 1-7",`Bismillâhirrahmanirrahim.\n\n1. İnnâ fetahnâ leke fethan mubînâ.\n2. Li yagfira lekallâhu mâ tekaddeme min zenbike ve mâ teahhara ve yutimme ni'metehu aleyke ve yehdiyeke sırâtan mustekîmâ.\n3. Ve yansurakallâhu nasran azîzâ.\n4. Huvellezî enzeles sekînete fî kulûbil mu'minîne li yezdâdû îmânen mea îmânihim, ve lillâhi cunûdus semâvâti vel ardı, ve kânallâhu alîmen hakîmâ.\n5. Li yudhilel mu'minîne vel mu'minâti cennâtin tecrî min tahtihâl enhâru hâlidîne fîhâ ve yukeffira anhum seyyiâtihim, ve kâne zâlike indallâhi fevzen azîmâ.\n6. Ve yuazzibel munâfikîne vel munâfikâti vel muşrikîne vel muşrikâtiz zânnîne billâhi zannes sev'i aleyhim dâiratus sev'i, ve gadiballâhu aleyhim ve leanehum ve eadde lehum cehenneme, ve sâet masîrâ.\n7. Ve lillâhi cunûdus semâvâti vel ardı, ve kânallâhu azîzen hakîmâ.`],
+["2. Sayfa — Ayet 8-14",`8. İnnâ erselnâke şâhiden ve mubeşşiran ve nezîrâ.\n9. Li tu'minû billâhi ve resûlihî ve tuazzirûhu ve tuvakkırûhu, ve tusebbihûhu bukraten ve asîlâ.\n10. İnnellezîne yubâyiûneke innemâ yubâyiûnallâhe, yedullâhi fevka eydîhim, fe men nekese fe innemâ yenkusu alâ nefsihî, ve men evfâ bi mâ âhede aleyhullâhe fe se yu'tîhi ecran azîmâ.\n11-14. Münafıkların özrü, Allah'ın hükmü ve mülkü anlatılır.`],
+["3. Sayfa — Ayet 15-21",`15-17. Münafıkların ganimet isteği, özürlülere kolaylık.\n18. Lekad radiyallâhu anil mu'minîne iz yubâyiûneke tahteş şecerati fe alime mâ fî kulûbihim fe enzeles sekînete aleyhim ve esâbehum fethan karîbâ.\n19. Ve megânime kesîraten ye'huzûnehâ, ve kânallâhu azîzen hakîmâ.\n20-21. Allah'ın vaadi ve ihata ettiği zafer.`],
+["4. Sayfa — Ayet 22-27",`22-23. Kâfirler savaşsaydı yenilirdi; Allah'ın değişmez sünneti.\n24. Mekke'de Allah her iki tarafı durdurdu.\n25-26. Kâfirlerin engeli ve müminlerin kurtarılması.\n27. Lekad sadakallâhu resûlehur ru'yâ bil hakkı, le tedhulunnel mescidel harâme inşâallâhu âminîne muhallikîne ruûsekum ve mukassırîne lâ tehâfûne, fe alime mâ lem ta'lemû fe ceale min dûni zâlike fethan karîbâ.`],
+["5. Sayfa — Ayet 28-29",`28. Huvellezî ersele resûlehu bil hudâ ve dînil hakkı li yuzhirahu alâd dîni kullihî, ve kefâ billâhi şehîdâ.\n\n29. Muhammedun resûlullâhi, vellezîne meahû eşiddâu alâl kuffâri ruhamâu beynehum terâhum rukkean succeden yebtegûne fadlen minallâhi ve rıdvânen sîmâhum fî vucûhihim min eseris sucûdi…\n\n— Âmîn —`]
 ];
 
 const YASIN_PAGES=[
-["1. Sayfa (1-12. Ayet)",`Bismillâhirrahmanirrahim.\n\n1. Yâ sîn.\n2. Vel kur'ânil hakîm.\n3. İnneke le minel murselîn.\n4. Alâ sırâtın mustekîm.\n5. Tenzîlel azîzir rahîm.\n6. Li tunzira kavmen mâ unzira âbâuhum fehum gâfilûn.\n7. Lekad hakkal kavlu alâ ekserihim fehum lâ yu'minûn.\n8. İnnâ cealâ fî a'nâkıhim ağlâlen fehiye ilel ezkâni fehum mukrehûn.\n9. Ve cealnâ min beyni eydîhim sedden ve min halfihim sedden fe ağşeynâhum fehum lâ yubsırûn.\n10. Ve sevâun aleyhim eenzertehum em lem tunzirhum lâ yu'minûn.\n11. İnnemâ tunziru menittebeaz zikra ve haşiyer rahmâne bil gayb, febeşşirhu bimağfiretin ve ecrin kerîm.\n12. İnnâ nahnü nuhyil mevtâ ve nektübü mâ kaddemu ve âsârehum, ve külle şey'in ahsaynâhu fî imâmin mubîn.`,null],
-["2. Sayfa (13-32. Ayet)",`13. Vadrib lehum meselen ashâbel karyeh, iz câehal murselûn.\n14-19. İki elçi ve üçüncü, şehir halkının inkârı.\n20. Ve câe min aksal medîneti raculun yes'â kâle yâ kavmittebiûl murselîn.\n21-25. Adamın imanı ve teşviki.\n26. Kîled hulil cennete kâle yâ leyte kavmî ya'lemûn.\n27. Bimâ gafera lî rabbî ve cealenî minel mukremîn.\n28-32. Şehrin helâkı ve insanların gafletine hayret.`,null],
-["3. Sayfa (33-50. Ayet)",`33. Ve âyetun lehumul ardul meytetu ahyeynâhâ ve ahrecnâ minhâ habben feminhum ye'kulûn.\n34-35. Bahçeler, pınarlar.\n36. Sübhânellezî halekal ezvâce kullehâ mimmâ tünbitül ardu ve min enfusihim ve mimmâ lâ ya'lemûn.\n37-40. Gece, gündüz, güneş, ay ve yörüngeleri.\n38. Veş şemsü tecrî li mustekarin lehâ, zâlike takdîrul azîzil alîm.\n40. Leş şemsü yenbegî lehâ en tudrikel kamera ve lel leylü sâbikun nehâr, ve kullun fî felekiy yesbehûn.\n41-50. Gemi ayeti, nankör insanlara uyarı.`,null],
-["4. Sayfa (51-83. Ayet)",`51-53. Sur'a üfürülmesi ve haşir.\n54. Felyemel yevme lâ tuzlemü nefsun şey'en ve lâ tuczevne illâ mâ kuntum ta'melûn.\n55-58. Cennet ehli, selam.\n58. Selâmun kavlen min rabbin rahîm.\n59-68. Suçluların ayrılması, organların şahitliği.\n78-79. Kemikleri kim diriltir? — Onları ilk yaratan.\n82. İnnemâ emruhû izâ erâde şey'en en yekûle lehû kun feyekûn.\n83. Fe subhânellezî biyadihî melekûtu külli şey'in ve ileyhi turce'ûn.`,null]
+["1. Sayfa — Ayet 1-12",`Bismillâhirrahmanirrahim.\n\n1. Yâ sîn. 2. Vel kur'ânil hakîm. 3. İnneke le minel murselîn. 4. Alâ sırâtın mustekîm. 5. Tenzîlel azîzir rahîm.\n6. Li tunzira kavmen mâ unzira âbâuhum fehum gâfilûn.\n7. Lekad hakkal kavlu alâ ekserihim fehum lâ yu'minûn.\n8. İnnâ cealâ fî a'nâkıhim ağlâlen fehiye ilel ezkâni fehum mukrehûn.\n9. Ve cealnâ min beyni eydîhim sedden ve min halfihim sedden fe ağşeynâhum fehum lâ yubsırûn.\n10. Ve sevâun aleyhim eenzertehum em lem tunzirhum lâ yu'minûn.\n11. İnnemâ tunziru menittebeaz zikra ve haşiyer rahmâne bil gayb, febeşşirhu bimağfiretin ve ecrin kerîm.\n12. İnnâ nahnü nuhyil mevtâ ve nektübü mâ kaddemu ve âsârehum, ve külle şey'in ahsaynâhu fî imâmin mubîn.`],
+["2. Sayfa — Ayet 13-32",`13. Vadrib lehum meselen ashâbel karyeh, iz câehal murselûn.\n14-19. İki elçi ve üçüncü gönderilir, şehir halkı inkâr eder.\n20. Ve câe min aksal medîneti raculun yes'â kâle yâ kavmittebiûl murselîn.\n21. İttebiû men lâ yes'elukum ecren vehum muhtedûn.\n26. Kîled hulil cennete kâle yâ leyte kavmî ya'lemûn.\n27. Bimâ gafera lî rabbî ve cealenî minel mukremîn.\n28-32. Şehrin helâkı ve insanların gafletine hayret.`],
+["3. Sayfa — Ayet 33-50",`33. Ve âyetun lehumul ardul meytetu ahyeynâhâ ve ahrecnâ minhâ habben feminhum ye'kulûn.\n34-35. Bahçeler, üzümler, pınarlar.\n36. Sübhânellezî halekal ezvâce kullehâ mimmâ tünbitül ardu ve min enfusihim ve mimmâ lâ ya'lemûn.\n37-39. Gece gündüze işaret, güneş ve ay.\n40. Leş şemsü yenbegî lehâ en tudrikel kamera ve lel leylü sâbikun nehâr, ve kullun fî felekiy yesbehûn.\n41-50. Gemi mucizesi, nankör insanlar.`],
+["4. Sayfa — Ayet 51-83",`51-53. Sur'a üfürülmesi ve diriliş.\n54. Felyemel yevme lâ tuzlemü nefsun şey'en ve lâ tuczevne illâ mâ kuntum ta'melûn.\n55-58. Cennet ehli ve selam — Selâmun kavlen min rabbin rahîm.\n59-68. Suçluların hesabı.\n78-79. Kim diriltir? — Onu ilk yaratan.\n82. İnnemâ emruhû izâ erâde şey'en en yekûle lehû kun feyekûn.\n83. Fe subhânellezî biyadihî melekûtu külli şey'in ve ileyhi turce'ûn.`]
 ];
 
 const CUZ6_PAGES=[
-["Nisa 148-152",`Bismillâhirrahmanirrahim.\n\n148. Lâ yuhıbbullâhul cehre bis sûi minel kavli illâ men zulem, ve kânallâhu semîan alîmâ.\n\n149. İn tubdû hayran ev tuhfûhu ev ta'fû an sûin fe innallâhe kâne afüvven kadîrâ.\n\n150. İnnellezîne yekfurûne billâhi ve rusülihî ve yurîdûne en yüferrıkû beynallâhi ve rusülihî ve yekûlûne nu'minu bi ba'din ve nekfuru bi ba'din, ve yurîdûne en yettehizû beyne zâlike sebîlâ.\n\n151. Ulâike humul kâfirûne hakkâ, ve a'tednâ lil kâfirîne azâben muhînâ.\n\n152. Vellezîne âmenû billâhi ve rusülihî ve lem yüferrıkû beyne ehadin minhum, ulâike sevfe yu'tîhim ucûrahum, ve kânallâhu gafûran rahîmâ.`,null]
+["Nisa 148-152",`Bismillâhirrahmanirrahim.\n\n148. Lâ yuhıbbullâhul cehre bis sûi minel kavli illâ men zulem, ve kânallâhu semîan alîmâ.\n\n149. İn tubdû hayran ev tuhfûhu ev ta'fû an sûin fe innallâhe kâne afüvven kadîrâ.\n\n150. İnnellezîne yekfurûne billâhi ve rusülihî ve yurîdûne en yüferrıkû beynallâhi ve rusülihî ve yekûlûne nu'minu bi ba'din ve nekfuru bi ba'din, ve yurîdûne en yettehizû beyne zâlike sebîlâ.\n\n151. Ulâike humul kâfirûne hakkâ, ve a'tednâ lil kâfirîne azâben muhînâ.\n\n152. Vellezîne âmenû billâhi ve rusülihî ve lem yüferrıkû beyne ehadin minhum, ulâike sevfe yu'tîhim ucûrahum, ve kânallâhu gafûran rahîmâ.`]
 ];
 
 const CEVSEN=[
-["1-10. Bölüm",`1. Yâ Allah  2. Yâ Rahmân  3. Yâ Rahîm  4. Yâ 'Alîm  5. Yâ Halîm  6. Yâ 'Azîm  7. Yâ Hakîm  8. Yâ Kadîm  9. Yâ Mukîm  10. Yâ Kerîm\n\nSübhâneke yâ lâ ilâhe illâ ente'l-emâne'l-emâne hallisnâ mine'n-nâr.`,null],
-["11-20. Bölüm",`11. Yâ 'Uddetî 'inde şiddetî  12. Yâ Recâî 'inde müsîbetî  13. Yâ Münîsî fî vahşetî  14. Yâ Sâhibî fî şiddetî  15. Yâ Veliyyî fî ni'metî  16. Yâ Ğıyâsî fî kurbetî  17. Yâ Delîlî fî hayretî  18. Yâ Ğanâî fî fakrî  19. Yâ Kenâî 'inde musîbetî  20. Yâ Hâdi'î 'inde zulletî\n\nSübhâneke yâ lâ ilâhe illâ ente'l-emâne'l-emâne hallisnâ mine'n-nâr.`,null],
-["21-30. Bölüm",`21. Yâ 'Allâme'l-ğuyûb  22. Yâ Ğaffâre'z-zünûb  23. Yâ Kâşife'l-küyûb  24. Yâ Müsellime'l-kulûb  25. Yâ Mübdile's-seyyiât  26. Yâ Sâtira'l-'uyûb  27. Yâ Müferrice'l-hemm  28. Yâ Münefise'l-ğamm  29. Yâ Müzille'l-cebberîn  30. Yâ Mühlike'l-mütekebbirin\n\nSübhâneke yâ lâ ilâhe illâ ente'l-emâne'l-emâne hallisnâ mine'n-nâr.`,null],
-["31-40. Bölüm",`31. Yâ Celîl  32. Yâ Cemîl  33. Yâ Vekîl  34. Yâ Kefîl  35. Yâ Dâim  36. Yâ Kâim  37. Yâ 'Âlim  38. Yâ Hâkim  39. Yâ Bâri  40. Yâ Bâsit\n\nSübhâneke yâ lâ ilâhe illâ ente'l-emâne'l-emâne hallisnâ mine'n-nâr.`,null],
-["41-50. Bölüm",`41. Yâ Delîle'l-mütehayyirîn  42. Yâ Ğıyâse'l-müstağîsîn  43. Yâ Sâri'a'l-ihsân  44. Yâ Fâtiha'l-ebvâb  45. Yâ Müsebbibe'l-esbâb  46. Yâ Müferrice'l-ahzân  47. Yâ Mücîbe daveti'l-mudtarrîn  48. Yâ Rahîme'l-mesakîn  49. Yâ Ünse'l-ğaribîn  50. Yâ Veliyy'il-mü'minîn\n\nSübhâneke yâ lâ ilâhe illâ ente'l-emâne'l-emâne hallisnâ mine'n-nâr.`,null],
-["51-60. Bölüm",`51. Yâ Ze'l-Cûdi ve'l-İhsân  52. Yâ Ze'l-Fadli ve'l-İmtinân  53. Yâ Ze'l-Emni ve'l-Emân  54. Yâ Ze'l-Kudsi ve's-Sübhân  55. Yâ Ze'l-Hikmeti ve'l-Beyân  56. Yâ Ze'l-'İzzeti ve's-Sultân  57. Yâ Ze'r-Rahmeti ve'r-Rıdvân  58. Yâ Ze'l-Hücceti ve'l-Bürhân  59. Yâ Ze'n-Ni'meti ve'l-İhsân  60. Yâ Ze'l-'Atfi ve'l-İmtinân\n\nSübhâneke yâ lâ ilâhe illâ ente'l-emâne'l-emâne hallisnâ mine'n-nâr.`,null],
-["61-70. Bölüm",`61. Yâ Hayra'l-ğâfirîn  62. Yâ Hayra'n-nâsırîn  63. Yâ Hayra'l-hâkimîn  64. Yâ Hayra'l-fâtihîn  65. Yâ Hayra'z-zâkirîn  66. Yâ Hayra'l-vârişîn  67. Yâ Hayra'l-hâmidîn  68. Yâ Hayra'r-râzikîn  69. Yâ Hayra'l-fâsilîn  70. Yâ Hayra'l-muhsinîn\n\nSübhâneke yâ lâ ilâhe illâ ente'l-emâne'l-emâne hallisnâ mine'n-nâr.`,null],
-["71-80. Bölüm",`71. Yâ Men lehü'l-'izzü ve'l-cemâl  72. Yâ Men lehü'l-mülkü ve'l-celâl  73. Yâ Men lehü'l-kudretü ve'l-kemâl  74. Yâ Men hüve'l-kebîru'l-mütea'âl  75. Yâ Hannân  76. Yâ Mennân  77. Yâ Deyyân  78. Yâ Ğufrân  79. Yâ Bürhân  80. Yâ Sultân\n\nSübhâneke yâ lâ ilâhe illâ ente'l-emâne'l-emâne hallisnâ mine'n-nâr.`,null],
-["81-90. Bölüm",`81. Yâ Mâni'  82. Yâ Dâfi'  83. Yâ Nâfi'  84. Yâ Râfi'  85. Yâ Sâni'  86. Yâ Sâmi'  87. Yâ Şâfi'  88. Yâ Kâfi  89. Yâ Vâsi'  90. Yâ Mûsi'\n\nSübhâneke yâ lâ ilâhe illâ ente'l-emâne'l-emâne ecirnâ mine'n-nâr.`,null],
-["91-100. Bölüm",`91. Yâ Sâni'e külli masnû'  92. Yâ Hâlika külli mahlûk  93. Yâ Râzika külli merzûk  94. Yâ Mâlike külli memlûk  95. Yâ Kâşife külli mekrûb  96. Yâ Fârece külli mahmûm  97. Yâ Râhime külli merhûm  98. Yâ Nâsıra külli mahzûl  99. Yâ Sâtira külli me'yûb  100. Yâ Melce'e külli mazlûm\n\nAllâhümme hallisnâ ve ecirnâ ve neccinâ mine'n-nâr. Âmîn.`,null]
+["1-10. Bölüm",`1. Yâ Allah  2. Yâ Rahmân  3. Yâ Rahîm  4. Yâ 'Alîm  5. Yâ Halîm  6. Yâ 'Azîm  7. Yâ Hakîm  8. Yâ Kadîm  9. Yâ Mukîm  10. Yâ Kerîm\n\nSübhâneke yâ lâ ilâhe illâ ente'l-emâne'l-emâne hallisnâ mine'n-nâr.`],
+["11-20. Bölüm",`11. Yâ 'Uddetî 'inde şiddetî  12. Yâ Recâî 'inde müsîbetî  13. Yâ Münîsî fî vahşetî  14. Yâ Sâhibî fî şiddetî  15. Yâ Veliyyî fî ni'metî  16. Yâ Ğıyâsî fî kurbetî  17. Yâ Delîlî fî hayretî  18. Yâ Ğanâî fî fakrî  19. Yâ Kenâî 'inde musîbetî  20. Yâ Hâdi'î 'inde zulletî\n\nSübhâneke yâ lâ ilâhe illâ ente'l-emâne'l-emâne hallisnâ mine'n-nâr.`],
+["21-30. Bölüm",`21. Yâ 'Allâme'l-ğuyûb  22. Yâ Ğaffâre'z-zünûb  23. Yâ Kâşife'l-küyûb  24. Yâ Müsellime'l-kulûb  25. Yâ Mübdile's-seyyiât  26. Yâ Sâtira'l-'uyûb  27. Yâ Müferrice'l-hemm  28. Yâ Münefise'l-ğamm  29. Yâ Müzille'l-cebberîn  30. Yâ Mühlike'l-mütekebbirin\n\nSübhâneke yâ lâ ilâhe illâ ente'l-emâne'l-emâne hallisnâ mine'n-nâr.`],
+["31-40. Bölüm",`31. Yâ Celîl  32. Yâ Cemîl  33. Yâ Vekîl  34. Yâ Kefîl  35. Yâ Dâim  36. Yâ Kâim  37. Yâ 'Âlim  38. Yâ Hâkim  39. Yâ Bâri  40. Yâ Bâsit\n\nSübhâneke yâ lâ ilâhe illâ ente'l-emâne'l-emâne hallisnâ mine'n-nâr.`],
+["41-50. Bölüm",`41. Yâ Delîle'l-mütehayyirîn  42. Yâ Ğıyâse'l-müstağîsîn  43. Yâ Sâri'a'l-ihsân  44. Yâ Fâtiha'l-ebvâb  45. Yâ Müsebbibe'l-esbâb  46. Yâ Müferrice'l-ahzân  47. Yâ Mücîbe daveti'l-mudtarrîn  48. Yâ Rahîme'l-mesakîn  49. Yâ Ünse'l-ğaribîn  50. Yâ Veliyy'il-mü'minîn\n\nSübhâneke yâ lâ ilâhe illâ ente'l-emâne'l-emâne hallisnâ mine'n-nâr.`],
+["51-60. Bölüm",`51. Yâ Ze'l-Cûdi ve'l-İhsân  52. Yâ Ze'l-Fadli ve'l-İmtinân  53. Yâ Ze'l-Emni ve'l-Emân  54. Yâ Ze'l-Kudsi ve's-Sübhân  55. Yâ Ze'l-Hikmeti ve'l-Beyân  56. Yâ Ze'l-'İzzeti ve's-Sultân  57. Yâ Ze'r-Rahmeti ve'r-Rıdvân  58. Yâ Ze'l-Hücceti ve'l-Bürhân  59. Yâ Ze'n-Ni'meti ve'l-İhsân  60. Yâ Ze'l-'Atfi ve'l-İmtinân\n\nSübhâneke yâ lâ ilâhe illâ ente'l-emâne'l-emâne hallisnâ mine'n-nâr.`],
+["61-70. Bölüm",`61. Yâ Hayra'l-ğâfirîn  62. Yâ Hayra'n-nâsırîn  63. Yâ Hayra'l-hâkimîn  64. Yâ Hayra'l-fâtihîn  65. Yâ Hayra'z-zâkirîn  66. Yâ Hayra'l-vârişîn  67. Yâ Hayra'l-hâmidîn  68. Yâ Hayra'r-râzikîn  69. Yâ Hayra'l-fâsilîn  70. Yâ Hayra'l-muhsinîn\n\nSübhâneke yâ lâ ilâhe illâ ente'l-emâne'l-emâne hallisnâ mine'n-nâr.`],
+["71-80. Bölüm",`71. Yâ Men lehü'l-'izzü ve'l-cemâl  72. Yâ Men lehü'l-mülkü ve'l-celâl  73. Yâ Men lehü'l-kudretü ve'l-kemâl  74. Yâ Men hüve'l-kebîru'l-mütea'âl  75. Yâ Hannân  76. Yâ Mennân  77. Yâ Deyyân  78. Yâ Ğufrân  79. Yâ Bürhân  80. Yâ Sultân\n\nSübhâneke yâ lâ ilâhe illâ ente'l-emâne'l-emâne hallisnâ mine'n-nâr.`],
+["81-90. Bölüm",`81. Yâ Mâni'  82. Yâ Dâfi'  83. Yâ Nâfi'  84. Yâ Râfi'  85. Yâ Sâni'  86. Yâ Sâmi'  87. Yâ Şâfi'  88. Yâ Kâfi  89. Yâ Vâsi'  90. Yâ Mûsi'\n\nSübhâneke yâ lâ ilâhe illâ ente'l-emâne'l-emâne ecirnâ mine'n-nâr.`],
+["91-100. Bölüm",`91. Yâ Sâni'e külli masnû'  92. Yâ Hâlika külli mahlûk  93. Yâ Râzika külli merzûk  94. Yâ Mâlike külli memlûk  95. Yâ Kâşife külli mekrûb  96. Yâ Fârece külli mahmûm  97. Yâ Râhime külli merhûm  98. Yâ Nâsıra külli mahzûl  99. Yâ Sâtira külli me'yûb  100. Yâ Melce'e külli mazlûm\n\nAllâhümme hallisnâ ve ecirnâ ve neccinâ mine'n-nâr. Âmîn.`]
 ];
 
 const BEDR_PAGES=[
-["1. Sayfa (1-63)",`Allâhümme innî es'elüke bihakkı eshâbi Bedrin en tağfira lî zunûbî ve en takdiye hâcetî.\n\n1. Hz. Muhammed Mustafâ (s.a.v.)\n2. Hz. Ebû Bekr es-Sıddîk\n3. Hz. Ömer ibn el-Hattâb\n4. Hz. Osman ibn Affân\n5. Hz. Ali ibn Ebî Tâlib\n6. Hz. Talha ibn Ubeydullah\n7. Hz. Zübeyr ibn el-Avvâm\n8. Hz. Abdurrahman ibn Avf\n9. Hz. Sa'd ibn Ebî Vakkâs\n10. Hz. Sa'îd ibn Zeyd\n11. Hz. Ebû Ubeyde ibn el-Cerrâh\n12. Hz. Hamza ibn Abdilmuttalib\n13. Hz. Ubeyde ibn el-Hâris\n14. Hz. Bilâl ibn Rebâh\n15. Hz. Mus'ab ibn Umeyr\n16. Hz. Abdullah ibn Mes'ûd\n17. Hz. Ammâr ibn Yâsir\n18. Hz. Habbâb ibn el-Eret\n19. Hz. Süheyb ibn Sinân er-Rûmî\n20. Hz. Ebû Zerr el-Gıfârî\n[21-63 devam...]`,null],
-["2. Sayfa (64-152)",`64. Hz. Rifâa ibn Râfi'\n65. Hz. Hâlid ibn Bükeyr\n66. Hz. Utbân ibn Mâlik\n67. Hz. Mubeşşir ibn Abdilmünzir\n68. Hz. Ebû Lubâbe el-Ensârî\n69. Hz. Sa'd ibn Muâz\n70. Hz. Hanzale ibn Ebî Âmir\n71. Hz. Ebû Düccâne es-Sâ'idî\n72. Hz. Mikdâd ibn el-Esved\n73. Hz. Ebû Hudeyfe ibn Utbe\n74. Hz. Sâlim el-Mevlâ\n75. Hz. Ma'n ibn 'Adiyy\n76. Hz. Ebû Katâde el-Ensârî\n[77-152 devam...]`,null],
-["3. Sayfa (153-252)",`153. Hz. Hilâl ibn el-Muallâ\n154. Hz. Hârise ibn Sürâka\n155. Hz. Sa'd ibn el-Rabî'\n156. Hz. Mühammed ibn Mesleme\n157. Hz. Abdullah ibn Sehl\n158. Hz. Hârice ibn Zeyd\n159. Hz. Nu'mân ibn Mâlik\n160. Hz. Sa'd ibn Zeyd\n[161-252 devam...]`,null],
-["4. Sayfa (253-313)",`253-312. [diğer sahabe isimleri...]\n313. Hz. Abdullah ibn Kays el-Ensârî\n\nAllâhümme bihakkı hâülâis-sâdatil kirâm, ighfir zunûbenâ ve kaddî hevâicinâ ve tüb aleynâ inneke ente't-tevvâbu'r-rahîm.\n\n— Âmîn —`,null]
+["1. Sayfa — Sahabe 1-63",`Allâhümme innî es'elüke bihakkı eshâbi Bedrin en tağfira lî zunûbî ve en takdiye hâcetî.\n\n1. Hz. Muhammed Mustafâ (s.a.v.)\n2. Hz. Ebû Bekr es-Sıddîk\n3. Hz. Ömer ibn el-Hattâb\n4. Hz. Osman ibn Affân\n5. Hz. Ali ibn Ebî Tâlib\n6. Hz. Talha ibn Ubeydullah\n7. Hz. Zübeyr ibn el-Avvâm\n8. Hz. Abdurrahman ibn Avf\n9. Hz. Sa'd ibn Ebî Vakkâs\n10. Hz. Sa'îd ibn Zeyd\n11. Hz. Ebû Ubeyde ibn el-Cerrâh\n12. Hz. Hamza ibn Abdilmuttalib\n13. Hz. Ubeyde ibn el-Hâris\n14. Hz. Bilâl ibn Rebâh\n15. Hz. Mus'ab ibn Umeyr\n16. Hz. Abdullah ibn Mes'ûd\n17. Hz. Ammâr ibn Yâsir\n18. Hz. Habbâb ibn el-Eret\n19. Hz. Süheyb ibn Sinân er-Rûmî\n20. Hz. Ebû Zerr el-Gıfârî\n[21-63 devam eder...]`],
+["2. Sayfa — Sahabe 64-152",`64. Hz. Rifâa ibn Râfi'\n65. Hz. Hâlid ibn Bükeyr\n66. Hz. Utbân ibn Mâlik\n67. Hz. Mubeşşir ibn Abdilmünzir\n68. Hz. Ebû Lubâbe el-Ensârî\n69. Hz. Sa'd ibn Muâz\n70. Hz. Hanzale ibn Ebî Âmir\n71. Hz. Ebû Düccâne es-Sâ'idî\n72. Hz. Mikdâd ibn el-Esved\n73. Hz. Ebû Hudeyfe ibn Utbe\n74. Hz. Sâlim el-Mevlâ\n75. Hz. Ma'n ibn 'Adiyy\n76. Hz. Ebû Katâde el-Ensârî\n[77-152 devam eder...]`],
+["3. Sayfa — Sahabe 153-252",`153. Hz. Hilâl ibn el-Muallâ\n154. Hz. Hârise ibn Sürâka\n155. Hz. Sa'd ibn el-Rabî'\n156. Hz. Mühammed ibn Mesleme\n157. Hz. Abdullah ibn Sehl\n158. Hz. Hârice ibn Zeyd\n[159-252 devam eder...]`],
+["4. Sayfa — Sahabe 253-313",`[253-312 devam eder...]\n313. Hz. Abdullah ibn Kays el-Ensârî\n\nAllâhümme bihakkı hâülâis-sâdatil kirâm, ighfir zunûbenâ ve kaddî hevâicinâ ve tüb aleynâ inneke ente't-tevvâbu'r-rahîm.\n\n— Âmîn —`]
 ];
 
-/* ═══ STATE ═══ */
-const KEY="dini-takip-v1";
-const DEFAULT_STATE={
-  dhikrs:[
-    {id:"free",name:"Serbest Sayaç",free:true,target:null,today:0,total:0,desc:"Hedefsiz sayaç",icon:"📿"},
-    {id:"tefriciye",name:"Salât-ı Tefriciye",target:11,today:0,total:0,desc:"Salavat-ı Şerife",icon:"🌙"},
-    {id:"ayetel_kursi",name:"Ayetel Kürsi",target:3,today:0,total:0,desc:"Bakara 255",icon:"📖"},
-    {id:"fetih",name:"Fetih Suresi",target:1,today:0,total:0,page:0,desc:"29 Ayet",icon:"📜"},
-    {id:"yasin",name:"Yâsin Suresi",target:1,today:0,total:0,page:0,desc:"83 Ayet",icon:"📜"},
-    {id:"nazar_duasi",name:"Nazar Duası",target:7,today:0,total:0,desc:"Koruyucu dua",icon:"🛡️"},
-    {id:"ihlas_felak_nas",name:"İhlas + Felak + Nas",target:3,today:0,total:0,desc:"Üç sure",icon:"📖"},
-    {id:"cuz6s3",name:"6. Cüz — 3. Sayfa",target:10,today:0,total:0,page:0,desc:"Nisa 148-152",icon:"📄"},
-    {id:"cevsen",name:"Cevşen-i Kebir",target:1,today:0,total:0,page:0,desc:"100 bölüm",icon:"✨"},
-    {id:"bedr",name:"Ashâb-ı Bedr Duası",target:1,today:0,total:0,page:0,desc:"313 sahabe",icon:"⭐"},
+/* ════════════════════════════════
+   STATE
+════════════════════════════════ */
+const KEY = "dini-takip-v2";
+const DHIKR_ICONS = ["c0","c1","c2","c3","c4","c5"];
+const DEFAULT_STATE = {
+  dhikrs: [
+    {id:"free",    name:"Serbest Sayaç",        free:true, target:null, today:0, total:0, desc:"Hedefsiz — istediğin kadar say",    icon:"📿", col:"c0"},
+    {id:"tefriciye",name:"Salât-ı Tefriciye",   target:11, today:0, total:0, desc:"Salavat — 11 kez",                   icon:"🌙", col:"c1"},
+    {id:"ayetel_kursi",name:"Ayetel Kürsi",      target:3,  today:0, total:0, desc:"Bakara 255 — 3 kez",                 icon:"📖", col:"c2"},
+    {id:"fetih",    name:"Fetih Suresi",          target:1,  today:0, total:0, page:0, desc:"29 ayet — sayfa sayfa",       icon:"📜", col:"c3"},
+    {id:"yasin",    name:"Yâsin Suresi",           target:1,  today:0, total:0, page:0, desc:"83 ayet — sayfa sayfa",       icon:"📜", col:"c4"},
+    {id:"nazar_duasi",name:"Nazar Duası",         target:7,  today:0, total:0, desc:"Koruyucu dua — 7 kez",               icon:"🛡️", col:"c5"},
+    {id:"ihlas_felak_nas",name:"İhlas + Felak + Nas",target:3,today:0,total:0,desc:"Üç sure — 3 kez",                    icon:"📖", col:"c0"},
+    {id:"cuz6s3",   name:"6. Cüz — 3. Sayfa",    target:10, today:0, total:0, page:0, desc:"Nisa 148-152 — 10 kez",       icon:"📄", col:"c1"},
+    {id:"cevsen",   name:"Cevşen-i Kebir",         target:1,  today:0, total:0, page:0, desc:"100 bölüm büyük dua",         icon:"✨", col:"c2"},
+    {id:"bedr",     name:"Ashâb-ı Bedr Duası",    target:1,  today:0, total:0, page:0, desc:"313 sahabe duası",             icon:"⭐", col:"c3"},
   ],
-  activeId:"free",lastDate:"",theme:"light",city:"Amsterdam"
+  activeId:"free", lastDate:"", theme:"light", city:"Groningen"
 };
 
-function todayStr(){return new Date().toISOString().slice(0,10)}
-function save(s){try{localStorage.setItem(KEY,JSON.stringify(s));}catch(e){}}
-function loadSt(){try{const r=localStorage.getItem(KEY);return r?JSON.parse(r):null;}catch{return null;}}
-let state=loadSt();
-if(!state||!Array.isArray(state.dhikrs))state=structuredClone(DEFAULT_STATE);
-const today=todayStr();
-if(state.lastDate!==today){state.dhikrs.forEach(d=>d.today=0);state.lastDate=today;}
-state.dhikrs.forEach(d=>{if(!('today'in d))d.today=0;if(!('total'in d))d.total=0;if(!('page'in d))d.page=0;if(!('icon'in d))d.icon="📿";});
-if(!state.theme)state.theme="light";
-if(!state.city)state.city="Amsterdam";
+function todayStr() { return new Date().toISOString().slice(0,10); }
+function save(s) { try { localStorage.setItem(KEY, JSON.stringify(s)); } catch(e) {} }
+function loadSt() { try { const r=localStorage.getItem(KEY); return r?JSON.parse(r):null; } catch{ return null; } }
 
-document.documentElement.setAttribute('data-theme',state.theme);
-document.getElementById('themeBtn').textContent=state.theme==='dark'?'☀️':'🌙';
+let state = loadSt();
+if (!state || !Array.isArray(state.dhikrs)) state = structuredClone(DEFAULT_STATE);
+const today = todayStr();
+if (state.lastDate !== today) { state.dhikrs.forEach(d => d.today=0); state.lastDate=today; }
+state.dhikrs.forEach(d => {
+  if(!('today'in d))d.today=0;
+  if(!('total'in d))d.total=0;
+  if(!('page'in d))d.page=0;
+  if(!('col'in d))d.col="c0";
+});
+if (!state.theme) state.theme = "light";
+if (!state.city) state.city = "Groningen";
+
+document.documentElement.setAttribute('data-theme', state.theme);
+document.getElementById('themeBtn').textContent = state.theme==='dark'?'☀️':'🌙';
 
 // Restore city
-const sc=NL_CITIES.find(c=>c.n===state.city)||NL_CITIES[0];
-selCity=sc;
-document.getElementById("prayerCityLabel").textContent="📍 "+sc.n;
-document.querySelectorAll(".city-btn").forEach(b=>{if(b.textContent===sc.n)b.classList.add("sel");});
-loadTimes(sc);
+const storedCity = NL_CITIES.find(c=>c.n===state.city) || NL_CITIES.find(c=>c.n==="Groningen") || NL_CITIES[0];
+selCity = storedCity;
+document.getElementById("cityLabel").textContent = storedCity.n;
+document.querySelectorAll(".city-btn").forEach(b=>{ if(b.textContent===storedCity.n) b.classList.add("sel"); });
+loadPrayerTimes(storedCity);
 
-/* Date + greeting */
-(()=>{
-  const d=new Date();
-  const days=["Pazar","Pazartesi","Salı","Çarşamba","Perşembe","Cuma","Cumartesi"];
-  const months=["Ocak","Şubat","Mart","Nisan","Mayıs","Haziran","Temmuz","Ağustos","Eylül","Ekim","Kasım","Aralık"];
-  document.getElementById("headerDate").textContent=`${days[d.getDay()]}, ${d.getDate()} ${months[d.getMonth()]} ${d.getFullYear()}`;
-  const h=d.getHours();
-  let g="Esselâmü Aleyküm";
-  if(h<5)g="Hayırlı Geceler 🌙";
-  else if(h<12)g="Hayırlı Sabahlar ☀️";
-  else if(h<14)g="Hayırlı Öğleler 🌤️";
-  else if(h<18)g="Hayırlı İkindiler 🌅";
-  else if(h<21)g="Hayırlı Akşamlar 🌆";
-  else g="Hayırlı Yatsılar 🌙";
-  document.getElementById("headerGreeting").textContent=g;
-})();
-
-/* Hicri takvim */
-document.getElementById("takvimBtn").addEventListener("click",()=>{
-  const d=new Date();
-  const hicri=new Intl.DateTimeFormat('tr-TR-u-ca-islamic',{year:'numeric',month:'long',day:'numeric'}).format(d);
-  document.getElementById("hicriBadge").textContent=hicri;
+/* ── THEME ── */
+document.getElementById("themeBtn").addEventListener("click", () => {
+  const t = document.documentElement.getAttribute('data-theme')==='dark'?'light':'dark';
+  document.documentElement.setAttribute('data-theme', t);
+  document.getElementById('themeBtn').textContent = t==='dark'?'☀️':'🌙';
+  state.theme = t; save(state);
+  document.querySelector('meta[name="theme-color"]').content = t==='dark'?'#0c1b13':'#1b4332';
 });
 
-/* Theme */
-document.getElementById("themeBtn").addEventListener("click",()=>{
-  const t=document.documentElement.getAttribute('data-theme')==='dark'?'light':'dark';
-  document.documentElement.setAttribute('data-theme',t);
-  document.getElementById('themeBtn').textContent=t==='dark'?'☀️':'🌙';
-  state.theme=t;save(state);
-  document.querySelector('meta[name="theme-color"]').content=t==='dark'?'#0d1f17':'#1a3a2a';
-});
-
-/* ─── DOM ─── */
-const mainView=document.getElementById("mainView"),counterView=document.getElementById("counterView");
-const ringTap=document.getElementById("ringTap"),countNum=document.getElementById("countNum");
-const activeNameEl=document.getElementById("activeName"),activeSubEl=document.getElementById("activeSub");
-const todayVal=document.getElementById("todayVal"),totalVal=document.getElementById("totalVal");
-const targetLbl=document.getElementById("targetLbl"),targetVal=document.getElementById("targetVal");
-const backBtn=document.getElementById("backBtn"),undoBtn=document.getElementById("undoBtn");
-const resetTodayBtn=document.getElementById("resetTodayBtn"),resetAllBtn=document.getElementById("resetAllBtn");
-const doneMsg=document.getElementById("doneMsg"),bottomBar=document.getElementById("bottomBar");
-const audioToggle=document.getElementById("audioToggle"),loopBtn=document.getElementById("loopBtn");
-const audioPanel=document.getElementById("audioPanel"),audioEl=document.getElementById("audioEl");
-const audioHint=document.getElementById("audioHint"),audioSrcs=document.getElementById("audioSrcs");
-const pager=document.getElementById("pager"),pagerBody=document.getElementById("pagerBody");
-const pagerFill=document.getElementById("pagerFill"),pagerFrac=document.getElementById("pagerFrac");
-const pagerSname=document.getElementById("pagerSname");
-const pPrev=document.getElementById("pPrev"),pNext=document.getElementById("pNext");
-const jumpInp=document.getElementById("jumpInp"),jumpGo=document.getElementById("jumpGo");
-const plTr=document.getElementById("plTr"),plAr=document.getElementById("plAr");
+/* ── DOM ── */
+const mainView=document.getElementById("mainView"), counterView=document.getElementById("counterView");
+const ringTap=document.getElementById("ringTap"), countNum=document.getElementById("countNum");
+const backBtn=document.getElementById("backBtn"), undoBtn=document.getElementById("undoBtn");
+const resetTodayBtn=document.getElementById("resetTodayBtn"), resetAllBtn=document.getElementById("resetAllBtn");
+const doneMsg=document.getElementById("doneMsg"), bottomBar=document.getElementById("bottomBar");
+const cvTitle=document.getElementById("cvTitle"), cvSub=document.getElementById("cvSub");
+const sToday=document.getElementById("sToday"), sTotal=document.getElementById("sTotal");
+const sTargetLbl=document.getElementById("sTargetLbl"), sTarget=document.getElementById("sTarget");
+const audioToggle=document.getElementById("audioToggle"), loopBtnEl=document.getElementById("loopBtn");
+const audioPanel=document.getElementById("audioPanel"), audioEl=document.getElementById("audioEl");
+const audioHint=document.getElementById("audioHint"), audioList=document.getElementById("audioList");
+const pagerWrap=document.getElementById("pager"), pBody=document.getElementById("pBody");
+const pFill=document.getElementById("pFill"), pFrac=document.getElementById("pFrac"), pSname=document.getElementById("pSname");
+const pPrev=document.getElementById("pPrev"), pNext=document.getElementById("pNext");
+const jInp=document.getElementById("jInp"), jGo=document.getElementById("jGo");
+const plTr=document.getElementById("plTr"), plAr=document.getElementById("plAr");
 const dhikrListEl=document.getElementById("dhikrList");
 
-function getActive(){return state.dhikrs.find(d=>d.id===state.activeId)||state.dhikrs[0];}
+function getActive() { return state.dhikrs.find(d=>d.id===state.activeId)||state.dhikrs[0]; }
 
 /* MENU */
-function renderMenu(){
-  dhikrListEl.innerHTML="";
-  const freeEl=document.getElementById("freeSlot");
-  state.dhikrs.forEach(d=>{
-    const el=document.createElement("div");el.className="dhikr-card";
-    const done=d.target&&d.today>=d.target;
-    const pct=d.target?Math.min(100,d.today/d.target*100):0;
-    const todayTxt=d.target?`${d.today}/${d.target}`:`${d.today}`;
-    el.innerHTML=`<div class="dc-icon">${d.icon||"📿"}</div>
+function renderMenu() {
+  dhikrListEl.innerHTML = "";
+  state.dhikrs.forEach(d => {
+    const el = document.createElement("div"); el.className = "dhikr-card";
+    const done = d.target && d.today >= d.target;
+    const pct = d.target ? Math.min(100, d.today/d.target*100) : 0;
+    const todayTxt = d.target ? `${d.today}/${d.target}` : d.today;
+    el.innerHTML = `
+      <div class="dc-icon-wrap ${d.col||'c0'}">${d.icon||"📿"}</div>
       <div class="dc-body">
-        <div class="dc-name">${d.name}${done?'<span class="dc-done">✓ Tamam</span>':''}</div>
-        <div class="dc-meta">${d.desc} &nbsp;·&nbsp; Bugün: <b>${todayTxt}</b> &nbsp;·&nbsp; Toplam: <b>${d.total}</b></div>
+        <div class="dc-name">${d.name}${done?'<span class="dc-badge-done">✓ Tamam</span>':''}</div>
+        <div class="dc-sub">${d.desc} &nbsp;·&nbsp; Bugün: <b style="color:var(--g2)">${todayTxt}</b></div>
         ${d.target?`<div class="dc-prog"><div class="dc-prog-fill" style="width:${pct}%"></div></div>`:''}
-      </div>`;
-    el.addEventListener("click",()=>switchToCounter(d.id));
+      </div>
+      <div class="dc-count">${d.today}</div>
+      <div class="dc-arrow">›</div>`;
+    el.addEventListener("click", () => switchToCounter(d.id));
     dhikrListEl.appendChild(el);
   });
 }
 
 /* SWITCH */
-function switchToCounter(id){
-  state.activeId=id;save(state);
-  mainView.classList.add("hidden");counterView.classList.remove("hidden");
-  bottomBar.style.display="none";
-  audioOpen=false;audioPanel.classList.remove("show");audioToggle.classList.remove("on");audioEl.pause();
-  pagerLang="tr";plTr.classList.add("on");plAr.classList.remove("on");
+function switchToCounter(id) {
+  state.activeId = id; save(state);
+  mainView.classList.add("hidden"); counterView.classList.remove("hidden");
+  bottomBar.style.display = "none";
+  audioOpen = false; audioPanel.classList.remove("show"); audioToggle.classList.remove("on"); audioEl.pause();
+  pagerLang = "tr"; plTr.classList.add("on"); plAr.classList.remove("on");
   renderCounter();
 }
-function switchToMain(){
-  counterView.classList.add("hidden");mainView.classList.remove("hidden");
-  bottomBar.style.display="flex";audioEl.pause();
+function switchToMain() {
+  counterView.classList.add("hidden"); mainView.classList.remove("hidden");
+  bottomBar.style.display = "flex"; audioEl.pause();
 }
 
 /* COUNTER */
-function renderCounter(){
-  const a=getActive();
-  activeNameEl.textContent=a.name;
-  const done=a.target&&a.today>=a.target;
-  if(a.target){activeSubEl.textContent=`${a.today} / ${a.target} — Hedef`;targetLbl.textContent="Hedef";targetVal.textContent=a.target;}
-  else{activeSubEl.textContent="Serbest sayaç";targetLbl.textContent="Mod";targetVal.textContent="∞";}
-  countNum.textContent=a.today;todayVal.textContent=a.today;totalVal.textContent=a.total;
-  doneMsg.className=done?"done-msg show":"done-msg";
-  if(done)ringTap.classList.add("done-ring");else ringTap.classList.remove("done-ring");
-  pager.classList.remove("on");activePagerData=null;
-  if(a.id==="cevsen")initPager(CEVSEN);
-  else if(a.id==="fetih")initPager(FETIH_PAGES);
-  else if(a.id==="bedr")initPager(BEDR_PAGES);
-  else if(a.id==="yasin")initPager(YASIN_PAGES);
-  else if(a.id==="cuz6s3")initPager(CUZ6_PAGES);
+function renderCounter() {
+  const a = getActive();
+  cvTitle.textContent = a.name;
+  const done = a.target && a.today >= a.target;
+  if (a.target) { cvSub.textContent=`${a.today} / ${a.target} tamamlandı`; sTargetLbl.textContent="Hedef"; sTarget.textContent=a.target; }
+  else { cvSub.textContent="Serbest sayaç"; sTargetLbl.textContent="Mod"; sTarget.textContent="∞"; }
+  countNum.textContent = a.today;
+  sToday.textContent = a.today; sTotal.textContent = a.total;
+  doneMsg.className = done ? "done-msg show" : "done-msg";
+  if (done) ringTap.classList.add("ring-done"); else ringTap.classList.remove("ring-done");
+  pagerWrap.classList.remove("on"); activePagerData = null;
+  if      (a.id==="cevsen") initPager(CEVSEN);
+  else if (a.id==="fetih")  initPager(FETIH_PAGES);
+  else if (a.id==="bedr")   initPager(BEDR_PAGES);
+  else if (a.id==="yasin")  initPager(YASIN_PAGES);
+  else if (a.id==="cuz6s3") initPager(CUZ6_PAGES);
 }
 
 /* TAP */
-function tap(){
-  const a=getActive();if(a.target&&a.today>=a.target)return;
-  a.today++;a.total++;save(state);renderCounter();renderMenu();
-  ringTap.style.transform="scale(.91)";setTimeout(()=>ringTap.style.transform="",90);
+function tap() {
+  const a = getActive(); if (a.target && a.today >= a.target) return;
+  a.today++; a.total++; save(state); renderCounter(); renderMenu();
+  ringTap.style.transform="scale(.90)"; setTimeout(()=>ringTap.style.transform="",85);
 }
-ringTap.addEventListener("click",tap);
-ringTap.addEventListener("keydown",e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();tap();}});
-undoBtn.addEventListener("click",()=>{const a=getActive();if(!a.today)return;a.today--;a.total=Math.max(0,a.total-1);save(state);renderCounter();renderMenu();});
-resetTodayBtn.addEventListener("click",()=>{if(!confirm("Bugünkü sayım sıfırlansın mı?"))return;getActive().today=0;save(state);renderCounter();renderMenu();});
-backBtn.addEventListener("click",()=>{switchToMain();renderMenu();});
-resetAllBtn.addEventListener("click",()=>{if(!confirm("Tüm veriler silinsin mi?"))return;localStorage.removeItem(KEY);state=structuredClone(DEFAULT_STATE);state.lastDate=todayStr();save(state);renderMenu();switchToMain();});
+ringTap.addEventListener("click", tap);
+ringTap.addEventListener("keydown", e=>{ if(e.key==="Enter"||e.key===" "){e.preventDefault();tap();} });
+undoBtn.addEventListener("click", ()=>{ const a=getActive(); if(!a.today)return; a.today--; a.total=Math.max(0,a.total-1); save(state); renderCounter(); renderMenu(); });
+resetTodayBtn.addEventListener("click", ()=>{ if(!confirm("Bugünkü sayım sıfırlansın mı?"))return; getActive().today=0; save(state); renderCounter(); renderMenu(); });
+backBtn.addEventListener("click", ()=>{ switchToMain(); renderMenu(); });
+resetAllBtn.addEventListener("click", ()=>{ if(!confirm("Tüm veriler silinsin mi?"))return; localStorage.removeItem(KEY); state=structuredClone(DEFAULT_STATE); state.lastDate=todayStr(); save(state); renderMenu(); switchToMain(); });
 
 /* AUDIO */
-let audioOpen=false,loopOn=false;
-audioToggle.addEventListener("click",()=>{
-  audioOpen=!audioOpen;
-  audioPanel.classList.toggle("show",audioOpen);
-  audioToggle.classList.toggle("on",audioOpen);
-  if(audioOpen)buildAudio(getActive().id);else audioEl.pause();
+let audioOpen=false, loopOn=false;
+audioToggle.addEventListener("click", ()=>{
+  audioOpen=!audioOpen; audioPanel.classList.toggle("show",audioOpen); audioToggle.classList.toggle("on",audioOpen);
+  if(audioOpen) buildAudio(getActive().id); else audioEl.pause();
 });
-loopBtn.addEventListener("click",()=>{loopOn=!loopOn;audioEl.loop=loopOn;loopBtn.classList.toggle("on",loopOn);loopBtn.textContent=loopOn?"🔁✓":"🔁";});
-function buildAudio(id){
-  const srcs=AUDIO_SOURCES[id]||[];audioSrcs.innerHTML="";
+loopBtnEl.addEventListener("click", ()=>{ loopOn=!loopOn; audioEl.loop=loopOn; loopBtnEl.classList.toggle("on",loopOn); loopBtnEl.textContent=loopOn?"🔁✓":"🔁"; });
+function buildAudio(id) {
+  const srcs=AUDIO_SOURCES[id]||[]; audioList.innerHTML="";
   if(!srcs.length){audioHint.textContent="Bu zikir için ses kaydı yok.";audioEl.src="";audioEl.style.display="none";return;}
-  audioEl.style.display="";audioHint.textContent="Kaynak seçin:";
+  audioEl.style.display=""; audioHint.textContent="Kaynak seçin:";
   srcs.forEach((s,i)=>{
-    if(s.yt){
-      const a=document.createElement("a");a.className="yt-src";a.href=s.yt;a.target="_blank";a.rel="noopener";a.textContent="▶ YouTube — "+s.label;audioSrcs.appendChild(a);
-      if(!s.src){audioEl.src="";audioEl.style.display="none";}
-    }else{
-      const b=document.createElement("button");b.className="a-src";b.textContent="▶ "+s.label;b.title=s.note||"";
-      b.addEventListener("click",()=>{document.querySelectorAll(".a-src").forEach(x=>x.classList.remove("active"));b.classList.add("active");audioEl.src=s.src;audioEl.loop=loopOn;audioEl.play().catch(()=>{});audioHint.textContent=s.note||s.label;});
-      audioSrcs.appendChild(b);
-      if(i===0)audioSrcs.children[0]?.classList.add("active");
-    }
+    if(s.yt){const a=document.createElement("a");a.className="yt-lnk";a.href=s.yt;a.target="_blank";a.rel="noopener";a.textContent="▶ YouTube — "+s.label;audioList.appendChild(a);if(!s.src){audioEl.src="";audioEl.style.display="none";}}
+    else{const b=document.createElement("button");b.className="asrc";b.textContent="▶ "+s.label;b.title=s.note||"";b.addEventListener("click",()=>{document.querySelectorAll(".asrc").forEach(x=>x.classList.remove("on"));b.classList.add("on");audioEl.src=s.src;audioEl.loop=loopOn;audioEl.play().catch(()=>{});audioHint.textContent=s.note||s.label;});audioList.appendChild(b);if(i===0)audioList.children[0]?.classList.add("on");}
   });
 }
 audioEl.addEventListener("play",()=>audioToggle.classList.add("on"));
 audioEl.addEventListener("pause",()=>{if(!audioOpen)audioToggle.classList.remove("on");});
 
 /* PAGER */
-let pagerLang="tr",activePagerData=null,activePagerMax=0;
+let pagerLang="tr", activePagerData=null, activePagerMax=0;
 plTr.addEventListener("click",()=>{pagerLang="tr";plTr.classList.add("on");plAr.classList.remove("on");renderPagerPage(getActive().page||0);});
 plAr.addEventListener("click",()=>{pagerLang="ar";plAr.classList.add("on");plTr.classList.remove("on");renderPagerPage(getActive().page||0);});
-
-function initPager(pages){activePagerData=pages;activePagerMax=pages.length;jumpInp.max=pages.length;jumpInp.placeholder=`1-${pages.length}`;pager.classList.add("on");renderPagerPage(getActive().page||0);}
+function initPager(pages){activePagerData=pages;activePagerMax=pages.length;jInp.max=pages.length;jInp.placeholder=`1-${pages.length}`;pagerWrap.classList.add("on");renderPagerPage(getActive().page||0);}
 function renderPagerPage(idx){
-  const a=getActive();a.page=idx;save(state);
+  const a=getActive(); a.page=idx; save(state);
   const sec=activePagerData[idx];
-  pagerSname.textContent=sec[0];
-  if(pagerLang==="ar"&&sec[2]){pagerBody.textContent=sec[2];pagerBody.style.direction="rtl";pagerBody.style.textAlign="right";pagerBody.style.fontFamily="'Noto Naskh Arabic','Amiri',serif";pagerBody.style.fontSize="1.1rem";}
-  else{pagerBody.textContent=sec[1]||sec[0];pagerBody.style.direction="ltr";pagerBody.style.textAlign="left";pagerBody.style.fontFamily="inherit";pagerBody.style.fontSize=".85rem";}
-  pagerFrac.textContent=`${idx+1} / ${activePagerMax}`;
-  pagerFill.style.width=((idx+1)/activePagerMax*100).toFixed(0)+"%";
+  pSname.textContent=sec[0];
+  pBody.textContent=sec[1]; pBody.style.direction="ltr"; pBody.style.textAlign="left"; pBody.style.fontSize=".85rem";
+  pFrac.textContent=`${idx+1} / ${activePagerMax}`;
+  pFill.style.width=((idx+1)/activePagerMax*100).toFixed(0)+"%";
   pPrev.disabled=idx===0;
   const isLast=idx===activePagerMax-1;
-  pNext.textContent=isLast?"✓ Bitti":"Devam Et →";pNext.disabled=isLast;
-  jumpInp.value=idx+1;
+  pNext.textContent=isLast?"✓ Bitti":"Devam Et →"; pNext.disabled=isLast;
+  jInp.value=idx+1;
 }
-pPrev.addEventListener("click",()=>{const c=getActive().page||0;if(c>0){renderPagerPage(c-1);pagerBody.scrollTop=0;}});
-pNext.addEventListener("click",()=>{const c=getActive().page||0;if(c<activePagerMax-1){renderPagerPage(c+1);pagerBody.scrollTop=0;}});
-jumpGo.addEventListener("click",()=>{const v=parseInt(jumpInp.value);if(v>=1&&v<=activePagerMax)renderPagerPage(v-1);});
-jumpInp.addEventListener("keydown",e=>{if(e.key==="Enter"){const v=parseInt(jumpInp.value);if(v>=1&&v<=activePagerMax)renderPagerPage(v-1);}});
+pPrev.addEventListener("click",()=>{const c=getActive().page||0;if(c>0){renderPagerPage(c-1);pBody.scrollTop=0;}});
+pNext.addEventListener("click",()=>{const c=getActive().page||0;if(c<activePagerMax-1){renderPagerPage(c+1);pBody.scrollTop=0;}});
+jGo.addEventListener("click",()=>{const v=parseInt(jInp.value);if(v>=1&&v<=activePagerMax)renderPagerPage(v-1);});
+jInp.addEventListener("keydown",e=>{if(e.key==="Enter"){const v=parseInt(jInp.value);if(v>=1&&v<=activePagerMax)renderPagerPage(v-1);}});
 
-save(state);renderMenu();
+save(state); renderMenu();
 </script>
 </body>
 </html>
