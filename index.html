@@ -353,11 +353,13 @@ body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;min-h
       </div>
     </div>
 
+    <!-- Okunuş kutusu (pager'sız zikirler) -->
+    <div id="okunusBox" style="display:none;width:100%;max-width:320px;margin:.7rem auto 0;background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:.9rem 1rem;font-size:.82rem;line-height:1.85;color:var(--text);white-space:pre-wrap;max-height:230px;overflow-y:auto;box-shadow:var(--shadowsm)"></div>
+
     <div class="pager-wrap" id="pager">
       <div class="pager-hdr">
         <div class="p-lang">
           <button class="plb on" id="plTr">Türkçe Okunuş</button>
-          <button class="plb" id="plAr">عربي Arapça</button>
         </div>
         <div class="p-meta"><span>Bölüm</span><span id="pFrac"></span></div>
         <div class="p-sname" id="pSname"></div>
@@ -373,6 +375,11 @@ body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;min-h
         <input type="number" id="jInp" min="1"/>
         <button id="jGo">Git</button>
       </div>
+    </div>
+
+    <!-- SAYFA ALTI GERİ DÖN -->
+    <div style="width:100%;max-width:320px;margin:1.2rem auto 1rem">
+      <button id="backBtnBottom" style="width:100%;background:var(--surface);border:1.5px solid var(--g2);color:var(--g2);padding:.6rem;border-radius:10px;cursor:pointer;font-size:.8rem;font-family:inherit;font-weight:600;transition:all .2s" onmouseover="this.style.background='var(--g2)';this.style.color='#fff'" onmouseout="this.style.background='var(--surface)';this.style.color='var(--g2)'">← Ana Sayfaya Dön</button>
     </div>
   </div>
 </div>
@@ -430,7 +437,7 @@ let nextTargetMs = null;
 /* ── PRAYER API ── */
 async function fetchPrayerTimes(city) {
   const d = new Date();
-  const url = `https://api.aladhan.com/v1/timings/${d.getDate()}-${d.getMonth()+1}-${d.getFullYear()}?latitude=${city.lat}&longitude=${city.lon}&method=3&school=1`;
+  const url = `https://api.aladhan.com/v1/timings/${d.getDate()}-${d.getMonth()+1}-${d.getFullYear()}?latitude=${city.lat}&longitude=${city.lon}&method=2&school=0`;
   const ctrl = new AbortController();
   const t = setTimeout(() => ctrl.abort(), 9000);
   try {
@@ -575,7 +582,9 @@ document.getElementById("cityOverlay").addEventListener("click", e => { if (e.ta
    AUDIO SOURCES
 ════════════════════════════════ */
 const AUDIO_SOURCES = {
-  tefriciye:[],
+  tefriciye:[
+    {label:"Salavat — YouTube",src:"",note:"YouTube'da dinleyin",yt:"https://www.youtube.com/results?search_query=salat+i+tefriciye"},
+  ],
   ayetel_kursi:[
     {label:"Mishary Rashid",src:"https://server8.mp3quran.net/mshary/002.mp3",note:"Bakara 255 — Mishary Rashid"},
     {label:"Maher Al Muaiqly",src:"https://server7.mp3quran.net/mahir/002.mp3",note:"Bakara 255 — Maher"},
@@ -590,7 +599,9 @@ const AUDIO_SOURCES = {
     {label:"Maher",src:"https://server7.mp3quran.net/mahir/036.mp3",note:"Yâsin — Maher"},
     {label:"Mishary",src:"https://server8.mp3quran.net/mshary/036.mp3",note:"Yâsin — Mishary"},
   ],
-  nazar_duasi:[],
+  nazar_duasi:[
+    {label:"Nazar Duası — YouTube",src:"",note:"YouTube'da dinleyin",yt:"https://www.youtube.com/results?search_query=nazar+duas%C4%B1+okunusu"},
+  ],
   ihlas_felak_nas:[
     {label:"İhlas — Sudeys",src:"https://server8.mp3quran.net/afs/112.mp3",note:"İhlas Suresi"},
     {label:"Felak — Maher",src:"https://server7.mp3quran.net/mahir/113.mp3",note:"Felak Suresi"},
@@ -598,7 +609,9 @@ const AUDIO_SOURCES = {
   ],
   cuz6s3:[{label:"Nisa — Sudeys",src:"https://server8.mp3quran.net/afs/004.mp3",note:"Nisa Suresi"}],
   cevsen:[{label:"YouTube",src:"",note:"YouTube'da izleyin",yt:"https://www.youtube.com/watch?v=1Y7wm6syvoA"}],
-  bedr:[],free:[],
+  bedr:[
+    {label:"Bedr Duası — YouTube",src:"",note:"YouTube'da dinleyin",yt:"https://www.youtube.com/results?search_query=ashab+bedr+duas%C4%B1"},
+  ],free:[],
 };
 
 /* ════════════════════════════════
@@ -642,6 +655,50 @@ const BEDR_PAGES=[
 ["3. Sayfa — Sahabe 153-252",`153. Hz. Hilâl ibn el-Muallâ\n154. Hz. Hârise ibn Sürâka\n155. Hz. Sa'd ibn el-Rabî'\n156. Hz. Mühammed ibn Mesleme\n157. Hz. Abdullah ibn Sehl\n158. Hz. Hârice ibn Zeyd\n[159-252 devam eder...]`],
 ["4. Sayfa — Sahabe 253-313",`[253-312 devam eder...]\n313. Hz. Abdullah ibn Kays el-Ensârî\n\nAllâhümme bihakkı hâülâis-sâdatil kirâm, ighfir zunûbenâ ve kaddî hevâicinâ ve tüb aleynâ inneke ente't-tevvâbu'r-rahîm.\n\n— Âmîn —`]
 ];
+
+/* ════════════════════════════════
+   OKUNUŞ METİNLERİ (pager'sız zikirler)
+════════════════════════════════ */
+const OKUNUŞ = {
+  tefriciye: `Allâhumme salli salâten kâmileten ve sellim selâmen tâmmen alâ Seyyidinâ Muhammedini'llezî tenhallü bihil ukadü ve tenfericu bihil kürebü ve tukdâ bihil havâicü ve tünâlü bihir reğâibü ve hüsnül havâtimi ve yüstaskal ğamâmu bi vechihil kerîm ve alâ âlihî ve sahbihî fî külli lemhatin ve nefesin bi adedi külli ma'lûmin lek.`,
+
+  ayetel_kursi: `Bismillâhirrahmânirrahîm.
+
+Allâhu lâ ilâhe illâ hüvel hayyül kayyûm.
+Lâ te'huzühû sinetün ve lâ nevm.
+Lehû mâ fis semâvâti ve mâ fil ard.
+Men zellezî yeşfeu indehû illâ bi iznih.
+Ya'lemü mâ beyne eydîhim ve mâ halfehüm.
+Ve lâ yühîtûne bi şey'in min ilmihî illâ bimâ şâe.
+Vesia kürsiyyühüs semâvâti vel ard.
+Ve lâ yeûdühû hıfzuhumâ.
+Ve hüvel aliyyül azîm.`,
+
+  nazar_duasi: `Eûzü bi kelimâtillâhit tâmmâti min şerri mâ halak.
+
+Eûzü bi kelimâtillâhit tâmmâti min külli şeytânin ve hâmmeh ve min külli aynin lâmmeh.`,
+
+  ihlas_felak_nas: `Bismillâhirrahmânirrahîm.
+Kul hüvallâhu ehad.
+Allâhüs samed.
+Lem yelid ve lem yûled.
+Ve lem yekün lehû küfüven ehad.
+
+Bismillâhirrahmânirrahîm.
+Kul eûzü bi rabbil felak.
+Min şerri mâ halak.
+Ve min şerri ğâsıkin izâ vakab.
+Ve min şerrin neffâsâti fil ukad.
+Ve min şerri hâsidin izâ hased.
+
+Bismillâhirrahmânirrahîm.
+Kul eûzü bi rabbin nâs.
+Melikin nâs.
+İlâhin nâs.
+Min şerril vesvâsil hannâs.
+Ellezî yüvesvisü fî sudûrin nâs.
+Minel cinneti ven nâs.`,
+};
 
 /* ════════════════════════════════
    STATE
@@ -704,6 +761,7 @@ document.getElementById("themeBtn").addEventListener("click", () => {
 const mainView=document.getElementById("mainView"), counterView=document.getElementById("counterView");
 const ringTap=document.getElementById("ringTap"), countNum=document.getElementById("countNum");
 const backBtn=document.getElementById("backBtn"), undoBtn=document.getElementById("undoBtn");
+const backBtnBottom=document.getElementById("backBtnBottom");
 const resetTodayBtn=document.getElementById("resetTodayBtn"), resetAllBtn=document.getElementById("resetAllBtn");
 const doneMsg=document.getElementById("doneMsg"), bottomBar=document.getElementById("bottomBar");
 const cvTitle=document.getElementById("cvTitle"), cvSub=document.getElementById("cvSub");
@@ -716,7 +774,7 @@ const pagerWrap=document.getElementById("pager"), pBody=document.getElementById(
 const pFill=document.getElementById("pFill"), pFrac=document.getElementById("pFrac"), pSname=document.getElementById("pSname");
 const pPrev=document.getElementById("pPrev"), pNext=document.getElementById("pNext");
 const jInp=document.getElementById("jInp"), jGo=document.getElementById("jGo");
-const plTr=document.getElementById("plTr"), plAr=document.getElementById("plAr");
+const plTr=document.getElementById("plTr");
 const dhikrListEl=document.getElementById("dhikrList");
 
 function getActive() { return state.dhikrs.find(d=>d.id===state.activeId)||state.dhikrs[0]; }
@@ -749,7 +807,7 @@ function switchToCounter(id) {
   mainView.classList.add("hidden"); counterView.classList.remove("hidden");
   bottomBar.style.display = "none";
   audioOpen = false; audioPanel.classList.remove("show"); audioToggle.classList.remove("on"); audioEl.pause();
-  pagerLang = "tr"; plTr.classList.add("on"); plAr.classList.remove("on");
+  pagerLang = "tr"; plTr.classList.add("on");
   renderCounter();
 }
 function switchToMain() {
@@ -768,6 +826,12 @@ function renderCounter() {
   sToday.textContent = a.today; sTotal.textContent = a.total;
   doneMsg.className = done ? "done-msg show" : "done-msg";
   if (done) ringTap.classList.add("ring-done"); else ringTap.classList.remove("ring-done");
+  // Okunuş kutusu
+  const okunusBox = document.getElementById("okunusBox");
+  const okunusTxt = OKUNUŞ[a.id];
+  if (okunusTxt) { okunusBox.style.display="block"; okunusBox.textContent=okunusTxt; }
+  else { okunusBox.style.display="none"; }
+
   pagerWrap.classList.remove("on"); activePagerData = null;
   if      (a.id==="cevsen") initPager(CEVSEN);
   else if (a.id==="fetih")  initPager(FETIH_PAGES);
@@ -787,6 +851,7 @@ ringTap.addEventListener("keydown", e=>{ if(e.key==="Enter"||e.key===" "){e.prev
 undoBtn.addEventListener("click", ()=>{ const a=getActive(); if(!a.today)return; a.today--; a.total=Math.max(0,a.total-1); save(state); renderCounter(); renderMenu(); });
 resetTodayBtn.addEventListener("click", ()=>{ if(!confirm("Bugünkü sayım sıfırlansın mı?"))return; getActive().today=0; save(state); renderCounter(); renderMenu(); });
 backBtn.addEventListener("click", ()=>{ switchToMain(); renderMenu(); });
+backBtnBottom.addEventListener("click", ()=>{ switchToMain(); renderMenu(); });
 resetAllBtn.addEventListener("click", ()=>{ if(!confirm("Tüm veriler silinsin mi?"))return; localStorage.removeItem(KEY); state=structuredClone(DEFAULT_STATE); state.lastDate=todayStr(); save(state); renderMenu(); switchToMain(); });
 
 /* AUDIO */
@@ -810,8 +875,7 @@ audioEl.addEventListener("pause",()=>{if(!audioOpen)audioToggle.classList.remove
 
 /* PAGER */
 let pagerLang="tr", activePagerData=null, activePagerMax=0;
-plTr.addEventListener("click",()=>{pagerLang="tr";plTr.classList.add("on");plAr.classList.remove("on");renderPagerPage(getActive().page||0);});
-plAr.addEventListener("click",()=>{pagerLang="ar";plAr.classList.add("on");plTr.classList.remove("on");renderPagerPage(getActive().page||0);});
+plTr.addEventListener("click",()=>{pagerLang="tr";plTr.classList.add("on");renderPagerPage(getActive().page||0);});
 function initPager(pages){activePagerData=pages;activePagerMax=pages.length;jInp.max=pages.length;jInp.placeholder=`1-${pages.length}`;pagerWrap.classList.add("on");renderPagerPage(getActive().page||0);}
 function renderPagerPage(idx){
   const a=getActive(); a.page=idx; save(state);
